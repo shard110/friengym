@@ -1,0 +1,76 @@
+/* 기본 페이지 스타일 설정 */
+.Mypage {
+    padding: 20px; /* 페이지 내부 여백 */
+    max-width: 800px; /* 페이지 최대 너비 설정 */
+    margin: 0 auto; /* 페이지 중앙 정렬 */
+    background-color: #f9f9f9; 
+    border-radius: 8px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+    margin-bottom: 30px; 
+    margin-top: 30px;
+
+}
+
+/* 제목 스타일 설정 */
+.Mypage h2 {
+    font-weight: bold; 
+    font-size: 30px; 
+    margin-bottom: 30px; /* 제목 아래 여백 설정 */
+    color: #333;
+}
+
+/* 아바타 컨테이너 스타일 설정 */
+.Mypage .avatar-container {
+    display: flex; /* 플렉스 박스 레이아웃 활성화 */
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: center; /* 수평 가운데 정렬 */
+    margin-bottom: 20px; /* 컨테이너 아래 여백 설정 */
+}
+
+
+/* .Mypage .avatar-container .MuiAvatar-root {
+    cursor: pointer; 
+    transition: border-color 0.3s; 
+    border: 2px solid #007bff; 
+}
+
+
+.Mypage .avatar-container .MuiAvatar-root:hover {
+    border-color: #0056b3; 
+}  */
+
+
+.Mypage .error {
+    color: red; 
+    font-size: 16px; 
+    margin-bottom: 20px; 
+}
+
+/* 사용자 정보 컨테이너 스타일 설정 */
+.user-info {
+    display: flex; /* 플렉스 박스 레이아웃 활성화 */
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    gap: 12px; /* 항목 간의 간격 설정 */
+}
+
+/* 사용자 정보 항목 스타일 설정 */
+.user-info p {
+    display: flex; /* 플렉스 박스 레이아웃 활성화 */
+    justify-content: space-between; 
+    margin: 5px 0; 
+    font-size: 16px; 
+    color: #333;
+}
+
+/* 사용자 정보 항목 레이블 스타일 설정 */
+.user-info p span {
+    font-weight: bold; 
+    min-width: 120px; 
+}
+
+/* 버튼 스타일 설정 */
+.Mypage .MuiButton-root {
+    margin-top: 30px; /* 버튼 위 여백 설정 */
+    color: white;
+    background-color: #22CEB1; /* 버튼 배경색 설정 */
+}

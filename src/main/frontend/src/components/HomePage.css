@@ -1,0 +1,131 @@
+/* 기본 스타일은 이전과 동일 */
+
+/* 슬라이드 컨테이너 스타일 */
+.slide-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-height: 500px;
+}
+
+/* 슬라이드 스타일 */
+.slides {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+/* 개별 슬라이드 스타일 */
+.slide {
+  min-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.slide img {
+  width: 100%;
+  height: auto;
+}
+
+/* 버튼 스타일 */
+.slide-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  z-index: 10;
+}
+
+.prev-button {
+  left: 10px;
+}
+
+.next-button {
+  right: 10px;
+}
+
+/* 전체 너비를 100%로 하고 콘텐츠를 1200px로 제한 */
+.homepage {
+  width: 100%;
+  padding: 0 20px; /* 좌우 여백 */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.homepage-inner {
+  max-width: 1200px;
+  width: 100%;
+}
+
+/* 상품 섹션 스타일 */
+.product-section, .product-section2 {
+  width: 100%;
+  padding: 20px 0; /* 상하 여백 */
+}
+
+/* .product-section2 배경색 설정 */
+.product-section {
+  background-color: #f0f0f0; /* 배경색 예시, 필요에 따라 조정 */
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between; /* 제목과 링크를 양 끝에 배치 */
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.product-title {
+  font-size: 24px;
+  margin: 0;
+  font-weight: bold;
+}
+
+.more-products-link, .more-products-link2 {
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.more-products-link:hover, .more-products-link2:hover {
+  text-decoration: underline;
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* 카드 사이의 간격 */
+}
+
+.product-card {
+  flex: 1 1 calc(25% - 20px); /* 4개의 카드가 한 줄에 표시되도록 설정, 카드 사이의 간격 고려 */
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+
+.product-card img {
+  width: 100%;
+  height: auto;
+}
+
+.product-card h3 {
+  font-size: 18px;
+  margin: 10px 0 5px;
+}
+
+.product-card p {
+  font-size: 16px;
+  margin: 0;
+}

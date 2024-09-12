@@ -1,0 +1,48 @@
+.gnb {
+    width: 100%;
+    
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px #22222222;
+
+    position: fixed;
+    z-index: 10000;
+}
+
+.gnb-logo img{
+    margin: 5px 56px 0 0;
+    width: 160px;
+}
+
+.gnb-wrap {
+    width: 1200px;
+    height: 44px;
+    font-size: 16px;
+    margin: 0 auto;
+    font-weight: 600;
+    display: flex;
+    align-content: center;
+    padding: 10px 20px;
+}
+
+.gnb-menu {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+.gnb-menu li {
+    display: inline;
+    margin-top: 12px;
+}
+
+.gnb-menu a {
+    color: #535353;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.gnb-menu a:hover {
+    color: #00be95;
+}

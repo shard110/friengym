@@ -1,0 +1,103 @@
+/* 전체 페이지 컨테이너 */
+.container {
+  width: 100%;
+  max-width: 1200px; /* 가운데 부분 최대 너비 */
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 40px;
+}
+
+/* 카드 헤더 */
+.cardHeader {
+  font-size: 24px; /* 글자 크기 증가 */
+  font-weight: bold;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 20px; /* 카드 본문과의 간격 조정 */
+  width: 100%; /* 전체 너비를 100%로 설정 */
+  box-sizing: border-box; /* 패딩과 보더가 너비에 포함되도록 설정 */
+}
+
+
+
+/* 댓글 리스트 */
+.listGroup {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 댓글 아이템 */
+.listGroupItem {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+  width: 100%; /* 전체 너비를 100%로 설정 */
+  box-sizing: border-box; /* 패딩과 보더를 너비에 포함시킴 */
+}
+
+/* 마지막 댓글 아이템 */
+.listGroupItem:last-child {
+  border-bottom: none;
+}
+
+/* 댓글 내용 및 버튼 컨테이너 */
+.listGroupItemContent {
+  display: flex;
+  justify-content: space-between; /* 좌우 정렬 */
+  align-items: center; /* 수직 정렬 */
+}
+
+/* 댓글 텍스트 */
+.commentText {
+  flex-grow: 1; /* 댓글 내용이 가능한 공간을 차지하도록 함 */
+  text-align: left; /* 댓글 내용 왼쪽 정렬 */
+}
+
+/* 버튼 컨테이너 */
+.buttonContainer {
+  display: flex; /* Flexbox 사용 */
+  gap: 10px; /* 버튼 사이의 간격 조정 */
+  margin-left: auto; /* 오른쪽으로 정렬 */
+}
+
+/* 버튼 스타일 */
+.button {
+  padding: 10px 20px; /* 버튼 크기 조정 */
+  font-size: 16px;
+  color: white;
+  background-color: #22CEB1;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s, transform 0.2s; /* 부드러운 전환 효과 */
+}
+
+/* 버튼 색상 */
+.saveButton {
+  background-color: #22CEB1;
+}
+
+.cancelButton {
+  background-color: #FF6F61;
+}
+
+/* 버튼 호버 상태 */
+.button:hover {
+  opacity: 0.8;
+  transform: scale(1.02); /* 버튼 클릭 시 약간의 확대 효과 */
+}
+
+/* 로딩 및 오류 메시지 스타일 */
+.loading,
+.error {
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+  text-align: center;
+  font-size: 18px;
+  color: #ff0000;
+}

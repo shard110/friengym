@@ -1,0 +1,116 @@
+.container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.tableWrapper {
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f2f2f2;
+}
+
+.paginationContainer {
+  margin-top: 20px;
+}
+
+.pagination {
+  list-style: none;
+  display: flex;
+  padding: 0;
+  margin: 0;
+  justify-content: center;
+}
+
+.pageItem {
+  margin: 0 5px;
+}
+
+.pageLink {
+  display: inline-block;
+  padding: 8px 12px;
+  font-size: 16px;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top:20px;
+}
+
+.pageLink:hover {
+  background-color: #e9ecef;
+}
+
+/* 페이징 */
+.pageItem.active .pageLink {
+  background-color: #ffa857;
+  color: #fff;
+  border-color: #ffa857;
+  margin-bottom: 20px;
+}
+
+
+/* 이전 다음 부분 */
+.navButton {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+
+/* 이전, 다음 */
+.navButton.disabled {
+  color: white;
+  border-color: #ccc;
+  cursor: not-allowed;
+  background-color: #22CEB1;
+  font-size: 15px;
+  font-weight: bold;
+
+
+}
+
+.createPostBtn {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  color: white;
+  background: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #22CEB1;
+  margin-bottom: 20px; /* 버튼 아래 간격 추가 */
+  margin-left:90%;
+}
+
+.heading {
+  font-weight: bold;
+  font-size: 25px;
+  margin-bottom: 40px; /* 간격 추가 (선택 사항) */
+}

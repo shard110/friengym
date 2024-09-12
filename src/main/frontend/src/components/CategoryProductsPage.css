@@ -1,0 +1,79 @@
+/* 전체 페이지 스타일 */
+.category-products {
+  max-width: 1200px;
+  margin: 0 auto; /* 중앙 정렬 */
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+/* 카테고리별 상품 목록 제목 스타일 */
+.category-products h2 {
+  font-size: 32px;  /* 글씨 크기 더 크게 설정 */
+  font-weight: bold;
+  text-align: center; /* 가운데 정렬 */
+  color: #333;
+  margin-bottom: 40px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+}
+
+/* 상품 목록 스타일 */
+.category-products ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* 카드 레이아웃 적용 */
+  gap: 20px; /* 카드 사이 여백 */
+  padding: 0;
+  list-style: none;
+}
+
+/* 개별 상품 카드 스타일 */
+.category-products li {
+  background-color: #fff;  /* 배경색을 하얗게 */
+  border-radius: 10px;  /* 모서리를 둥글게 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* 부드러운 그림자 효과 */
+  overflow: hidden;
+  transition: transform 0.3s ease;  /* 마우스 호버 시 카드 확대 효과 */
+}
+
+.category-products li:hover {
+  transform: scale(1.05);  /* 카드 확대 효과 */
+}
+
+/* 상품 이미지 스타일 */
+.category-products img {
+  width: 100%;  /* 카드 너비에 맞춰 이미지 크기 조정 */
+  height: 200px;  /* 고정된 높이로 설정하여 일관된 크기 유지 */
+  object-fit: cover;  /* 이미지 비율 유지하며 자르기 */
+}
+
+/* 상품 정보 박스 */
+.category-products li div {
+  padding: 15px;
+  text-align: center;  /* 중앙 정렬 */
+}
+
+/* 상품 이름 스타일 */
+.category-products h3 {
+  font-size: 20px;
+  font-weight: bold;  /* 상품 이름 굵게 */
+  color: #333;
+  margin: 10px 0;
+  transition: color 0.3s ease;
+}
+
+.category-products li:hover h3 {
+  color: #ff6347;  /* 마우스 호버 시 색상 변경 */
+}
+
+/* 상품 가격 스타일 */
+.category-products p {
+  font-size: 18px;
+  color: #777;
+  margin: 0;
+}
+
+/* 가격 텍스트 강조 */
+.category-products p span {
+  font-weight: bold;
+  color: #000;
+}

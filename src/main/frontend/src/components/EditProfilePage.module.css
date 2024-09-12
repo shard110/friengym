@@ -1,0 +1,64 @@
+/* EditProfilePage.module.css */
+
+.EditProfilePage {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 3%;
+  }
+  
+  .EditProfilePage h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .EditProfilePage form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .EditProfilePage label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .EditProfilePage input[type="text"],
+  .EditProfilePage input[type="number"],
+  .EditProfilePage input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .EditProfilePage button {
+    padding: 10px 15px;
+    font-size: 16px;
+    color: white;
+    background-color: #22CEB1;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 30%;
+    margin-left: 35%;
+    margin-top: 10px;
+  }
+  
+  .EditProfilePage button:hover {
+    background-color: #1e9e90;
+  }
+  
+  .EditProfilePage p {
+    color: red;
+    font-size: 16px;
+    text-align: center;
+  }
+  
