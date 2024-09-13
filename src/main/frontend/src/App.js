@@ -31,6 +31,9 @@ import ProductList from './page/ProductList';
 import QnaPage from './page/QnaPage';
 import ReviewPage from './page/ReviewPage';
 
+//관리자용 import
+import AdminHome from './admin/AdminHome';
+
 export default function App() {
   return (
     <AuthProvider>
@@ -59,15 +62,19 @@ export default function App() {
             <Route path="/post/:poNum/comments" element={<CommentList />} />
             <Route path="/post/:poNum/comments/create" element={<CommentCreate />} />
             <Route path="/post/:poNum/comments/:commentNo/edit" element={<CommentEdit />} />
-                          <Route path="/qna" element={<QnaPage />} />
-                        <Route path="/asks" element={<AskPage />} />
-                        <Route path="/asks/view/:anum" element={<ViewAsk />} />
-                        <Route path="/asks/update/:anum" element={<UpdateAsk />} />
-                        <Route path="/reviews" element={<ReviewPage />} />
-                        <Route path="/customer" element={<Customer />} />
-                    </Routes>
-                </div>
-            </Router>
-        </AuthProvider>
-    );
+            <Route path="/qna" element={<QnaPage />} />
+            <Route path="/asks" element={<AskPage />} />
+            <Route path="/asks/view/:anum" element={<ViewAsk />} />
+            <Route path="/asks/update/:anum" element={<UpdateAsk />} />
+            <Route path="/reviews" element={<ReviewPage />} />
+            <Route path="/customer" element={<Customer />} />
+
+            {/* 관리자용 */}
+            <Route path="/adminHome" element={<AdminHome />} />
+
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
+  );
 }
