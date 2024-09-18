@@ -19,7 +19,7 @@ const Footer = () => {
                 </span>
                 <p></p>
                 <span>
-                    <Link to='/admin'>
+                    <Link to='/adminHome'>
                     관리자 로그인
                     </Link>
                 </span>
