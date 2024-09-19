@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../components/AuthContext";
 import "./Gallery.css"; // 새로 정의된 CSS
 
 const Gallery = () => {
@@ -11,7 +11,7 @@ const Gallery = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("/api/posts")
+    fetch("/posts")
       .then((response) => response.json())
       .then((data) => {
         setPosts(data);
@@ -36,19 +36,18 @@ const Gallery = () => {
 
       {posts.length > 0 ? (
         posts.map((post) => (
-          <div className="post" key={post.id}>
-            <div className="post-header">
-              <img
-                src={post.user.photo}
-                alt={post.user.id}
-                className="post-avatar"
-              />
-              <div className="post-user">
-                <span>{post.user.id}</span>
-              </div>
-            </div>
-            <div className="post-content">{post.poContents}</div>
-            {post.fileUrl && (
+            <div className="post-card" key={post.userId}>
+                        <div className="user-info">
+                            {/* post.user가 존재하는지 먼저 확인 */}
+                            {post.user && (
+                                <>
+                                    <img src={post.user.photo || 'default-photo-url'} alt={post.userId} className="user-photo" />
+                                    <span>{post.userId}</span>
+                                </>
+                            )}
+                     </div>
+
+         {post.fileUrl && (
               <div className="post-media">
                 {post.fileUrl.endsWith(".mp4") ? (
                   <video controls className="post-video">
@@ -59,21 +58,24 @@ const Gallery = () => {
                 )}
               </div>
             )}
+
+            <div className="post-content">{post.poContents}</div>
+   
             <div className="post-actions">
               <span>👍 {post.likes}</span>
               <span>👁 {post.viewCnt}</span>
-              {user?.userId === post.user.id && (
+              {user?.userId === post.userId && (
                 <div className="action-buttons">
                   <button
-                    onClick={() => navigate(`/edit-post/${post.id}`)}
+                    onClick={() => navigate(`/edit-post/${post.userId}`)}
                     className="edit-btn"
                   >
                     수정
                   </button>
                   <button
                     onClick={() => {
-                      fetch(`/api/posts/${post.id}`, { method: "DELETE" });
-                      setPosts(posts.filter((p) => p.id !== post.id));
+                      fetch(`/posts/${post.poNum}`, { method: "DELETE" });
+                      setPosts(posts.filter((p) => p.id !== post.userId));
                     }}
                     className="delete-btn"
                   >

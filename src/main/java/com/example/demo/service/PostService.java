@@ -1,25 +1,17 @@
 package com.example.demo.service;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.config.JwtTokenProvider;
 import com.example.demo.dto.CommentRequest;
 import com.example.demo.dto.CommentResponse;
-import com.example.demo.dto.PageDTO; // DTO 클래스 import
 import com.example.demo.dto.PostRequest;
-import com.example.demo.dto.PostResponse;
 import com.example.demo.entity.Comment;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.User;
@@ -143,37 +135,9 @@ public class PostService {
         postRepository.deleteById(poNum);
     }
 
-    // 검색조건
-    public Map<String, Object> getPagedPosts(int page, int size, String search) {
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Order.desc("poDate")));
-        Page<Post> postPage;
 
-        if (search == null || search.isEmpty()) {
-            postPage = postRepository.findAll(pageable);
-        } else {
-            postPage = postRepository.findByPoTitleContainingIgnoreCase(search.trim(), pageable);
-        }
 
-        // 게시글 목록과 댓글 수를 함께 가져오기
-        List<PostResponse> postsWithCommentCount = postPage.getContent().stream()
-                .map(post -> {
-                    int commentCount = commentRepository.countByPost(post);
-                    return new PostResponse(post, commentCount); // 댓글 수 포함
-                })
-                .collect(Collectors.toList());
 
-        PageDTO pageInfo = new PageDTO(
-                page,
-                size,
-                10, // 노출할 페이지 수
-                (int) postPage.getTotalElements());
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("pageInfo", pageInfo);
-        response.put("posts", postsWithCommentCount);
-
-        return response;
-    }
 
     //좋아요 기능
     public Post incrementLikes(Integer poNum) {

@@ -18,7 +18,6 @@ import NewProducts from './components/NewProducts';
 import PopularProductsPage from './components/PopularProductsPage';
 import PostDetail from './components/PostDetail';
 import ProductHome from './components/ProductHome';
-import Recommendations from './components/Recommendations'; // 새로운 추천 페이지 임포트
 import RegisterPage from './components/RegisterPage';
 import UpdateAsk from './components/UpdateAsk';
 import ViewAsk from './components/ViewAsk';
@@ -29,6 +28,7 @@ import MastersList from './page/MastersList';
 import ProductDetail from './page/ProductDetail';
 import ProductList from './page/ProductList';
 import QnaPage from './page/QnaPage';
+import Recommendations from './page/Recommendations'; // 새로운 추천 페이지 임포트
 import ReviewPage from './page/ReviewPage';
 
 export default function App() {
