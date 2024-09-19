@@ -74,7 +74,7 @@ public class PostService {
         String fileUrl = null;
         if (file != null && !file.isEmpty()) {
             try {
-                fileUrl = fileService.saveFile(file);  // 파일을 저장하고 파일 URL을 생성
+                fileUrl = fileService.save(file);  // 파일을 저장하고 파일 URL을 생성
             } catch (IOException e) {
                 e.printStackTrace();
                 // 필요에 따라 로그 기록 및 예외 처리 로직 추가

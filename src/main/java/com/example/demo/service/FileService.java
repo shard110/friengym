@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FileService {
-    String saveFile(MultipartFile file) throws IOException;
+    String save(MultipartFile file) throws IOException;
     Path getFile(String fileName);
-		String save(MultipartFile file);
+	
 }

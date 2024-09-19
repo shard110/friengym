@@ -21,7 +21,7 @@ public class FileServiceImpl implements FileService {
 
     // 파일 저장 메서드 구현
     @Override
-    public String saveFile(MultipartFile file) throws IOException {
+    public String save(MultipartFile file) throws IOException {
         // 저장할 파일 이름 설정 (타임스탬프 + 원래 파일 이름)
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         Path targetPath = Paths.get(filePath + File.separator + fileName).toAbsolutePath().normalize();
