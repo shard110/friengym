@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 
+import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,6 +45,24 @@ public class PostController {
     @Autowired
     private FileService fileService;
 
+    // 모든 게시글 조회
+    @GetMapping
+    public ResponseEntity<List<PostResponse>> getAllPosts() {
+        try {
+            // 모든 게시글 조회
+            List<Post> posts = postService.getAllPosts();
+            // PostResponse로 변환하여 응답
+            List<PostResponse> response = posts.stream()
+                                            .map(PostResponse::new)
+                                            .collect(Collectors.toList());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            // 서버 오류 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+
     // 게시글 작성
     @PostMapping
     public ResponseEntity<PostResponse> createPost(
@@ -51,23 +70,18 @@ public class PostController {
             @RequestHeader("Authorization") String authHeader,
             @RequestPart(value = "file", required = false) MultipartFile file) {
         
-        // 게시글 내용이 비어 있는지 검증
-        if (postRequest.getPoContents() == null || postRequest.getPoContents().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(null);
-        }
-        
-        try {
-            // JWT 토큰에서 사용자 ID 추출
-            String userId = postService.getUserIdFromToken(authHeader);
-            // 게시글 생성
-            Post post = postService.createPost(postRequest, file, userId);
-            PostResponse response = new PostResponse(post);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            // 예외 발생 시 서버 오류 응답
-            e.printStackTrace(); // 로깅 프레임워크 사용 권장
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+        // JWT 토큰에서 사용자 ID 추출
+    String userId = postService.getUserIdFromToken(authHeader);
+
+    try {
+        // 파일과 함께 게시글을 생성
+        Post post = postService.createPost(postRequest, file, userId);
+        PostResponse response = new PostResponse(post);
+        return ResponseEntity.ok(response);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
     }
 
     // 게시글 조회 (조회수 증가)
@@ -126,32 +140,28 @@ public class PostController {
         }
     }
 
-    // 파일 다운로드
+    // 파일 다운로드 및 미리보기 설정
     @GetMapping("/files/{filename:.+}")
-    public ResponseEntity<Resource> getFile(@PathVariable("filename") String filename) {
+    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
         try {
-            // 파일 다운로드 처리
-            Resource file = fileService.getFile(filename);
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-                    .body(file);
+            // 파일 경로에서 파일 가져오기
+            Path filePath = fileService.getFile(filename);
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                // 파일을 성공적으로 찾았을 때
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                throw new RuntimeException("파일을 읽을 수 없습니다.");
+            }
         } catch (Exception e) {
-            // 파일이 존재하지 않을 경우 응답
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
-    // 게시글 목록 조회 (페이징 및 검색)
-    @GetMapping
-    public ResponseEntity<Map<String, Object>> getPosts(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "search", defaultValue = "") String search) {
-
-        // 게시글 목록 조회
-        Map<String, Object> posts = postService.getPagedPosts(page, size, search);
-        return ResponseEntity.ok(posts);
-    }
+  
 
     // 댓글 추가
     @PostMapping("/{poNum}/comments")
@@ -224,7 +234,7 @@ public class PostController {
     private PostRepository postRepository;
 
     @PostMapping("/{poNum}/like")
-public ResponseEntity<Post> likePost(@PathVariable Integer poNum) {
+    public ResponseEntity<Post> likePost(@PathVariable Integer poNum) {
     // poNum을 사용하여 Post를 찾음
     Post post = postRepository.findById(poNum)
             .orElseThrow(() -> new RuntimeException("Post not found"));

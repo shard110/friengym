@@ -17,14 +17,14 @@ import Mypage from './components/Mypage';
 import NewProducts from './components/NewProducts';
 import PopularProductsPage from './components/PopularProductsPage';
 import PostDetail from './components/PostDetail';
-import PostsList from './components/PostsList';
 import ProductHome from './components/ProductHome';
+import Recommendations from './components/Recommendations'; // 새로운 추천 페이지 임포트
 import RegisterPage from './components/RegisterPage';
 import UpdateAsk from './components/UpdateAsk';
 import ViewAsk from './components/ViewAsk';
 import AskPage from './page/AskPage';
-import Board from './page/Board';
 import Cart from './page/Cart';
+import Gallery from './page/Gallery'; // 게시물 갤러리 컴포넌트 임포트
 import MastersList from './page/MastersList';
 import ProductDetail from './page/ProductDetail';
 import ProductList from './page/ProductList';
@@ -39,14 +39,14 @@ export default function App() {
           <NavBar /> {/* NavBar 컴포넌트 추가 */}
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/posts" element={<PostsList />} />
+            <Route path="/recommendations" element={<Recommendations />} />
             <Route path="/products" element={<ProductHome />} />
             <Route path="/categories/:catenum" element={<CategoryProductsPage />} />
             <Route path="/products/popular" element={<PopularProductsPage />} />
             <Route path="/products/new" element={<NewProducts />} />
             <Route path="/masters" element={<MastersList />} />
             <Route path="/cart" element={<Cart />} />
-            <Route path="/board" element={<Board />} />
+            <Route path="/posts" element={<Gallery />} />
             <Route path="/productslist/:pNum" element={<ProductDetail />} />
             <Route path="/productslist" element={<ProductList />} />
             <Route path="/post/:poNum" element={<PostDetail />} />

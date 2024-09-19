@@ -15,7 +15,7 @@ import com.example.demo.entity.User;
 import com.example.demo.service.RecommendationService;
 
 @RestController
-@RequestMapping("/recommendations")
+@RequestMapping("/api/recommendations")
 @CrossOrigin(origins = "http://localhost:3000")
 public class RecommendationController {
 

@@ -2,16 +2,14 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-import styles from './CreatePostForm.module.css'; // CSS 모듈 import
-import Footer from './Footer'; // Footer 컴포넌트 import
+import "./CreatePostForm.css";
 
 const CreatePostForm = () => {
   const { user } = useAuth(); // AuthContext에서 사용자 정보를 가져옵니다
   const navigate = useNavigate();
-  const [poTitle, setpoTitle] = useState("");
   const [poContents, setpoContents] = useState("");
   const [file, setFile] = useState(null);
-  const [message, setMessage] = useState("");
+
 
   // Redirect to login page if not authenticated
   if (!user) {
@@ -23,7 +21,6 @@ const CreatePostForm = () => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("poTitle", poTitle);
     formData.append("poContents", poContents);
     formData.append("userId", user.userId);
     if (file) {
@@ -31,71 +28,38 @@ const CreatePostForm = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/posts",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${
-              user.token || localStorage.getItem("jwtToken")
-            }`,
-          },
-        }
-      );
-      console.log(response.data);
-      setMessage("Post created successfully!");
-      alert("Post created successfully!");
-      setTimeout(() => {
-        navigate("/posts");
-      }, 2000);
+      await axios.post("http://localhost:8080/posts", formData, {
+        headers: {
+          Authorization: `Bearer ${
+            user.token || localStorage.getItem("jwtToken")
+          }`,
+        },
+      });
+      alert("게시글이 성공적으로 작성되었습니다!");
+      navigate("/posts");
     } catch (error) {
-      console.error("An unexpected error occurred:", error);
-      setMessage("An unexpected error occurred.");
-      alert("An unexpected error occurred.");
+      alert("게시글 작성 중 오류가 발생했습니다.");
     }
   };
 
+
   return (
-    <>
-      <div className={styles.container}>
-        <div className={styles.formWrapper}>
-          <form onSubmit={handleSubmit}>
-            <div className={styles.field}>
-              <label className={styles.label}>제목</label>
-              <input
-                type="text"
-                className={styles.inputText}
-                value={poTitle}
-                onChange={(e) => setpoTitle(e.target.value)}
-                required
-              />
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label}>내용</label>
-              <textarea
-                className={styles.textarea}
-                value={poContents}
-                onChange={(e) => setpoContents(e.target.value)}
-                required
-              />
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label}>첨부파일</label>
-              <input
-                type="file"
-                className={styles.inputFile}
-                onChange={(e) => setFile(e.target.files[0])}
-              />
-            </div>
-            <button type="submit" className={styles.button}>게시글 등록</button>
-            {message && <p className={styles.message}>{message}</p>}
-          </form>
-        </div>
-      </div>
-      <Footer /> {/* Footer 추가 */}
-    </>
-  );
+    <div className="create-post-form">
+    <form onSubmit={handleSubmit}>
+      <textarea
+        value={poContents}
+        onChange={(e) => setpoContents(e.target.value)}
+        placeholder="무엇이든 이야기 해보자!"
+        required
+      />
+      <input
+        type="file"
+        onChange={(e) => setFile(e.target.files[0])}
+      />
+      <button type="submit">게시글 등록</button>
+    </form>
+  </div>
+);
 };
 
 export default CreatePostForm;

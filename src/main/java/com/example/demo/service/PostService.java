@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,11 @@ public class PostService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    // 모든 게시글 조회 메서드
+    public List<Post> getAllPosts() {
+        return postRepository.findAll(); // 모든 게시글을 조회
+    }
+
     // JWT 토큰에서 사용자 ID 추출
     public String getUserIdFromToken(String authHeader) {
         String token = authHeader.replace("Bearer ", "");
@@ -61,30 +67,31 @@ public class PostService {
                 .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
-    // 게시글 작성
     public Post createPost(PostRequest postRequest, MultipartFile file, String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
-        // 검증 추가
-        if (postRequest.getPoContents() == null || postRequest.getPoContents().trim().isEmpty()) {
-            throw new IllegalArgumentException("Post contents cannot be null or empty");
-        }
-        Post post = new Post();
-        post.setPoTitle(postRequest.getPoTitle());
-        post.setPoContents(postRequest.getPoContents());
-        post.setUser(user);
-
+    
         String fileUrl = null;
         if (file != null && !file.isEmpty()) {
             try {
-                fileUrl = fileService.save(file);
-            } catch (Exception e) {
-                throw new RuntimeException("File save failed", e);
+                fileUrl = fileService.saveFile(file);  // 파일을 저장하고 파일 URL을 생성
+            } catch (IOException e) {
+                e.printStackTrace();
+                // 필요에 따라 로그 기록 및 예외 처리 로직 추가
+                throw new RuntimeException("파일 저장에 실패했습니다.", e);  // 적절한 예외를 던져 처리
             }
         }
-        post.setFileUrl(fileUrl);
-        return postRepository.save(post);
+    
+        // Post 객체 생성 및 저장
+        Post post = new Post();
+        post.setUserId(userId);
+        post.setPoContents(postRequest.getPoContents());
+        post.setFileUrl(fileUrl);  // 파일 URL을 저장
+        postRepository.save(post);
+    
+        return post;
     }
+    
 
     public Post getPostById(Integer poNum) {
         incrementViewCount(poNum);
