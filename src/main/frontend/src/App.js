@@ -70,7 +70,7 @@ export default function App() {
             <Route path="/customer" element={<Customer />} />
 
             {/* 관리자용 */}
-            <Route path="/adminHome" element={<AdminHome />} />
+            <Route path="/adminHome/*" element={<AdminHome />} />
 
           </Routes>
         </div>
