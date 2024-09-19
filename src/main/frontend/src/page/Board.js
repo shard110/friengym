@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function Board() {
   const [posts, setPosts] = useState([]);
   const [currentPost, setCurrentPost] = useState({ title: '', username: '', content: '' });
   const [isEditing, setIsEditing] = useState(false);
   const [editPostId, setEditPostId] = useState(null);
+  const [hashtags, setHashtags] = useState([]);
 
   // 서버에서 모든 게시글을 가져오는 함수
   const fetchPosts = async () => {
@@ -29,6 +30,9 @@ function Board() {
     if (response.ok) {
       fetchPosts();
       setCurrentPost({ title: '', username: '', content: '' });
+      const handleAddHashtag = (tag) => {
+        setHashtags([...hashtags, tag]);
+    }
       setIsEditing(false);
       setEditPostId(null);
     }

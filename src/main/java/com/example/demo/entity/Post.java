@@ -1,9 +1,14 @@
 package com.example.demo.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,9 +23,6 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Data
 @NoArgsConstructor
@@ -53,9 +55,12 @@ public class Post {
     @Column(name = "fileUrl", length = 500) // 파일 URL 컬럼 추가
     private String fileUrl;
 
+    @Column(name = "likes", nullable = false)
+    private int likes = 0;
+
+
     @ManyToOne // 다대일 관계를 설정합니다.
     @JoinColumn(name = "id", nullable = false) // 외래키 컬럼 이름
-
     private User user; // 작성자 (User 엔티티와 연결)
 
     @Transient
@@ -84,5 +89,8 @@ public class Post {
     public void onUpdate() {
         this.updatedDate = LocalDateTime.now();
     }
+
+     @ElementCollection
+    private List<String> hashtags = new ArrayList<>();
 
 }

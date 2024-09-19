@@ -1,5 +1,10 @@
 package com.example.demo.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,17 +21,12 @@ import com.example.demo.dto.PostRequest;
 import com.example.demo.dto.PostResponse;
 import com.example.demo.entity.Comment;
 import com.example.demo.entity.Post;
+import com.example.demo.entity.User;
 import com.example.demo.exception.PostNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
-import com.example.demo.entity.User;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
-import java.util.stream.Collectors;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
 
 @Service
 public class PostService {
@@ -166,6 +166,14 @@ public class PostService {
         response.put("posts", postsWithCommentCount);
 
         return response;
+    }
+
+    //좋아요 기능
+    public Post incrementLikes(Integer poNum) {
+        Post post = postRepository.findById(poNum)
+                .orElseThrow(() -> new PostNotFoundException(poNum));
+        post.setLikes(post.getLikes() + 1);
+        return postRepository.save(post);
     }
 
     ////////////////////////////////////////////
