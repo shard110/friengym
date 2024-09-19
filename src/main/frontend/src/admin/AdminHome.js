@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Router import
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ManagerBar from './ManagerBar';
-import UserList from './UserList'; // UserList import
+import Shop from './Shop';
 
 const AdminHome = () => {
   const [aid, setAid] = useState('');
@@ -10,19 +10,38 @@ const AdminHome = () => {
   const [message, setMessage] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    // 컴포넌트가 마운트될 때 로컬 스토리지에서 토큰 확인
+    const token = localStorage.getItem('adminToken');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:8080/api/admin/login', { aid, apwd });
+
+      console.log(response.data);
+
       if (response.data.success) {
+        localStorage.setItem('adminToken', response.data.token);
         setMessage('안녕하세요 관리자님');
         setIsLoggedIn(true);
       } else {
         setMessage('로그인 실패. 아이디와 비밀번호를 확인하세요.');
       }
     } catch (error) {
+      console.error(error);
       setMessage('서버 오류. 다시 시도하세요.');
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken');
+    setIsLoggedIn(false);
+    setMessage('로그아웃 되었습니다.');
   };
 
   return (
@@ -57,11 +76,10 @@ const AdminHome = () => {
         </>
       ) : (
         <>
-            <ManagerBar />
-            <Routes>
-              <Route path="/user" element={<UserList />} /> {/* 유저 목록 페이지 */}
-              {/* 다른 라우트 추가 가능 */}
-            </Routes>
+          <ManagerBar onLogout={handleLogout} />
+          <Routes>
+            <Route path="shop" element={<Shop />} />
+          </Routes>
         </>
       )}
     </div>
