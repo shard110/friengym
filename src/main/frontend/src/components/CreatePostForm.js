@@ -9,13 +9,25 @@ const CreatePostForm = () => {
   const navigate = useNavigate();
   const [poContents, setpoContents] = useState("");
   const [file, setFile] = useState(null);
-
+  const [filePreview, setFilePreview] = useState(null); // 미리보기 상태
 
   // Redirect to login page if not authenticated
   if (!user) {
     navigate("/login");
     return null; // Return null while navigating
   }
+
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+
+    // 파일이 이미지거나 동영상인 경우 미리보기 설정
+    if (selectedFile) {
+      const fileUrl = URL.createObjectURL(selectedFile);
+      setFilePreview(fileUrl); // 미리보기 URL 설정
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,10 +64,16 @@ const CreatePostForm = () => {
         placeholder="무엇이든 이야기 해보자!"
         required
       />
-      <input
-        type="file"
-        onChange={(e) => setFile(e.target.files[0])}
-      />
+       <input type="file" onChange={handleFileChange} />
+
+       {filePreview && (
+        <div>
+          {/* 파일 미리보기 설정 */}
+          {file.type.startsWith("image/") && <img src={filePreview} alt="미리보기" style={{ width: "100%", maxHeight: "300px" }} />}
+          {file.type.startsWith("video/") && <video src={filePreview} controls style={{ width: "100%", maxHeight: "300px" }} />}
+        </div>
+      )}
+
       <button type="submit">게시글 등록</button>
     </form>
   </div>

@@ -34,9 +34,6 @@ public class Post {
     @Column(name = "ponum") // 데이터베이스 컬럼 이름
     private Integer poNum; // 게시글 번호
 
-    @Column(name = "poTitle", nullable = false, length = 100)
-    private String poTitle;
-
     @Column(name = "poContents", nullable = false, length = 4000)
     private String poContents;
 
@@ -72,8 +69,8 @@ public class Post {
     private List<Comment> comments;
 
     // 생성자
-    public Post(String poTitle, String poContents, User user) {
-        this.poTitle = poTitle;
+    public Post( String poContents, User user) {
+   
         this.poContents = poContents;
         this.user = user; // User 객체 설정
         this.poDate = LocalDateTime.now();

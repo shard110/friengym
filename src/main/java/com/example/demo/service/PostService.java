@@ -76,6 +76,7 @@ public class PostService {
     
         // Post 객체 생성 및 저장
         Post post = new Post();
+        post.setUser(user);
         post.setUserId(userId);
         post.setPoContents(postRequest.getPoContents());
         post.setFileUrl(fileUrl);  // 파일 URL을 저장
@@ -107,7 +108,6 @@ public class PostService {
             throw new IllegalArgumentException("User not authorized to update this post");
         }
 
-        post.setPoTitle(postRequest.getPoTitle());
         post.setPoContents(postRequest.getPoContents());
 
         if (file != null && !file.isEmpty()) {

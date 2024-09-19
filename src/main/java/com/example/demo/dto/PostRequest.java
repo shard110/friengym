@@ -12,9 +12,6 @@ public class PostRequest {
         return poTitle;
     }
 
-    public void setPoTitle(String poTitle) {
-        this.poTitle = poTitle;
-    }
 
     public String getPoContents() {
         return poContents;
@@ -26,7 +23,6 @@ public class PostRequest {
 
     public Post toPost(User user) {
         Post post = new Post();
-        post.setPoTitle(this.poTitle);
         post.setPoContents(this.poContents);
         post.setUser(user);
         return post;

@@ -7,7 +7,7 @@ import CategoryProductsPage from './components/CategoryProductsPage';
 import CommentCreate from './components/CommentCreate';
 import CommentEdit from './components/CommentEdit';
 import CommentList from './components/CommentList';
-import CreatePost from "./components/CreatePost";
+import CreatePost from "./components/CreatePostForm";
 import Customer from './components/Customer';
 import EditPost from './components/EditPost';
 import EditProfilePage from './components/EditProfilePage';
@@ -51,7 +51,7 @@ export default function App() {
             <Route path="/productslist" element={<ProductList />} />
             <Route path="/post/:poNum" element={<PostDetail />} />
             <Route path="/create-post" element={<CreatePost />} />
-            <Route path="/edit/:poNum" element={<EditPost />} />
+            <Route path="/edit-post/:poNum" element={<EditPost />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/mypage" element={<Mypage />} />
