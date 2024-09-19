@@ -14,6 +14,7 @@ import com.example.demo.dto.ProductListDTO;
 import com.example.demo.dto.ProductResponseDTO;
 import com.example.demo.entity.Product;
 import com.example.demo.repository.ProductRepository;
+import com.example.demo.repository.CategoryRepository; // 카테고리 레포지토리 추가
 
 @Service
 public class ProductService {
@@ -21,6 +22,9 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
     
+    @Autowired
+    private CategoryRepository categoryRepository; // 카테고리 레포지토리 추가
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -41,6 +45,19 @@ public class ProductService {
 
     // 상품 저장 또는 업데이트
     public Product saveOrUpdateProduct(Product product) {
+        // 업데이트 전 pcate 값 로그 출력
+        System.out.println("Before update: pcate = " + product.getPcate());
+
+        // pcate 값 체크
+        if (product.getPcate() == null) {
+            throw new IllegalArgumentException("pcate cannot be null");
+        }
+
+        // 카테고리 존재 여부 체크
+        if (!categoryRepository.existsById(product.getPcate())) {
+            throw new IllegalArgumentException("Invalid pcate: " + product.getPcate());
+        }
+
         return productRepository.save(product);
     }
 
@@ -70,8 +87,6 @@ public class ProductService {
             product.setpImg(rs.getString("pImg"));
             product.setpDate(rs.getDate("pDate"));
             product.setpIntro(rs.getString("pIntro"));
-            
-
             return product;
         });
     }
@@ -92,7 +107,7 @@ public class ProductService {
         }, limit);
     }
 
-     // 지난 한 달 동안의 상품 가져오기    
+    // 지난 한 달 동안의 상품 가져오기    
     public List<Product> findProductsFromLastMonth() {
         LocalDate oneMonthAgo = LocalDate.now().minusMonths(1);
         String sql = "SELECT * FROM product WHERE pDate >= ? ORDER BY pDate DESC";
@@ -110,12 +125,12 @@ public class ProductService {
     }
 
     // 카테고리별 상품을 ProductResponseDTO로 반환
-public List<ProductResponseDTO> findProductsByCategory(int catenum) {
-    List<Product> products = productRepository.findByCategory(catenum);
-    return products.stream()
-                   .map(ProductResponseDTO::new)
-                   .collect(Collectors.toList());
-}
+    public List<ProductResponseDTO> findProductsByCategory(int catenum) {
+        List<Product> products = productRepository.findByCategory(catenum);
+        return products.stream()
+                       .map(ProductResponseDTO::new)
+                       .collect(Collectors.toList());
+    }
 
     // 검색
     public List<ProductListDTO> searchProducts(String keyword) {
