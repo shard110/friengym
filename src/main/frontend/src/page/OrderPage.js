@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
-import * as PortOne from "@portone/browser-sdk/v2";
+import PortOne from "@portone/browser-sdk/v2";
 
 //import './OrderPage.css';
 
@@ -39,7 +39,38 @@ const OrderPage = () => {
             fetchCartItems();
         }
     }, [user]);
-    
+
+    const handlePayment = async () => {
+        try {
+            const response = await axios.post('/api/payment/request', {
+                amount: totalPrice,
+                orderId: `order_${new Date().getTime()}`,
+                // 기타 결제 정보 추가
+            });
+            const paymentResponse = response.data;
+
+            const portone = new PortOne('your_api_key'); // 포트원 API 키를 입력하세요
+
+            portone.requestPayment({
+                amount: totalPrice,
+                order_id: `order_${new Date().getTime()}`, // 고유한 주문 ID 생성
+                // 기타 결제 정보 추가
+            }, (response) => {
+                if (response.success) {
+                    // 결제 성공 처리
+                    alert('결제가 성공적으로 완료되었습니다.');
+                    navigate('/order-success'); // 결제 성공 페이지로 이동
+                } else {
+                    // 결제 실패 처리
+                    alert(`결제 실패: ${response.error_msg}`);
+                }
+            });
+        } catch (error) {
+            console.error('결제 요청 중 오류 발생:', error);
+            alert('결제 요청 중 오류가 발생했습니다.');
+        }
+    };
+
     return (
         <div className="cart">
             <h2>주문서</h2>
@@ -92,7 +123,7 @@ const OrderPage = () => {
             <p>신용카드</p>
             <p>무통장입금</p>
             <p>만나서 결제</p>
-            <button>구매하기</button>
+            <button onClick={handlePayment}>구매하기</button>
         </div>
     );
 };
