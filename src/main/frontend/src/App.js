@@ -41,7 +41,7 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/posts" element={<Gallery />} />
             <Route path="/create-post" element={<CreatePost />} />
-            <Route path="/post/:poNum" element={<PostDetail />} />
+            <Route path="/posts/:poNum" element={<PostDetail />} />
             <Route path="/edit-post/:poNum" element={<EditPost />} />
             <Route path="/post/:poNum/comments" element={<CommentList />} />
             <Route path="/post/:poNum/comments/create" element={<CommentCreate />} />

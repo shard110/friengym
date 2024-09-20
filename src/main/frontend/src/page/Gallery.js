@@ -39,14 +39,14 @@ const Gallery = () => {
           <div
             className="post-card"
             key={post.poNum}
-            onClick={() => navigate(`/posts/${post.poNum}`)}  // 게시글 클릭 시 상세 페이지로 이동
-            style={{ cursor: "pointer" }}  // 클릭 가능한 스타일 추가
+            onClick={() => navigate(`/posts/${post.poNum}`)} // 게시글 클릭 시 상세 페이지로 이동
+            style={{ cursor: "pointer" }} // 클릭 가능한 스타일 추가
           >
             <div className="user-info">
               {post.user ? (
                 <>
                   <img
-                    src={post.user.photo || "default-photo-url"}  // 기본 프로필 이미지 설정
+                    src={post.user.photo || "default-photo-url"} // 기본 프로필 이미지 설정
                     alt={post.user.id}
                     className="user-photo"
                   />
@@ -78,7 +78,7 @@ const Gallery = () => {
                 <div className="action-buttons">
                   <button
                     onClick={(e) => {
-                      e.stopPropagation();  // 클릭 이벤트 전파 방지
+                      e.stopPropagation(); // 클릭 이벤트 전파 방지
                       navigate(`/edit-post/${post.poNum}`);
                     }}
                     className="edit-btn"
@@ -86,15 +86,35 @@ const Gallery = () => {
                     수정
                   </button>
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();  // 클릭 이벤트 전파 방지
-                      fetch(`/posts/${post.poNum}`, { method: "DELETE" });
-                      setPosts(posts.filter((p) => p.poNum !== post.poNum)); // 게시글 삭제 후 목록 갱신
-                    }}
-                    className="delete-btn"
-                  >
-                    삭제
-                  </button>
+              onClick={(e) => {
+                e.stopPropagation(); // 클릭 이벤트 전파 방지
+
+                // JWT 토큰 가져오기 (예시: localStorage에서 가져옴)
+                const token = localStorage.getItem('jwtToken'); 
+
+                fetch(`/posts/${post.poNum}`, {
+                  method: "DELETE",
+                  headers: {
+                    'Authorization': `Bearer ${token}`,  // Authorization 헤더 추가
+                    'Content-Type': 'application/json'
+                  }
+                })
+                  .then((response) => {
+                    if (!response.ok) {
+                      throw new Error("게시글 삭제에 실패했습니다.");
+                    }
+                    setPosts(posts.filter((p) => p.poNum !== post.poNum)); // 게시글 삭제 후 목록 갱신
+                  })
+                  .catch((error) => {
+                    console.error("Error deleting post:", error);
+                    alert("게시글 삭제에 실패했습니다.");
+                  });
+              }}
+              className="delete-btn"
+            >
+              삭제
+            </button>
+
                 </div>
               )}
             </div>

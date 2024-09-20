@@ -119,26 +119,26 @@ public class PostController {
         }
     }
 
-    // 게시글 삭제
-    @DeleteMapping("/{poNum}")
-    public ResponseEntity<String> deletePost(
-            @PathVariable("poNum") Integer poNum,
-            @RequestHeader("Authorization") String authHeader) {
-        try {
-            // JWT 토큰에서 사용자 ID 추출
-            String userId = postService.getUserIdFromToken(authHeader);
-            // 게시글 삭제
-            postService.deletePost(poNum, userId);
-            return ResponseEntity.ok("Post with ID " + poNum + " has been deleted successfully.");
-        } catch (IllegalArgumentException e) {
-            // 권한 오류 시 응답
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this post.");
-        } catch (Exception e) {
-            // 서버 오류 발생 시 응답
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred while deleting the post.");
-        }
+  // 게시글 삭제
+@DeleteMapping("/{poNum}")
+public ResponseEntity<String> deletePost(
+        @PathVariable("poNum") Integer poNum,
+        @RequestHeader("Authorization") String authHeader) {
+    try {
+        // JWT 토큰에서 사용자 ID 추출
+        String userId = postService.getUserIdFromToken(authHeader);
+        // 게시글 삭제
+        postService.deletePost(poNum, userId);
+        return ResponseEntity.ok("Post with ID " + poNum + " has been deleted successfully.");
+    } catch (IllegalArgumentException e) {
+        // 권한 오류 시 응답
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this post.");
+    } catch (Exception e) {
+        // 서버 오류 발생 시 응답
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("An error occurred while deleting the post.");
     }
+}
 
     // 파일 다운로드 및 미리보기 설정
     @GetMapping("/files/{filename:.+}")
