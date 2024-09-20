@@ -30,6 +30,7 @@ import ProductDetail from './page/ProductDetail';
 import ProductList from './page/ProductList';
 import QnaPage from './page/QnaPage';
 import ReviewPage from './page/ReviewPage';
+import OrderPage from './page/OrderPage';
 
 export default function App() {
   return (
@@ -50,6 +51,7 @@ export default function App() {
             <Route path="/productslist/:pNum" element={<ProductDetail />} />
             <Route path="/productslist" element={<ProductList />} />
             <Route path="/post/:poNum" element={<PostDetail />} />
+            <Route path="/order" element={<OrderPage />} /> {/* OrderPage 라우트 추가 */}
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/edit/:poNum" element={<EditPost />} />
             <Route path="/login" element={<LoginPage />} />

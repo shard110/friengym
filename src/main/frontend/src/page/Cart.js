@@ -1,11 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; // Link 컴포넌트 추가
+import { Link, useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
 import { useAuth } from '../components/AuthContext'; // useAuth 훅 추가
 import './Cart.css';
 
 const Cart = () => {
     const { user, loading } = useAuth(); // useAuth 훅 사용
+    const navigate = useNavigate(); // useNavigate 훅 사용
     const [cartItems, setCartItems] = useState([]);
 
     useEffect(() => {
@@ -72,6 +73,10 @@ const Cart = () => {
         }
     };
 
+    const handleBuyNow = () => {
+        navigate('/order');
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -121,6 +126,7 @@ const Cart = () => {
                     </tbody>
                 </table>
             )}
+            <button onClick={handleBuyNow}>구매하기</button>
         </div>
     );
 };
