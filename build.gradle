@@ -39,6 +39,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    //WebSocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    
+
+
     // Lombok (compile-time code generation)
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
