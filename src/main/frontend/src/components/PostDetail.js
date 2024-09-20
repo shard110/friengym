@@ -37,12 +37,20 @@ const PostDetail = () => {
   // 댓글 추가 핸들러
   const handleAddComment = () => {
     if (!newComment.trim()) return;
-
+  
+    // localStorage에서 JWT 토큰 가져오기
+    const token = localStorage.getItem('token'); 
+  
+    if (!token) {
+      setError("로그인이 필요합니다.");
+      return;
+    }
+  
     fetch(`/posts/${poNum}/comments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,  // 사용자 인증 토큰 포함
+        Authorization: `Bearer ${token}`,  // JWT 토큰을 Authorization 헤더에 추가
       },
       body: JSON.stringify({
         comment: newComment,
@@ -57,7 +65,7 @@ const PostDetail = () => {
         setError("댓글을 추가하는 데 실패했습니다.");
       });
   };
-
+  
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
 
