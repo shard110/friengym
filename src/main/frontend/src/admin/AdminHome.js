@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ManagerBar from './ManagerBar';
+import UserList from './UserList'; // UserList 컴포넌트 임포트
 
 const AdminHome = () => {
   const [aid, setAid] = useState('');
@@ -77,7 +78,7 @@ const AdminHome = () => {
         <>
           <ManagerBar onLogout={handleLogout} />
           <Routes>
-            
+            <Route path="/user" element={<UserList />} /> {/* UserList 경로 추가 */}
           </Routes>
         </>
       )}
