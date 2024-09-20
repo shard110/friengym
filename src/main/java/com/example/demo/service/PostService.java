@@ -86,10 +86,12 @@ public class PostService {
     }
     
 
+
+ // 게시글 조회 메서드
     public Post getPostById(Integer poNum) {
         incrementViewCount(poNum);
         return postRepository.findById(poNum)
-                .orElseThrow(() -> new PostNotFoundException(poNum));
+                .orElseThrow(() -> new PostNotFoundException(poNum));// 게시글이 없으면 예외 발생
     }
 
     public void incrementViewCount(Integer poNum) {

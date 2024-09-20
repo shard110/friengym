@@ -39,32 +39,36 @@ export default function App() {
           <NavBar /> {/* NavBar 컴포넌트 추가 */}
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/posts" element={<Gallery />} />
+            <Route path="/create-post" element={<CreatePost />} />
+            <Route path="/post/:poNum" element={<PostDetail />} />
+            <Route path="/edit-post/:poNum" element={<EditPost />} />
+            <Route path="/post/:poNum/comments" element={<CommentList />} />
+            <Route path="/post/:poNum/comments/create" element={<CommentCreate />} />
+            <Route path="/post/:poNum/comments/:commentNo/edit" element={<CommentEdit />} />
             <Route path="/recommendations" element={<Recommendations />} />
+
             <Route path="/products" element={<ProductHome />} />
             <Route path="/categories/:catenum" element={<CategoryProductsPage />} />
             <Route path="/products/popular" element={<PopularProductsPage />} />
             <Route path="/products/new" element={<NewProducts />} />
-            <Route path="/masters" element={<MastersList />} />
             <Route path="/cart" element={<Cart />} />
-            <Route path="/posts" element={<Gallery />} />
             <Route path="/productslist/:pNum" element={<ProductDetail />} />
             <Route path="/productslist" element={<ProductList />} />
-            <Route path="/post/:poNum" element={<PostDetail />} />
-            <Route path="/create-post" element={<CreatePost />} />
-            <Route path="/edit-post/:poNum" element={<EditPost />} />
+            <Route path="/reviews" element={<ReviewPage />} />
+
+            <Route path="/masters" element={<MastersList />} />
+       
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/mypage" element={<Mypage />} />
             <Route path="/edit-profile" element={<EditProfilePage />} />
-            <Route path="/post/:poNum/comments" element={<CommentList />} />
-            <Route path="/post/:poNum/comments/create" element={<CommentCreate />} />
-            <Route path="/post/:poNum/comments/:commentNo/edit" element={<CommentEdit />} />
-                          <Route path="/qna" element={<QnaPage />} />
-                        <Route path="/asks" element={<AskPage />} />
-                        <Route path="/asks/view/:anum" element={<ViewAsk />} />
-                        <Route path="/asks/update/:anum" element={<UpdateAsk />} />
-                        <Route path="/reviews" element={<ReviewPage />} />
-                        <Route path="/customer" element={<Customer />} />
+      
+            <Route path="/qna" element={<QnaPage />} />
+            <Route path="/asks" element={<AskPage />} />
+            <Route path="/asks/view/:anum" element={<ViewAsk />} />
+            <Route path="/asks/update/:anum" element={<UpdateAsk />} />
+            <Route path="/customer" element={<Customer />} />
                     </Routes>
                 </div>
             </Router>

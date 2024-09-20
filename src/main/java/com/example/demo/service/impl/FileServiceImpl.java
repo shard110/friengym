@@ -33,7 +33,8 @@ public class FileServiceImpl implements FileService {
         Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 
         // 저장된 파일의 경로 반환 (프론트엔드에서 접근할 수 있도록 상대 경로)
-        return fileName;
+        return "/files/" + fileName;
+
     }
 
     // 파일 가져오는 메서드 구현
