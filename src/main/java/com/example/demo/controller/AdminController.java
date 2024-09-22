@@ -69,4 +69,17 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable String id) {
+        try {
+            userRepository.deleteById(id); // 여기서 오류 발생
+            return ResponseEntity.ok("User deleted successfully.");
+        } catch (Exception e) {
+            e.printStackTrace(); // 오류 내용 확인
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting user.");
+        }
+    }
+
+
 }
