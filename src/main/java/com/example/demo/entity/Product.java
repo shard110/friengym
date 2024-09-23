@@ -28,17 +28,15 @@ public class Product {
   private String pIntro;
   private String pImgUrl;
   private String pDetailImgUrl;
-  private int pCate;
+  private Integer pcate; // Integer로 수정하여 null을 허용하게 함
   
   @ManyToOne
   @JoinColumn(name = "pcate", referencedColumnName = "catenum", insertable = false, updatable = false)
   private Category category;
 
-
   public Category getCategory() {
     return this.category;
-}
-
+  }
 
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Dorder> dorders = new ArrayList<>();
@@ -115,12 +113,12 @@ public class Product {
     this.pDetailImgUrl = pDetailImgUrl;
   }
 
-  public int getpCate() {
-    return this.pCate;
+  public Integer getPcate() { // Integer로 변경
+    return this.pcate;
   }
 
-  public void setpCate(int pCate) {
-    this.pCate = pCate;
+  public void setPcate(Integer pcate) { // Integer로 변경
+    this.pcate = pcate;
   }
 
   public List<Dorder> getDorders() {
