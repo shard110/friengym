@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.Ask; // Ask 엔티티 임포트
+import com.example.demo.repository.AskRepository; // AskRepository 임포트
 import com.example.demo.entity.User; // User 엔티티 임포트
 import com.example.demo.repository.UserRepository; // UserRepository 임포트
 import io.jsonwebtoken.Jwts;
@@ -23,12 +25,16 @@ public class AdminController {
     private String secretKey;
 
     private final UserRepository userRepository;
+    private final AskRepository askRepository;
 
     @Autowired
-    public AdminController(UserRepository userRepository) {
-        this.userRepository = userRepository; // UserRepository 주입
+    public AdminController(UserRepository userRepository, AskRepository askRepository) {
+        this.userRepository = userRepository;
+        this.askRepository = askRepository;
     }
 
+
+    // 관리자 로그인
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> payload) {
         String aid = payload.get("aid");
@@ -58,6 +64,7 @@ public class AdminController {
         }
     }
 
+    // 사용자 목록
     @GetMapping("/users")
     public ResponseEntity<List<User>> getUsers() {
         try {
@@ -70,6 +77,7 @@ public class AdminController {
         }
     }
 
+    // 사용자 삭제
     @DeleteMapping("/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable String id) {
         try {
@@ -81,5 +89,30 @@ public class AdminController {
         }
     }
 
+    // 모든 문의글 조회
+    @GetMapping("/asks")
+    public ResponseEntity<List<Ask>> getAsks() {
+        try {
+            List<Ask> asks = askRepository.findAll(); // 모든 문의글 가져오기
+            System.out.println("Retrieved asks: " + asks);
+            return ResponseEntity.ok(asks);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 
+    // 특정 문의글 조회
+    @GetMapping("/asks/{id}")
+    public ResponseEntity<Ask> getAskById(@PathVariable int id) {
+        try {
+            Ask ask = askRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("문의글을 찾을 수 없습니다."));
+            return ResponseEntity.ok(ask);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+    
 }

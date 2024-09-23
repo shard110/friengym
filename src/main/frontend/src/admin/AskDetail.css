@@ -1,0 +1,35 @@
+/* AskDetail.css */
+
+.ask-detail-container {
+  padding: 30px;
+  max-width: 800px;
+  margin: 40px auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.ask-detail-container:hover {
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+}
+
+h2 {
+  color: #343a40;
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 18px;
+  line-height: 1.6;
+  margin: 15px 0;
+  color: #555;
+}
+
+strong {
+  color: #007bff; /* 제목 강조 색상 */
+  font-weight: bold;
+}
