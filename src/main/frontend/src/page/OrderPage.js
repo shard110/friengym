@@ -49,7 +49,7 @@ const OrderPage = () => {
             });
             const paymentResponse = response.data;
 
-            const portone = new PortOne('your_api_key'); // 포트원 API 키를 입력하세요
+            const portone = new PortOne(process.env.REACT_APP_PORTONE_API_KEY); // 포트원 API 키
 
             portone.requestPayment({
                 amount: totalPrice,

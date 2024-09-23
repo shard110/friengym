@@ -1,13 +1,24 @@
+package com.example.demo.service;
+
 import okhttp3.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import com.example.demo.model.PaymentRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 
 @Service
 public class PaymentService {
 
-    private final String API_URL = "https://api.portone.io/v2";
-    private final String API_KEY = "your_api_key";
-    private final String API_SECRET = "your_api_secret";
+    @Value("${portone.api.url}")
+    private String apiUrl;
+
+    @Value("${portone.api.key}")
+    private String apiKey;
+
+    @Value("${portone.api.secret}")
+    private String apiSecret;
+
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -21,7 +32,7 @@ public class PaymentService {
             .build();
 
         Request request = new Request.Builder()
-            .url(API_URL + "/payments")
+            .url(apiUrl + "/payments")
             .post(body)
             .addHeader("Authorization", "Bearer " + accessToken)
             .build();
@@ -34,12 +45,12 @@ public class PaymentService {
 
     private String getAccessToken() throws IOException {
         RequestBody body = new FormBody.Builder()
-            .add("api_key", API_KEY)
-            .add("api_secret", API_SECRET)
+            .add("api_key", apiKey)
+            .add("api_secret", apiSecret)
             .build();
 
         Request request = new Request.Builder()
-            .url(API_URL + "/auth/token")
+            .url(apiUrl + "/auth/token")
             .post(body)
             .build();
 
