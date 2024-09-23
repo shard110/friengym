@@ -43,8 +43,11 @@ const Shop = () => {
       const formData = new FormData();
       formData.append('file', imageFile);
       await axios.post(`http://localhost:8080/api/products/${newProduct.pcate}/uploadImage`, formData);
-      imgUrl = `/images/${imageFile.name}`; // 이미지 URL 설정
+      imgUrl = `/images/${imageFile.name}?t=${Date.now()}`; // 이미지 URL 설정
     }
+
+    console.log("상품 추가/수정 시 새로운 이미지 URL:", imgUrl);
+    console.log("새로운 상품 데이터:", { ...newProduct, pImgUrl: imgUrl });
 
     try {
       const response = await axios.post('http://localhost:8080/api/products', { ...newProduct, pImgUrl: imgUrl });
@@ -64,7 +67,7 @@ const Shop = () => {
       name: product.pName,
       price: product.pPrice,
       pcate: product.pcate,
-      count: product.pCount
+      count: product.pCount,
     });
     setImageFile(null); // 파일 초기화
   };
@@ -73,25 +76,40 @@ const Shop = () => {
     e.preventDefault();
     let imgUrl = editingProduct.pImgUrl; // 기존 이미지 URL 사용
 
-    // 이미지 파일이 선택된 경우
+    // 새로운 이미지 파일이 선택된 경우
     if (imageFile) {
       const formData = new FormData();
       formData.append('file', imageFile);
-      await axios.post(`http://localhost:8080/api/products/${editingProduct.pNum}/uploadImage`, formData);
-      imgUrl = `/images/${imageFile.name}`; // 새로운 이미지 URL 설정
+      
+      try {
+        const response = await axios.post(`http://localhost:8080/api/products/${editingProduct.pNum}/uploadImage`, formData);
+        imgUrl = response.data.pImgUrl; // 서버에서 새로운 이미지 URL 받아오기
+        imgUrl += `?t=${Date.now()}`; // 캐시 방지
+      } catch (error) {
+        console.error(error);
+        setMessage('이미지 업로드에 실패했습니다.');
+        return; // 에러 발생 시 더 이상 진행하지 않음
+      }
     }
+
+    console.log("상품 추가/수정 시 새로운 이미지 URL:", imgUrl);
+    console.log("새로운 상품 데이터:", { ...newProduct, pImgUrl: imgUrl });
 
     try {
       const updatedProduct = {
         pNum: editingProduct.pNum,
         pName: newProduct.name,
         pPrice: newProduct.price,
-        pImgUrl: imgUrl, // 이미지 URL을 업데이트
+        pImgUrl: imgUrl,
         pcate: newProduct.pcate,
-        pCount: newProduct.count
+        pCount: newProduct.count,
       };
-      const response = await axios.put(`http://localhost:8080/api/products/${editingProduct.pNum}`, updatedProduct);
-      setProducts(products.map((prod) => (prod.pNum === editingProduct.pNum ? response.data : prod)));
+      
+      await axios.put(`http://localhost:8080/api/products/${editingProduct.pNum}`, updatedProduct);
+      
+      const updatedProducts = products.map((prod) => (prod.pNum === editingProduct.pNum ? updatedProduct : prod));
+      setProducts(updatedProducts);
+      
       setEditingProduct(null);
       setNewProduct({ name: '', price: '', pcate: '', count: '' });
       setImageFile(null);

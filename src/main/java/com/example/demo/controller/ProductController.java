@@ -5,6 +5,8 @@ import com.example.demo.dto.ProductListDTO;
 import com.example.demo.entity.Product;
 import com.example.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +21,9 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ResourceLoader resourceLoader;
 
     @GetMapping
     public List<ProductListDTO> getAllProducts() {
@@ -47,42 +52,46 @@ public class ProductController {
     }
 
     @PostMapping("/{pNum}/uploadImage")
-    public Product uploadImage(@PathVariable("pNum") int pNum, @RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<Product> uploadImage(@PathVariable("pNum") int pNum, @RequestParam("file") MultipartFile file) throws IOException {
         Product product = productService.getProductById(pNum);
         if (product == null) {
             throw new RuntimeException("Product not found with id: " + pNum);
         }
 
-        // 파일 시스템에 이미지 저장
-        String fileName = file.getOriginalFilename();
-        String filePath = "path/to/save/images/" + fileName;
-        File dest = new File(filePath);
+        String directoryPath = new File("src/main/resources/static/images").getAbsolutePath();
+        File dir = new File(directoryPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        File dest = new File(dir, fileName);
         file.transferTo(dest);
 
-        // 이미지 URL 설정
-        product.setpImgUrl("/images/" + fileName);
-        return productService.saveOrUpdateProduct(product);
+        product.setpImgUrl("/images/" + fileName + "?t=" + System.currentTimeMillis());
+        productService.saveOrUpdateProduct(product);
+
+        return ResponseEntity.ok(product);
     }
 
     @PostMapping("/{pNum}/uploadDetailImage")
-    public Product uploadDetailImage(@PathVariable("pNum") int pNum, @RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<Product> uploadDetailImage(@PathVariable("pNum") int pNum, @RequestParam("file") MultipartFile file) throws IOException {
         Product product = productService.getProductById(pNum);
         if (product == null) {
             throw new RuntimeException("Product not found with id: " + pNum);
         }
 
-        // 파일 시스템에 상세 이미지 저장
-        String fileName = file.getOriginalFilename();
-        String filePath = "path/to/save/images/" + fileName;
-        File dest = new File(filePath);
+        String directoryPath = new File("src/main/resources/static/images").getAbsolutePath();
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        File dest = new File(directoryPath, fileName);
         file.transferTo(dest);
 
-        // 상세 이미지 URL 설정
-        product.setpDetailImgUrl("/images/" + fileName);
-        return productService.saveOrUpdateProduct(product);
+        product.setpDetailImgUrl("/images/" + fileName + "?t=" + System.currentTimeMillis());
+        productService.saveOrUpdateProduct(product);
+
+        return ResponseEntity.ok(product);
     }
 
-    // 검색
     @GetMapping("/search")
     public List<ProductListDTO> searchProducts(@RequestParam String keyword) {
         return productService.searchProducts(keyword);
