@@ -84,19 +84,31 @@ public class PostController {
     }
     }
 
-    // 게시글 조회 (조회수 증가)
-    @GetMapping("/{poNum}")
-    public ResponseEntity<PostResponse> getPostById(@PathVariable("poNum") Integer poNum) {
-        try {
-            // 게시글 조회 및 조회수 증가
-            Post post = postService.getPostById(poNum);
-            PostResponse response = new PostResponse(post);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            // 게시글이 존재하지 않을 경우 응답
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    // 게시글 조회 (조회수 증가 없음)
+@GetMapping("/{poNum}")
+public ResponseEntity<PostResponse> getPostById(@PathVariable("poNum") Integer poNum) {
+    try {
+        // 게시글만 조회
+        Post post = postService.getPostByIdWithoutIncrementingView(poNum); // 조회수 증가 없는 메서드 사용
+        PostResponse response = new PostResponse(post);
+        return ResponseEntity.ok(response);
+    } catch (Exception e) {
+        // 게시글이 존재하지 않을 경우 응답
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
+}
+
+// 조회수 증가 API
+@PostMapping("/{poNum}/increment-view")
+public ResponseEntity<Void> incrementViewCount(@PathVariable Integer poNum) {
+    try {
+        postService.incrementViewCount(poNum); // 조회수 증가 로직 호출
+        return ResponseEntity.ok().build(); // 성공적인 응답
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
+
 
     // 게시글 수정
     @PutMapping("/{poNum}")

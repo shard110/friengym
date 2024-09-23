@@ -41,7 +41,7 @@ public class PostService {
 
     // 모든 게시글 조회 메서드
     public List<Post> getAllPosts() {
-        return  postRepository.findAllByOrderByPoDateDesc();// 모든 게시글을 조회
+        return postRepository.findAllByOrderByPoDateDesc(); // 모든 게시글을 조회
     }
 
     // JWT 토큰에서 사용자 ID 추출
@@ -93,10 +93,12 @@ public class PostService {
         return postRepository.findById(poNum)
                 .orElseThrow(() -> new PostNotFoundException(poNum));// 게시글이 없으면 예외 발생
     }
-// 조회수 증가 로직 (중복 호출 방지)
-incrementViewCount(poNum);
 
-return post;
+    public void incrementViewCount(Integer poNum) {
+        Post post = postRepository.findById(poNum)
+                .orElseThrow(() -> new PostNotFoundException(poNum));
+        post.setViewCnt(post.getViewCnt() + 1);
+        postRepository.save(post);
     }
 
     // 게시글 업데이트

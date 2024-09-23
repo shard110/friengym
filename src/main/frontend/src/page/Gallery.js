@@ -23,6 +23,7 @@ const Gallery = () => {
       });
   }, []);
 
+ 
 
 // 사용자별로 likedPosts 가져오기
 const likedPostsKey = `likedPosts_${user?.id}`;
