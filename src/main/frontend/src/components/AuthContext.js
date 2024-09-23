@@ -37,11 +37,15 @@ export const AuthProvider = ({ children }) => {
     const login = (userData) => {
         setUser(userData);
         localStorage.setItem('jwtToken', userData.token);
+        // 로그인 시, 이전 사용자의 좋아요 데이터를 초기화
+        localStorage.setItem('likedPosts', JSON.stringify({}));
     };
 
     const logout = () => {
         setUser(null);
         localStorage.removeItem('jwtToken');
+        // 로그아웃 시, likedPosts 초기화
+        localStorage.removeItem('likedPosts');
     };
 
     return (

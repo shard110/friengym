@@ -2,6 +2,7 @@ package com.example.demo.repository;
 
 import java.util.List;
 
+import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,9 @@ import com.example.demo.entity.Post;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
 
+    // 최신 순으로 게시글 조회
+    @Query("SELECT p FROM Post p ORDER BY p.poDate DESC")
+    List<Post> findAllByOrderByPoDateDesc();
     
     // 내용으로 검색할 수 있는 메서드
     List<Post> findByPoContents(String poContents);

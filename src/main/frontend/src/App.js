@@ -16,7 +16,6 @@ import LoginPage from './components/LoginPage';
 import Mypage from './components/Mypage';
 import NewProducts from './components/NewProducts';
 import PopularProductsPage from './components/PopularProductsPage';
-import PostDetail from './components/PostDetail';
 import ProductHome from './components/ProductHome';
 import RegisterPage from './components/RegisterPage';
 import UpdateAsk from './components/UpdateAsk';
@@ -25,6 +24,7 @@ import AskPage from './page/AskPage';
 import Cart from './page/Cart';
 import Gallery from './page/Gallery'; // 게시물 갤러리 컴포넌트 임포트
 import MastersList from './page/MastersList';
+import PostDetail from './page/PostDetail';
 import ProductDetail from './page/ProductDetail';
 import ProductList from './page/ProductList';
 import QnaPage from './page/QnaPage';

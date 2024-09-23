@@ -233,9 +233,9 @@ public ResponseEntity<String> deletePost(
     @Autowired
     private PostRepository postRepository;
 
+    // 게시글 좋아요 기능
     @PostMapping("/{poNum}/like")
     public ResponseEntity<Post> likePost(@PathVariable Integer poNum) {
-    // poNum을 사용하여 Post를 찾음
     Post post = postRepository.findById(poNum)
             .orElseThrow(() -> new RuntimeException("Post not found"));
     post.setLikes(post.getLikes() + 1);

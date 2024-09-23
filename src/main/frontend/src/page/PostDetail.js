@@ -39,7 +39,7 @@ const PostDetail = () => {
     if (!newComment.trim()) return;
   
     // localStorage에서 JWT 토큰 가져오기
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token');
   
     if (!token) {
       setError("로그인이 필요합니다.");
@@ -73,17 +73,26 @@ const PostDetail = () => {
     <div className="post-detail">
       {post ? (
         <div>
-          <h2>{post.poContents}</h2>
-          <p>작성자: {post.user ? post.user.id : "Unknown"}</p>
-          <p>조회수: {post.viewCnt}</p>
-          
-          {post.fileUrl && post.fileUrl.endsWith(".mp4") ? (
-            <video controls>
-              <source src={post.fileUrl} type="video/mp4" />
-            </video>
-          ) : (
-            <img src={post.fileUrl} alt="Uploaded" />
+         
+          <p>작성자: {post.user ? post.user.id : "Unknown"}</p> <br></br>
+        
+           <h2>{post.poContents}</h2> <br></br>
+
+         {/* 파일이 존재하는 경우에만 미디어 파일 표시 */}
+         {post.fileUrl && (
+            <div className="post-media">
+              {post.fileUrl.endsWith(".mp4") ? (
+                <video controls>
+                  <source src={post.fileUrl} type="video/mp4" />
+                </video>
+              ) : (
+                <img src={post.fileUrl} alt="Uploaded" />
+              )}
+            </div>
           )}
+
+
+          <p>👁 {post.viewCnt}  👍 {post.likes}</p>
 
           {/* 댓글 목록 */}
           <div className="comments-section">
@@ -95,7 +104,7 @@ const PostDetail = () => {
                 </div>
               ))
             ) : (
-              <p>댓글이 없습니다.</p>
+              <p> </p>
             )}
           </div>
 
