@@ -11,6 +11,9 @@ const PostDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newComment, setNewComment] = useState(""); // 새 댓글 상태
+  const [editingCommentId, setEditingCommentId] = useState(null); // 수정 중인 댓글 ID
+  const [editedComment, setEditedComment] = useState(""); // 수정할 댓글 내용
+
 
   useEffect(() => {
     fetch(`/posts/${poNum}`)
@@ -27,6 +30,7 @@ const PostDetail = () => {
     fetch(`/posts/${poNum}/comments`)
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);  // 댓글 데이터를 출력하여 user 정보 확인
         setComments(data);
       })
       .catch((error) => {
@@ -39,7 +43,7 @@ const PostDetail = () => {
     if (!newComment.trim()) return;
   
     // localStorage에서 JWT 토큰 가져오기
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('jwtToken');
   
     if (!token) {
       setError("로그인이 필요합니다.");
@@ -66,6 +70,53 @@ const PostDetail = () => {
       });
   };
   
+
+  // 댓글 수정 핸들러
+  const handleEditComment = (commentId) => {
+    const token = localStorage.getItem('jwtToken');
+  
+    fetch(`/posts/${poNum}/comments/${commentId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ comment: editedComment }),
+    })
+      .then((response) => response.json())
+      .then((updatedComment) => {
+        setComments(comments.map((comment) =>
+          comment.commentNo === commentId ? updatedComment : comment
+        ));
+        setEditingCommentId(null);
+      })
+      .catch((error) => {
+        setError("댓글을 수정하는 데 실패했습니다.");
+      });
+  };
+
+  // 댓글 삭제 핸들러
+  const handleDeleteComment = (commentId) => {
+    const token = localStorage.getItem('jwtToken');
+  
+    fetch(`/posts/${poNum}/comments/${commentId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          setComments(comments.filter((comment) => comment.commentNo !== commentId));
+        } else {
+          throw new Error("댓글 삭제에 실패했습니다.");
+        }
+      })
+      .catch((error) => {
+        setError("댓글을 삭제하는 데 실패했습니다.");
+      });
+  };
+
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
 
@@ -99,14 +150,42 @@ const PostDetail = () => {
             <h3>댓글</h3>
             {comments.length > 0 ? (
               comments.map((comment) => (
-                <div className="comment" key={comment.commentNo}>
-                  <p><strong>{comment.user.id}:</strong> {comment.comment}</p>
+              <div className="comment" key={comment.commentNo}>
+                {/* 댓글 작성자의 프로필 사진과 댓글 내용 표시 */}
+              <div className="comment-user-info">
+              <img src={comment.photo || "default-photo-url"} alt={comment.id} className="comment-user-photo" />
+              {editingCommentId === comment.commentNo ? (
+                      <>
+                        <textarea
+                          value={editedComment}
+                          onChange={(e) => setEditedComment(e.target.value)}
+                        />
+                        <button onClick={() => handleEditComment(comment.commentNo)}>수정</button>
+                        <button onClick={() => setEditingCommentId(null)}>취소</button>
+                      </>
+                    ) : (
+                      <>
+                        <span> : {comment.comment}
+                        {user?.id === comment.id && (
+                          <div className="comment-actions">
+                            <button onClick={() => {
+                              setEditingCommentId(comment.commentNo);
+                              setEditedComment(comment.comment);
+                            }}>수정</button>
+                            <button onClick={() => handleDeleteComment(comment.commentNo)}>삭제</button>
+                          </div>
+                        )}
+                        </span>
+                      </>
+                    )}
+                  </div>
                 </div>
               ))
             ) : (
-              <p> </p>
+              <p>댓글이 없습니다.</p>
             )}
           </div>
+
 
           {/* 댓글 작성 폼 */}
           {user && (

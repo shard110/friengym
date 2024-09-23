@@ -44,6 +44,13 @@ public class PostService {
         return postRepository.findAllByOrderByPoDateDesc(); // 모든 게시글을 조회
     }
 
+     // 조회수 증가 없는 게시글 조회 메서드 추가
+     public Post getPostByIdWithoutIncrementingView(Integer poNum) {
+        return postRepository.findById(poNum)
+                .orElseThrow(() -> new PostNotFoundException(poNum)); // 게시글이 없으면 예외 발생
+    }
+
+
     // JWT 토큰에서 사용자 ID 추출
     public String getUserIdFromToken(String authHeader) {
         String token = authHeader.replace("Bearer ", "");

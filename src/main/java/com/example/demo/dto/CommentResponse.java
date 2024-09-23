@@ -1,11 +1,14 @@
 package com.example.demo.dto;
 
-import com.example.demo.entity.Comment;
-import lombok.Getter;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import com.example.demo.entity.Comment;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
 @Getter
 public class CommentResponse {
 
@@ -15,7 +18,8 @@ public class CommentResponse {
     private String modifiedDate; // LocalDateTime 대신 String으로 변경
     private Integer poNum;
     private String name; // 작성자 이름
-    private String id; // 댓글 작성자 ID (변경된 필드 이름)
+    private String id; // 댓글 작성자 ID
+    private String photo; // 댓글 작성자의 프로필 사진 추가
 
     /* Entity -> Dto */
     public CommentResponse(Comment comment) {
@@ -26,6 +30,7 @@ public class CommentResponse {
         this.poNum = (comment.getPost() != null) ? comment.getPost().getPoNum() : null;
         this.name = (comment.getUser() != null) ? comment.getUser().getName() : "Anonymous"; // 작성자 이름
         this.id = (comment.getUser() != null) ? comment.getUser().getId() : null; // 댓글 작성자 ID
+        this.photo = (comment.getUser() != null && comment.getUser().getPhoto() != null) ? comment.getUser().getPhoto() : "default-photo-url"; // 작성자의 프로필 사진
     }
 
     // 날짜 포맷팅 메서드
