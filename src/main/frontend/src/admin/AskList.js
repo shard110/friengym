@@ -46,12 +46,13 @@ const AskList = () => {
             <th>제목</th>
             <th>작성자</th>
             <th>작성일</th>
+            <th>상태</th> {/* 상태 열 추가 */}
           </tr>
         </thead>
         <tbody>
           {asks.length === 0 ? (
             <tr>
-              <td colSpan="3">등록된 문의글이 없습니다.</td>
+              <td colSpan="4">등록된 문의글이 없습니다.</td>
             </tr>
           ) : (
             asks.map((ask) => (
@@ -63,6 +64,13 @@ const AskList = () => {
                 </td>
                 <td>{ask.user ? ask.user.id : 'Unknown'}</td>
                 <td>{new Date(ask.aDate).toLocaleString()}</td>
+                <td>
+                  {ask.reply ? (
+                    <span style={{ color: 'green' }}>답변 완료</span> // 답변이 있을 경우
+                  ) : (
+                    <span style={{ color: 'red' }}>답변 미완료</span> // 답변이 없을 경우
+                  )}
+                </td>
               </tr>
             ))
           )}

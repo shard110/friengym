@@ -114,5 +114,31 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+    @PostMapping("/asks/{id}/reply")
+    public ResponseEntity<String> replyToAsk(@PathVariable int id, @RequestBody String reply) {
+        try {
+            Ask ask = askRepository.findById(id).orElseThrow(() -> new RuntimeException("문의글이 존재하지 않습니다."));
+            ask.setReply(reply); // 엔티티의 reply 필드에 값 설정
+            askRepository.save(ask); // 업데이트
+            return ResponseEntity.ok("답변이 등록되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("답변 등록에 실패했습니다.");
+        }
+    }
+
+    @DeleteMapping("/asks/{id}/reply")
+    public ResponseEntity<String> deleteReply(@PathVariable int id) {
+        try {
+            Ask ask = askRepository.findById(id).orElseThrow(() -> new RuntimeException("문의글이 존재하지 않습니다."));
+            ask.setReply(null); // 답변을 삭제하기 위해 reply 필드를 null로 설정
+            askRepository.save(ask); // 업데이트
+            return ResponseEntity.ok("답변이 삭제되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("답변 삭제에 실패했습니다.");
+        }
+    }
     
 }
