@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ManagerBar from './ManagerBar';
+import UserList from './UserList'; // UserList 컴포넌트 임포트
+import AskList from './AskList'; // AskList 컴포넌트 임포트
+import AskDetail from './AskDetail'; // AskDetail 컴포넌트 임포트
 import Shop from './Shop';
 
 const AdminHome = () => {
@@ -78,6 +81,9 @@ const AdminHome = () => {
         <>
           <ManagerBar onLogout={handleLogout} />
           <Routes>
+            <Route path="/user" element={<UserList />} /> {/* UserList 경로 추가 */}
+            <Route path="/ask" element={<AskList />} /> {/* 문의글 목록 경로 추가 */}
+            <Route path="/ask/:id" element={<AskDetail />} /> {/* 문의글 상세 내용 경로 추가 */}
             <Route path="shop" element={<Shop />} />
           </Routes>
         </>
