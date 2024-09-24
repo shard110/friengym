@@ -82,9 +82,8 @@ const Shop = () => {
       formData.append('file', imageFile);
       
       try {
-        const response = await axios.post(`http://localhost:8080/api/products/${editingProduct.pNum}/uploadImage`, formData);
-        imgUrl = response.data.pImgUrl; // 서버에서 새로운 이미지 URL 받아오기
-        imgUrl += `?t=${Date.now()}`; // 캐시 방지
+        await axios.post(`http://localhost:8080/api/products/${editingProduct.pNum}/uploadImage`, formData);
+        imgUrl = `/images/${imageFile.name}?t=${Date.now()}`; // 캐시 방지 URL
       } catch (error) {
         console.error(error);
         setMessage('이미지 업로드에 실패했습니다.');
@@ -107,9 +106,9 @@ const Shop = () => {
       
       await axios.put(`http://localhost:8080/api/products/${editingProduct.pNum}`, updatedProduct);
       
-      const updatedProducts = products.map((prod) => (prod.pNum === editingProduct.pNum ? updatedProduct : prod));
-      setProducts(updatedProducts);
-      
+      // 제품 목록을 다시 가져옵니다.
+      await fetchProducts();
+
       setEditingProduct(null);
       setNewProduct({ name: '', price: '', pcate: '', count: '' });
       setImageFile(null);
