@@ -4,20 +4,24 @@ import axios from 'axios';
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [newProduct, setNewProduct] = useState({ name: '', price: '', pcate: '', count: '' });
+  const [newProduct, setNewProduct] = useState({ name: '', price: '', pcate: null, count: '' });
   const [editingProduct, setEditingProduct] = useState(null);
   const [message, setMessage] = useState('');
-  const [imageFile, setImageFile] = useState(null); // 이미지 파일 상태
+  const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
-    fetchProducts();
-    fetchCategories();
+    const loadData = async () => {
+      await fetchProducts();
+      await fetchCategories();
+    };
+    loadData();
   }, []);
 
   const fetchProducts = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/products');
       setProducts(response.data);
+      console.log('Fetched Products:', response.data);
     } catch (error) {
       console.error(error);
       setMessage('상품 목록을 가져오는 데 실패했습니다.');
@@ -28,6 +32,7 @@ const Shop = () => {
     try {
       const response = await axios.get('http://localhost:8080/api/categories');
       setCategories(response.data);
+      console.log('Fetched Categories:', response.data);
     } catch (error) {
       console.error(error);
       setMessage('카테고리 목록을 가져오는 데 실패했습니다.');
@@ -38,21 +43,17 @@ const Shop = () => {
     e.preventDefault();
     let imgUrl = '';
 
-    // 이미지 파일이 선택된 경우
     if (imageFile) {
       const formData = new FormData();
       formData.append('file', imageFile);
       await axios.post(`http://localhost:8080/api/products/${newProduct.pcate}/uploadImage`, formData);
-      imgUrl = `/images/${imageFile.name}?t=${Date.now()}`; // 이미지 URL 설정
+      imgUrl = `/images/${imageFile.name}?t=${Date.now()}`;
     }
-
-    console.log("상품 추가/수정 시 새로운 이미지 URL:", imgUrl);
-    console.log("새로운 상품 데이터:", { ...newProduct, pImgUrl: imgUrl });
 
     try {
       const response = await axios.post('http://localhost:8080/api/products', { ...newProduct, pImgUrl: imgUrl });
       setProducts([...products, response.data]);
-      setNewProduct({ name: '', price: '', pcate: '', count: '' });
+      setNewProduct({ name: '', price: '', pcate: null, count: '' });
       setImageFile(null);
       setMessage('상품이 등록되었습니다.');
     } catch (error) {
@@ -69,31 +70,26 @@ const Shop = () => {
       pcate: product.pcate,
       count: product.pCount,
     });
-    setImageFile(null); // 파일 초기화
+    setImageFile(null);
   };
 
   const handleUpdateProduct = async (e) => {
     e.preventDefault();
-    let imgUrl = editingProduct.pImgUrl; // 기존 이미지 URL 사용
+    let imgUrl = editingProduct.pImgUrl;
 
-    // 새로운 이미지 파일이 선택된 경우
     if (imageFile) {
       const formData = new FormData();
       formData.append('file', imageFile);
-      
+
       try {
-        const response = await axios.post(`http://localhost:8080/api/products/${editingProduct.pNum}/uploadImage`, formData);
-        imgUrl = response.data.pImgUrl; // 서버에서 새로운 이미지 URL 받아오기
-        imgUrl += `?t=${Date.now()}`; // 캐시 방지
+        await axios.post(`http://localhost:8080/api/products/${editingProduct.pNum}/uploadImage`, formData);
+        imgUrl = `/images/${imageFile.name}?t=${Date.now()}`;
       } catch (error) {
         console.error(error);
         setMessage('이미지 업로드에 실패했습니다.');
-        return; // 에러 발생 시 더 이상 진행하지 않음
+        return;
       }
     }
-
-    console.log("상품 추가/수정 시 새로운 이미지 URL:", imgUrl);
-    console.log("새로운 상품 데이터:", { ...newProduct, pImgUrl: imgUrl });
 
     try {
       const updatedProduct = {
@@ -104,14 +100,14 @@ const Shop = () => {
         pcate: newProduct.pcate,
         pCount: newProduct.count,
       };
-      
+
       await axios.put(`http://localhost:8080/api/products/${editingProduct.pNum}`, updatedProduct);
-      
+
       const updatedProducts = products.map((prod) => (prod.pNum === editingProduct.pNum ? updatedProduct : prod));
       setProducts(updatedProducts);
-      
+
       setEditingProduct(null);
-      setNewProduct({ name: '', price: '', pcate: '', count: '' });
+      setNewProduct({ name: '', price: '', pcate: null, count: '' });
       setImageFile(null);
       setMessage('상품이 수정되었습니다.');
     } catch (error) {
@@ -131,6 +127,12 @@ const Shop = () => {
     }
   };
 
+  const getCategoryName = (pcate) => {
+    if (pcate === null || pcate === undefined) return '미지정';
+    const category = categories.find(category => category.catenum === pcate);
+    return category ? category.catename : '미지정';
+  };
+
   return (
     <div>
       <h1>상품 목록</h1>
@@ -139,7 +141,7 @@ const Shop = () => {
         {products.map((product) => (
           <li key={product.pNum}>
             <img src={product.pImgUrl} alt={product.pName} style={{ width: '100px', height: '100px' }} />
-            {product.pName} - {product.pPrice} 원 - 재고: {product.pCount}개
+            {product.pName} - {product.pPrice} 원 - 재고: {product.pCount}개 - 카테고리: {getCategoryName(product.pcate)}
             <button onClick={() => handleEditProduct(product)}>수정</button>
             <button onClick={() => handleDeleteProduct(product.pNum)}>삭제</button>
           </li>
@@ -165,7 +167,7 @@ const Shop = () => {
         <input
           type="file"
           accept="image/*"
-          onChange={(e) => setImageFile(e.target.files[0])} // 파일 선택 시 상태 업데이트
+          onChange={(e) => setImageFile(e.target.files[0])}
         />
         <input
           type="number"
@@ -175,16 +177,20 @@ const Shop = () => {
           required
         />
         <select
-          value={newProduct.pcate}
-          onChange={(e) => setNewProduct({ ...newProduct, pcate: e.target.value })}
+          value={newProduct.pcate !== null ? newProduct.pcate : ''}
+          onChange={(e) => setNewProduct({ ...newProduct, pcate: e.target.value ? Number(e.target.value) : null })}
           required
         >
           <option value="">카테고리 선택</option>
-          {categories.map((category) => (
-            <option key={category.catenum} value={category.catenum}>
-              {category.cateName}
-            </option>
-          ))}
+          {categories.length > 0 ? (
+            categories.map((category) => (
+              <option key={category.catenum} value={category.catenum}>
+                {category.catename}
+              </option>
+            ))
+          ) : (
+            <option value="" disabled>카테고리가 없습니다.</option>
+          )}
         </select>
         <button type="submit">{editingProduct ? '수정하기' : '등록하기'}</button>
       </form>

@@ -141,11 +141,13 @@ public class ProductService {
                         product.getpName(),
                         product.getpPrice(),
                         product.getpImgUrl(),
-                        product.getpCount()
+                        product.getpCount(),
+                        product.getPcate(),
+                        product.getCategory() != null ? product.getCategory().getCatename() : "미지정"
                 ))
                 .collect(Collectors.toList());
     }
-
+    
     public List<ProductListDTO> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream()
@@ -154,10 +156,13 @@ public class ProductService {
                         product.getpName(),
                         product.getpPrice(),
                         product.getpImgUrl(),
-                        product.getpCount()
+                        product.getpCount(),
+                        product.getPcate(),
+                        product.getCategory() != null ? product.getCategory().getCatename() : "미지정"
                 ))
                 .collect(Collectors.toList());
     }
+    
 
     public ProductDetailDTO getProductDetail(int pNum) {
         Product product = productRepository.findById(pNum).orElseThrow(() -> new RuntimeException("Product not found"));

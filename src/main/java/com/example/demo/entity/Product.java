@@ -12,120 +12,126 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.FetchType; // 추가
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Entity
 public class Product {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int pNum;
-  private String pName;
-  private Date pDate;
-  private int pCount;
-  private int pPrice;
-  private String pImg;
-  private String pIntro;
-  private String pImgUrl;
-  private String pDetailImgUrl;
-  private Integer pcate; // Integer로 수정하여 null을 허용하게 함
-  
-  @ManyToOne
-  @JoinColumn(name = "pcate", referencedColumnName = "catenum", insertable = false, updatable = false)
-  private Category category;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int pNum;
+    private String pName;
+    private Date pDate;
+    private int pCount;
+    private int pPrice;
+    private String pImg;
+    private String pIntro;
+    private String pImgUrl;
+    private String pDetailImgUrl;
+    private Integer pcate; // Integer로 수정하여 null을 허용하게 함
+    
+    @ManyToOne(fetch = FetchType.EAGER) // FetchType 추가
+    @JoinColumn(name = "pcate", referencedColumnName = "catenum", insertable = false, updatable = false)
+    private Category category;
 
-  public Category getCategory() {
-    return this.category;
-  }
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Dorder> dorders = new ArrayList<>();
 
-  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Dorder> dorders = new ArrayList<>();
+    public Category getCategory() {
+        return this.category;
+    }
 
-  public int getpNum() {
-    return this.pNum;
-  }
+    public String getCategoryName() { // 카테고리 이름 가져오는 메서드 추가
+        return (category != null) ? category.getCatename() : "미지정";
+    }
 
-  public void setpNum(int pNum) {
-    this.pNum = pNum;
-  }
+    // Getter와 Setter 메서드
+    public int getpNum() {
+        return this.pNum;
+    }
 
-  public String getpName() {
-    return this.pName;
-  }
+    public void setpNum(int pNum) {
+        this.pNum = pNum;
+    }
 
-  public void setpName(String pName) {
-    this.pName = pName;
-  }
+    public String getpName() {
+        return this.pName;
+    }
 
-  public Date getpDate() {
-    return this.pDate;
-  }
+    public void setpName(String pName) {
+        this.pName = pName;
+    }
 
-  public void setpDate(Date pDate) {
-    this.pDate = pDate;
-  }
+    public Date getpDate() {
+        return this.pDate;
+    }
 
-  public int getpCount() {
-    return this.pCount;
-  }
+    public void setpDate(Date pDate) {
+        this.pDate = pDate;
+    }
 
-  public void setpCount(int pCount) {
-    this.pCount = pCount;
-  }
+    public int getpCount() {
+        return this.pCount;
+    }
 
-  public int getpPrice() {
-    return this.pPrice;
-  }
+    public void setpCount(int pCount) {
+        this.pCount = pCount;
+    }
 
-  public void setpPrice(int pPrice) {
-    this.pPrice = pPrice;
-  }
+    public int getpPrice() {
+        return this.pPrice;
+    }
 
-  public String getpImg() {
-    return this.pImg;
-  }
+    public void setpPrice(int pPrice) {
+        this.pPrice = pPrice;
+    }
 
-  public void setpImg(String pImg) {
-    this.pImg = pImg;
-  }
+    public String getpImg() {
+        return this.pImg;
+    }
 
-  public String getpIntro() {
-    return this.pIntro;
-  }
+    public void setpImg(String pImg) {
+        this.pImg = pImg;
+    }
 
-  public void setpIntro(String pIntro) {
-    this.pIntro = pIntro;
-  }
+    public String getpIntro() {
+        return this.pIntro;
+    }
 
-  public String getpImgUrl() {
-    return this.pImgUrl;
-  }
+    public void setpIntro(String pIntro) {
+        this.pIntro = pIntro;
+    }
 
-  public void setpImgUrl(String pImgUrl) {
-    this.pImgUrl = pImgUrl;
-  }
+    public String getpImgUrl() {
+        return this.pImgUrl;
+    }
 
-  public String getpDetailImgUrl() {
-    return this.pDetailImgUrl;
-  }
+    public void setpImgUrl(String pImgUrl) {
+        this.pImgUrl = pImgUrl;
+    }
 
-  public void setpDetailImgUrl(String pDetailImgUrl) {
-    this.pDetailImgUrl = pDetailImgUrl;
-  }
+    public String getpDetailImgUrl() {
+        return this.pDetailImgUrl;
+    }
 
-  public Integer getPcate() { // Integer로 변경
-    return this.pcate;
-  }
+    public void setpDetailImgUrl(String pDetailImgUrl) {
+        this.pDetailImgUrl = pDetailImgUrl;
+    }
 
-  public void setPcate(Integer pcate) { // Integer로 변경
-    this.pcate = pcate;
-  }
+    public Integer getPcate() {
+        return this.pcate;
+    }
 
-  public List<Dorder> getDorders() {
-    return this.dorders;
-  }
+    public void setPcate(Integer pcate) {
+        this.pcate = pcate;
+    }
 
-  public void setDorders(List<Dorder> dorders) {
-    this.dorders = dorders;
-  }
+    public List<Dorder> getDorders() {
+        return this.dorders;
+    }
+
+    public void setDorders(List<Dorder> dorders) {
+        this.dorders = dorders;
+    }
 }
