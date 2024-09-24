@@ -11,6 +11,7 @@ import CreatePost from "./components/CreatePostForm";
 import Customer from './components/Customer';
 import EditPost from './components/EditPost';
 import EditProfilePage from './components/EditProfilePage';
+import HashtagPosts from './components/HashtagPosts';
 import HomePage from './components/HomePage';
 import LoginPage from './components/LoginPage';
 import Mypage from './components/Mypage';
@@ -47,6 +48,7 @@ export default function App() {
             <Route path="/post/:poNum/comments/create" element={<CommentCreate />} />
             <Route path="/post/:poNum/comments/:commentNo/edit" element={<CommentEdit />} />
             <Route path="/recommendations" element={<Recommendations />} />
+            <Route path="/hashtag/:tag" element={<HashtagPosts />} />
 
             <Route path="/products" element={<ProductHome />} />
             <Route path="/categories/:catenum" element={<CategoryProductsPage />} />

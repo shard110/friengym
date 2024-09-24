@@ -30,7 +30,6 @@ import com.example.demo.dto.PostRequest;
 import com.example.demo.dto.PostResponse;
 import com.example.demo.entity.Comment;
 import com.example.demo.entity.Post;
-import com.example.demo.repository.PostRepository;
 import com.example.demo.service.FileService;
 import com.example.demo.service.PostService;
 
@@ -173,7 +172,20 @@ public ResponseEntity<String> deletePost(
         }
     }
 
-  
+  // 특정 해시태그로 게시글 조회
+    @GetMapping("/hashtag/{tag}")
+    public ResponseEntity<List<PostResponse>> getPostsByHashtag(@PathVariable("tag") String tag) {
+        try {
+            List<Post> posts = postService.getPostsByHashtag(tag);
+            List<PostResponse> response = posts.stream()
+                    .map(PostResponse::new)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 
     // 댓글 추가
     @PostMapping("/{poNum}/comments")
@@ -242,16 +254,14 @@ public ResponseEntity<String> deletePost(
         }
     }
 
-    @Autowired
-    private PostRepository postRepository;
+
 
     // 게시글 좋아요 기능
-    @PostMapping("/{poNum}/like")
-    public ResponseEntity<Post> likePost(@PathVariable Integer poNum) {
-    Post post = postRepository.findById(poNum)
-            .orElseThrow(() -> new RuntimeException("Post not found"));
-    post.setLikes(post.getLikes() + 1);
-    postRepository.save(post);
-    return ResponseEntity.ok(post);
+@PostMapping("/{poNum}/like")
+public ResponseEntity<PostResponse> likePost(@PathVariable Integer poNum) {
+    Post post = postService.incrementLikes(poNum);
+    PostResponse response = new PostResponse(post);
+    return ResponseEntity.ok(response);
 }
+
 }

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'; // Link 컴포넌트 임포트
 
 const Recommendations = () => {
     const [recommendedPosts, setRecommendedPosts] = useState([]);
 
     useEffect(() => {
-        fetch('/api/recommend')
+        fetch('/api/recommendations')
             .then(response => response.json())
             .then(data => setRecommendedPosts(data));
     }, []);
@@ -12,26 +13,28 @@ const Recommendations = () => {
     return (
         <div className="recommendations">
             <h2>Recommended for you</h2>
-            <div className="gallery-container">
+            <div className="rec-gallery-container">
                 {recommendedPosts.map(post => (
-                    <div className="post-card" key={post.id}>
-                        <div className="user-info">
-                            <img src={post.user.photo} alt={post.user.id} className="user-photo" />
-                            <span>{post.user.id}</span>
-                        </div>
-                        <img src={post.fileUrl} alt={post.poContents} className="post-image" />
-                        <div className="post-info">
-                            <p>{post.poContents}</p>
-                            <div className="post-stats">
-                                <span>👍 {post.likes}</span>
-                                <span>👁 {post.viewCnt}</span>
-                            </div>
-                        </div>
+                    <div className="rec-post-card" key={post.poNum}>
+                        <Link to={`/post/${post.poNum}`}>
+                            {/* 이미지나 동영상이 있으면 출력, 없으면 텍스트만 출력 */}
+                            {post.fileUrl ? (
+                                post.fileUrl.endsWith(".mp4") ? (
+                                    <video src={post.fileUrl} controls className="post-video"></video>
+                                ) : (
+                                    <img src={post.fileUrl} alt={post.poContents} className="post-image" />
+                                )
+                            ) : (
+                                <div className="text-only">
+                                    <p>{post.poContents}</p>
+                                </div>
+                            )}
+                        </Link>
                     </div>
                 ))}
             </div>
         </div>
     );
-}
+};
 
 export default Recommendations;

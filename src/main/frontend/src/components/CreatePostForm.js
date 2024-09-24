@@ -8,6 +8,7 @@ const CreatePostForm = () => {
   const { user } = useAuth(); // AuthContext에서 사용자 정보를 가져옵니다
   const navigate = useNavigate();
   const [poContents, setpoContents] = useState("");
+  const [hashtags, setHashtags] = useState([]);
   const [file, setFile] = useState(null);
   const [filePreview, setFilePreview] = useState(null); // 미리보기 상태
 
@@ -34,6 +35,7 @@ const CreatePostForm = () => {
 
     const formData = new FormData();
     formData.append("poContents", poContents);
+    formData.append('hashtags', hashtags);
     formData.append("userId", user.userId);
     if (file) {
       formData.append("file", file);
@@ -64,6 +66,12 @@ const CreatePostForm = () => {
         placeholder="무엇이든 이야기 해보자!"
         required
       />
+       <input
+                type="text"
+                value={hashtags.join(' ')}
+                onChange={(e) => setHashtags(e.target.value.split(' '))}
+                placeholder="#해시태그"
+            /><br></br>
        <input type="file" onChange={handleFileChange} />
 
        {filePreview && (

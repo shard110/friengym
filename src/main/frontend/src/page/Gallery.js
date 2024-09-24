@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
+import PostSideBar from "../components/PostSideBar";
 import "./Gallery.css"; // 새로 정의된 CSS
 
 const Gallery = () => {
@@ -44,7 +45,15 @@ const handleLike = (post) => {
         "Content-Type": "application/json",
       },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          return response.text().then((text) => {
+            throw new Error(`Server Error: ${text}`);
+          });
+        }
+      })
       .then((updatedPost) => {
         setPosts((prevPosts) =>
           prevPosts.map((p) => (p.poNum === updatedPost.poNum ? updatedPost : p))
@@ -53,6 +62,9 @@ const handleLike = (post) => {
         // 사용자별로 likedPosts 업데이트
         const updatedLikedPosts = { ...likedPosts, [post.poNum]: true };
         localStorage.setItem(likedPostsKey, JSON.stringify(updatedLikedPosts));
+
+         // 좋아요 완료 메시지 표시
+         alert("좋아요를 눌렀습니다.");
       })
       .catch((error) => {
         console.error("좋아요 처리 중 오류:", error);
@@ -70,6 +82,11 @@ const handleLike = (post) => {
   if (error) return <div>{error}</div>;
 
   return (
+
+    <div className="gallery-layout">
+    {/* 왼쪽에 사이드바 배치 */}
+    <PostSideBar />
+
     <div className="gallery">
       <div className="create-post">
         <button onClick={() => navigate("/create-post")} className="create-btn">
@@ -114,15 +131,36 @@ const handleLike = (post) => {
 
             <div className="post-content">{post.poContents}</div>
 
+            
+            <div className="hashtags">
+                  {post.hashtags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="hashtag"
+                      onClick={(e) => {
+                        e.stopPropagation(); // 부모 클릭 이벤트 방지
+                        navigate(`/hashtag/${tag}`);
+                      }}
+                    >
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+
+
             <div className="post-actions">
               {/* 좋아요 버튼 */}
               <button
                 className="like-btn"
-                onClick={() => handleLike(post)}
+                onClick={(e) => {
+                  e.stopPropagation(); // 클릭 이벤트 전파 방지
+                  handleLike(post);
+                }}
                 disabled={hasLiked(post.poNum)} // 이미 좋아요를 누른 경우 버튼 비활성화
               >
                 👍 {post.likes}
               </button>
+
               <span>👁 {post.viewCnt}</span>
 
               {user?.id === post.user?.id && (
@@ -173,6 +211,7 @@ const handleLike = (post) => {
       ) : (
         <p>게시물이 없습니다.</p>
       )}
+    </div>
     </div>
   );
 };

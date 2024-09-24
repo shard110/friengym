@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,16 @@ import com.example.demo.dto.CommentRequest;
 import com.example.demo.dto.CommentResponse;
 import com.example.demo.dto.PostRequest;
 import com.example.demo.entity.Comment;
+import com.example.demo.entity.Hashtag;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.User;
 import com.example.demo.exception.PostNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.CommentRepository;
+import com.example.demo.repository.HashtagRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
+
 
 @Service
 public class PostService {
@@ -35,6 +39,9 @@ public class PostService {
 
     @Autowired
     private CommentRepository commentRepository; // 댓글 리포지토리 추가
+
+    @Autowired
+    private HashtagRepository hashtagRepository;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -66,6 +73,7 @@ public class PostService {
                 .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
+    // 게시글 생성
     public Post createPost(PostRequest postRequest, MultipartFile file, String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
@@ -89,7 +97,13 @@ public class PostService {
         post.setFileUrl(fileUrl);  // 파일 URL을 저장
         postRepository.save(post);
     
-        return post;
+       // 해시태그 처리
+       Set<Hashtag> hashtags = processHashtags(postRequest.getHashtags());
+       post.setHashtags(hashtags);
+
+       postRepository.save(post);
+
+       return post;
     }
     
 
@@ -108,7 +122,7 @@ public class PostService {
         postRepository.save(post);
     }
 
-    // 게시글 업데이트
+    // 게시글 수정
     public Post updatePost(Integer poNum, PostRequest postRequest, MultipartFile file, String userId) {
         Post post = postRepository.findById(poNum)
                 .orElseThrow(() -> new PostNotFoundException(poNum));
@@ -119,6 +133,10 @@ public class PostService {
 
         post.setPoContents(postRequest.getPoContents());
 
+        // 해시태그 처리
+        Set<Hashtag> hashtags = processHashtags(postRequest.getHashtags());
+        post.setHashtags(hashtags);
+
         if (file != null && !file.isEmpty()) {
             try {
                 String fileUrl = fileService.save(file);
@@ -126,10 +144,13 @@ public class PostService {
             } catch (Exception e) {
                 throw new RuntimeException("File save failed", e);
             }
-        }
-
-        return postRepository.save(post);
+        } else {
+        // 파일이 없으면 기존 파일 유지
     }
+
+    return postRepository.save(post);
+}
+        
 
     // 삭제하기
 
@@ -144,7 +165,18 @@ public class PostService {
         postRepository.deleteById(poNum);
     }
 
+     // 해시태그 처리 메서드
+     private Set<Hashtag> processHashtags(List<String> tagStrings) {
+        return tagStrings.stream().map(tag -> {
+            return hashtagRepository.findByTag(tag)
+                    .orElseGet(() -> new Hashtag(tag));
+        }).collect(Collectors.toSet());
+    }
 
+    // 특정 해시태그로 게시글 조회
+    public List<Post> getPostsByHashtag(String tag) {
+        return postRepository.findByHashtags_Tag(tag);
+    }
 
 
 
@@ -199,4 +231,7 @@ public class PostService {
 
         commentRepository.deleteById(commentNo);
     }
+
+
+
 }

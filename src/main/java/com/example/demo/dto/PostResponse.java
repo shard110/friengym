@@ -25,6 +25,7 @@ public class PostResponse {
     private int commentCount;
     private int likes;
     private UserResponse user; // User 정보를 담을 DTO 객체로 매핑
+    private List<String> hashtags;
 
     // 기존 생성자
     public PostResponse(Post post) {
@@ -46,6 +47,10 @@ public class PostResponse {
                         : Collections.emptyList();
         this.commentCount = this.comments.size(); // 댓글 수 설정
         this.user = new UserResponse(post.getUser()); // UserResponse로 변환
+        this.hashtags = post.getHashtags().stream()
+                .map(hashtag -> hashtag.getTag())
+                .collect(Collectors.toList());
+
     }
 
     // 댓글 수를 포함하는 생성자

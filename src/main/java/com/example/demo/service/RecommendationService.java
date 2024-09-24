@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -9,14 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.entity.Hashtag;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.User;
 import com.example.demo.entity.UserActivity;
+import com.example.demo.exception.InvalidTokenException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserActivityRepository;
 import com.example.demo.repository.UserRepository;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 
 
@@ -39,28 +44,38 @@ public class RecommendationService {
 
 
      // JWT 토큰에서 사용자 ID를 추출하는 메서드
-    public String getUserIdFromToken(String token) {
-        // JWT 토큰 파싱 및 사용자 ID 추출
-        Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
+   public String getUserIdFromToken(String token) {
+    if (token == null || !token.startsWith("Bearer ")) {
+        throw new InvalidTokenException("Missing or invalid Authorization header");
+    }
+    try {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
+                .build()
                 .parseClaimsJws(token.replace("Bearer ", ""))
                 .getBody();
-        return claims.getSubject(); // 사용자 ID 또는 username을 반환
+        return claims.getSubject();
+    } catch (JwtException | IllegalArgumentException e) {
+        throw new InvalidTokenException("Invalid JWT token", e);
     }
+}
+
 
      // 사용자 ID로 User 객체를 찾는 메서드
      public User findUserById(String userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
+
     }
 
 
     // 추천 게시글 로직
     public List<Post> recommendPosts(User user) {
         List<UserActivity> activities = userActivityRepository.findByUser(user);
-        Map<String, Long> hashtagFrequency = activities.stream()
-            .flatMap(activity -> activity.getPost().getHashtags().stream())
-            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+       Map<String, Long> hashtagFrequency = activities.stream()
+                        .flatMap(activity -> activity.getPost().getHashtags().stream())
+                        .map(Hashtag::getTag) // Hashtag 객체를 tag 문자열로 변환
+                        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
         List<String> topHashtags = hashtagFrequency.entrySet().stream()
             .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
@@ -68,6 +83,7 @@ public class RecommendationService {
             .map(Map.Entry::getKey)
             .collect(Collectors.toList());
 
-        return postRepository.findByHashtagsIn(topHashtags);
+            return postRepository.findByHashtagsIn(topHashtags).stream().distinct().collect(Collectors.toList());
+
     }
 }
