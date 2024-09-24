@@ -1,15 +1,20 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
-import { useAuth } from '../components/AuthContext'; // useAuth 훅 추가
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../components/AuthContext';
 import './Cart.css';
 
 const Cart = () => {
-    const { user, loading } = useAuth(); // useAuth 훅 사용
-    const navigate = useNavigate(); // useNavigate 훅 사용
+    const { user, loading } = useAuth();
+    const navigate = useNavigate();
     const [cartItems, setCartItems] = useState([]);
 
     useEffect(() => {
+        if (!user) {
+            navigate('/login'); // 로그인되지 않은 경우 로그인 페이지로 이동
+            return;
+        }
+
         const fetchCartItems = async () => {
             const token = user?.token || localStorage.getItem('jwtToken');
             if (!token) {
@@ -21,7 +26,7 @@ const Cart = () => {
             try {
                 const response = await axios.get(`/api/cart/${user.id}`, {
                     headers: {
-                        'Authorization': `${token}` // 요청 헤더에 JWT 토큰 추가
+                        'Authorization': `${token}`
                     }
                 });
                 setCartItems(response.data);
@@ -30,10 +35,8 @@ const Cart = () => {
             }
         };
 
-        if (user) {
-            fetchCartItems();
-        }
-    }, [user]);
+        fetchCartItems();
+    }, [user, navigate]);
 
     const updateCartItemCount = async (cnum, newCount) => {
         const token = user?.token || localStorage.getItem('jwtToken');
@@ -43,9 +46,9 @@ const Cart = () => {
         }
 
         try {
-            const response = await axios.put(`/api/cart/${cnum}`, { cCount: newCount }, {
+            await axios.put(`/api/cart/${cnum}`, { cCount: newCount }, {
                 headers: {
-                    'Authorization': `${token}` // 요청 헤더에 JWT 토큰 추가
+                    'Authorization': `${token}`
                 }
             });
             setCartItems(cartItems.map(item => item.cnum === cnum ? { ...item, cCount: newCount } : item));
@@ -64,7 +67,7 @@ const Cart = () => {
         try {
             await axios.delete(`/api/cart/${cnum}`, {
                 headers: {
-                    'Authorization': `${token}` // 요청 헤더에 JWT 토큰 추가
+                    'Authorization': `${token}`
                 }
             });
             setCartItems(cartItems.filter(item => item.cnum !== cnum));

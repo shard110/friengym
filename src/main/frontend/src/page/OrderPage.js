@@ -40,34 +40,102 @@ const OrderPage = () => {
         }
     }, [user]);
 
-    const handlePayment = async () => {
+    const handlePaymentPayco = async () => {
+        const customer = {
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+            fullName: user.fullName,
+        };
+
+        const orderName = cartItems.map(item => item.product.pName).join(', ');
+
         try {
-            const response = await axios.post('/api/payment/request', {
-                amount: totalPrice,
-                orderId: `order_${new Date().getTime()}`,
-                // 기타 결제 정보 추가
+            const response = await PortOne.requestPayment({
+                storeId: process.env.REACT_APP_PORTONE_STORE_ID,
+                paymentId: `payment-${crypto.randomUUID()}`,
+                orderName: orderName,
+                totalAmount: cartItems.reduce((total, item) => total + item.product.pPrice * item.cCount, 0),
+                currency: "CURRENCY_KRW",
+                payMethod: "EASY_PAY",
+                channelKey: process.env.REACT_APP_PORTONE_TOSS,
+                customer: customer,
+                easyPay: {
+                    easyPayProvider: "PAYCO",
+                },
             });
-            const paymentResponse = response.data;
-
-            const portone = new PortOne(process.env.REACT_APP_PORTONE_API_KEY); // 포트원 API 키
-
-            portone.requestPayment({
-                amount: totalPrice,
-                order_id: `order_${new Date().getTime()}`, // 고유한 주문 ID 생성
-                // 기타 결제 정보 추가
-            }, (response) => {
-                if (response.success) {
-                    // 결제 성공 처리
-                    alert('결제가 성공적으로 완료되었습니다.');
-                    navigate('/order-success'); // 결제 성공 페이지로 이동
-                } else {
-                    // 결제 실패 처리
-                    alert(`결제 실패: ${response.error_msg}`);
-                }
-            });
+    
+            if (response.code != null) {
+                alert(response.message);
+            } else {
+                console.log('결제 성공:', response);
+            }
         } catch (error) {
             console.error('결제 요청 중 오류 발생:', error);
-            alert('결제 요청 중 오류가 발생했습니다.');
+            alert('결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.');
+        }
+    };
+
+    const handlePaymentToss = async () => {
+        const customer = {
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+            fullName: user.fullName,
+        };
+
+        const orderName = cartItems.map(item => item.product.pName).join(', ');
+
+        try {
+            const response = await PortOne.requestPayment({
+                storeId: process.env.REACT_APP_PORTONE_STORE_ID,
+                channelKey: process.env.REACT_APP_PORTONE_TOSS,
+                paymentId: `payment-${crypto.randomUUID()}`,
+                orderName: orderName,
+                totalAmount: cartItems.reduce((total, item) => total + item.product.pPrice * item.cCount, 0),
+                currency: "CURRENCY_KRW",
+                payMethod: "CARD",
+                customer: customer,
+            });
+
+            if (response.code != null) {
+                alert(response.message);
+            } else {
+                console.log('결제 성공:', response);
+            }
+        } catch (error) {
+            console.error('결제 요청 중 오류 발생:', error);
+            alert('결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.');
+        }
+    };
+
+    const handlePaymentKG = async () => {
+        const customer = {
+            email: "test@gmail.com",    // to-do user테이블에 메일 추가해야 함
+            phoneNumber: user.phone,
+            fullName: user.name,
+        };
+
+        const orderName = cartItems.map(item => item.product.pName).join(', ');
+
+        try {
+            const response = await PortOne.requestPayment({
+                storeId: process.env.REACT_APP_PORTONE_STORE_ID,
+                channelKey: process.env.REACT_APP_PORTONE_KG,
+                paymentId: `${crypto.randomUUID()}`,    // uuid 수정
+                orderName: orderName,
+                totalAmount: cartItems.reduce((total, item) => total + item.product.pPrice * item.cCount, 0),
+                currency: "CURRENCY_KRW",
+                payMethod: "CARD",
+                customer: customer,
+            });
+
+            if (response.code != null) {
+                alert(response.message);
+            } else {
+                console.log('결제 성공:', response);
+            }
+        } catch (error) {
+            console.error('결제 요청 중 오류 발생:', error);
+            alert('결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.');
         }
     };
 
@@ -123,7 +191,9 @@ const OrderPage = () => {
             <p>신용카드</p>
             <p>무통장입금</p>
             <p>만나서 결제</p>
-            <button onClick={handlePayment}>구매하기</button>
+            <button onClick={handlePaymentPayco}>페이코 간편결제</button>
+            <button onClick={handlePaymentToss}>토스페이</button>
+            <button onClick={handlePaymentKG}>신용카드 결제</button>
         </div>
     );
 };
