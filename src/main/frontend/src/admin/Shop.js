@@ -37,20 +37,24 @@ const Shop = () => {
   const handleAddProduct = async (e) => {
     e.preventDefault();
     let imgUrl = '';
-
-    // 이미지 파일이 선택된 경우
+  
     if (imageFile) {
       const formData = new FormData();
       formData.append('file', imageFile);
       await axios.post(`http://localhost:8080/api/products/${newProduct.pcate}/uploadImage`, formData);
-      imgUrl = `/images/${imageFile.name}?t=${Date.now()}`; // 이미지 URL 설정
+      imgUrl = `/images/${imageFile.name}?t=${Date.now()}`;
     }
-
-    console.log("상품 추가/수정 시 새로운 이미지 URL:", imgUrl);
-    console.log("새로운 상품 데이터:", { ...newProduct, pImgUrl: imgUrl });
-
+  
     try {
-      const response = await axios.post('http://localhost:8080/api/products', { ...newProduct, pImgUrl: imgUrl });
+      const productData = {
+        pName: newProduct.name,
+        pPrice: parseInt(newProduct.price), // 숫자로 변환
+        pCount: parseInt(newProduct.count), // 숫자로 변환
+        pImgUrl: imgUrl,
+        pcate: parseInt(newProduct.pcate), // 숫자로 변환
+      };
+  
+      const response = await axios.post('http://localhost:8080/api/products', productData);
       setProducts([...products, response.data]);
       setNewProduct({ name: '', price: '', pcate: '', count: '' });
       setImageFile(null);
@@ -60,6 +64,7 @@ const Shop = () => {
       setMessage('상품 등록에 실패했습니다.');
     }
   };
+  
 
   const handleEditProduct = (product) => {
     setEditingProduct(product);
