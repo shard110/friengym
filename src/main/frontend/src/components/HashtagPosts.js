@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const HashtagPosts = () => {
     const { tag } = useParams();
@@ -19,6 +19,20 @@ const HashtagPosts = () => {
                 posts.map((post) => (
                     <div key={post.poNum} className="post-card">
                         {/* 게시글 내용 표시 */}
+                        <Link to={`/posts/${post.poNum}`}>
+                        {post.fileUrl && (
+                            <div className="post-media">
+                            {post.fileUrl.endsWith(".mp4") ? (
+                                <video controls>
+                                <source src={post.fileUrl} type="video/mp4" />
+                                </video>
+                            ) : (
+                                <img src={post.fileUrl} alt="Uploaded" />
+                            )}
+                            </div>
+                        )}
+                        <p>{post.poContents}</p>
+                        </Link>
                     </div>
                 ))
             ) : (
