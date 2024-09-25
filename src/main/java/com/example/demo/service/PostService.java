@@ -3,9 +3,12 @@ package com.example.demo.service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -230,6 +233,47 @@ public class PostService {
         commentRepository.deleteById(commentNo);
     }
 
+    // 인기 검색 키워드 추적을 위한 맵 (간단한 예시)
+    private ConcurrentHashMap<String, AtomicInteger> searchKeywordFrequency = new ConcurrentHashMap<>();
 
+    // 검색 메서드
+    public List<Post> searchPosts(String userId, String content, String hashtag) {
+        Specification<Post> spec = Specification.where(null);
+
+        if (userId != null && !userId.isEmpty()) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("user").get("id"), userId));
+            incrementKeywordFrequency(userId);
+        }
+
+        if (content != null && !content.isEmpty()) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(root.get("poContents"), "%" + content + "%"));
+            incrementKeywordFrequency(content);
+        }
+
+        if (hashtag != null && !hashtag.isEmpty()) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.join("hashtags").get("tag"), hashtag));
+            incrementKeywordFrequency(hashtag);
+        }
+
+        return postRepository.findAll(spec);
+    }
+
+    // 인기 검색 키워드 가져오기 (상위 5개)
+    public List<String> getPopularSearchKeywords() {
+        return searchKeywordFrequency.entrySet()
+                .stream()
+                .sorted((e1, e2) -> e2.getValue().get() - e1.getValue().get())
+                .limit(5)
+                .map(e -> e.getKey())
+                .collect(Collectors.toList());
+    }
+
+    // 키워드 빈도 증가 메서드
+    private void incrementKeywordFrequency(String keyword) {
+        searchKeywordFrequency.computeIfAbsent(keyword, k -> new AtomicInteger(0)).incrementAndGet();
+    }
 
 }

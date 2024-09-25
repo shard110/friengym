@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -245,8 +246,6 @@ public ResponseEntity<String> deletePost(
         }
     }
 
-
-
     // 게시글 좋아요 기능
 @PostMapping("/{poNum}/like")
 public ResponseEntity<PostResponse> likePost(@PathVariable Integer poNum) {
@@ -254,5 +253,27 @@ public ResponseEntity<PostResponse> likePost(@PathVariable Integer poNum) {
     PostResponse response = new PostResponse(post);
     return ResponseEntity.ok(response);
 }
+
+// 검색 API
+@GetMapping("/search")
+public ResponseEntity<?> searchPosts(
+        @RequestParam(required = false) String userId,
+        @RequestParam(required = false) String content,
+        @RequestParam(required = false) String hashtag) {
+
+    List<Post> posts = postService.searchPosts(userId, content, hashtag);
+    List<PostResponse> response = posts.stream()
+            .map(PostResponse::new)
+            .collect(Collectors.toList());
+
+    return ResponseEntity.ok(response);
+}
+
+    // 인기 검색 키워드 API 추가
+    @GetMapping("/popular-search")
+    public ResponseEntity<List<String>> getPopularSearchKeywords() {
+        List<String> popularKeywords = postService.getPopularSearchKeywords();
+        return ResponseEntity.ok(popularKeywords);
+    }
 
 }

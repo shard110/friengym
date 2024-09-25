@@ -17,6 +17,7 @@ import LoginPage from './components/LoginPage';
 import Mypage from './components/Mypage';
 import NewProducts from './components/NewProducts';
 import PopularProductsPage from './components/PopularProductsPage';
+import PostSearch from './components/PostSearch';
 import ProductHome from './components/ProductHome';
 import RegisterPage from './components/RegisterPage';
 import UpdateAsk from './components/UpdateAsk';
@@ -49,6 +50,7 @@ export default function App() {
             <Route path="/post/:poNum/comments/:commentNo/edit" element={<CommentEdit />} />
             <Route path="/recommendations" element={<Recommendations />} />
             <Route path="/hashtag/:tag" element={<HashtagPosts />} />
+            <Route path="/post-search" element={<PostSearch />} />
 
             <Route path="/products" element={<ProductHome />} />
             <Route path="/categories/:catenum" element={<CategoryProductsPage />} />

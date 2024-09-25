@@ -6,7 +6,7 @@ const PostSideBar = () => {
   return (
     <div className="sidebar">
     <Link to="/posts">게시글</Link>
-    <Link to="/search">검색</Link>
+    <Link to="/post-search">검색</Link>
     <Link to="/recommendations">추천</Link>
     <Link to="/messages">메시지</Link>
     <Link to="/notifications">알림</Link>

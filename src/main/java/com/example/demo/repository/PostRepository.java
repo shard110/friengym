@@ -3,6 +3,7 @@ package com.example.demo.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.entity.Post;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Integer> {
+public interface PostRepository extends JpaRepository<Post, Integer>, JpaSpecificationExecutor<Post> {
 
     // 모든 게시글을 최신순으로 조회하는 메서드
     List<Post> findAllByOrderByPoDateDesc();
@@ -31,6 +32,8 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     // 최신 게시글 10개 가져오기 (추가)
     List<Post> findTop10ByOrderByPoDateDesc();
+
+    
 
 
 
