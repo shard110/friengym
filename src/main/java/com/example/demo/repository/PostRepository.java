@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Post;
@@ -11,24 +12,26 @@ import com.example.demo.entity.Post;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
 
-    // 최신 순으로 게시글 조회
-    @Query("SELECT p FROM Post p ORDER BY p.poDate DESC")
+    // 모든 게시글을 최신순으로 조회하는 메서드
     List<Post> findAllByOrderByPoDateDesc();
+
+    // 좋아요 수가 많은 게시글 10개 가져오기
+    List<Post> findTop10ByOrderByLikesDesc();
     
     // 내용으로 검색할 수 있는 메서드
     List<Post> findByPoContents(String poContents);
 
-    @Query("SELECT p FROM Post p JOIN p.hashtags h WHERE h = :hashtag")
-    List<Post> findByHashtag(String hashtag);
+    // 특정 해시태그를 가진 게시글 조회
+   @Query("SELECT p FROM Post p JOIN p.hashtags h WHERE h.tag = :tag")
+    List<Post> findByHashtag(@Param("tag") String tag);
 
     // 여러 해시태그를 포함한 게시글을 찾기 위한 메서드
-    List<Post> findByHashtagsIn(List<String> hashtags);
+    @Query("SELECT DISTINCT p FROM Post p JOIN p.hashtags h WHERE h.tag IN :tags")
+    List<Post> findByHashtagsIn(@Param("tags") List<String> tags);
+
+    // 최신 게시글 10개 가져오기 (추가)
+    List<Post> findTop10ByOrderByPoDateDesc();
 
 
-    // 특정 해시태그를 가진 게시글 조회
-    List<Post> findByHashtags_Tag(String tag);
-
-    // 여러 해시태그 중 하나라도 포함하는 게시글 조회
-    List<Post> findByHashtags_TagIn(List<String> tags);
 
 }

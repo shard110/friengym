@@ -101,9 +101,8 @@ public class PostService {
        Set<Hashtag> hashtags = processHashtags(postRequest.getHashtags());
        post.setHashtags(hashtags);
 
-       postRepository.save(post);
+       return  postRepository.save(post);
 
-       return post;
     }
     
 
@@ -175,7 +174,7 @@ public class PostService {
 
     // 특정 해시태그로 게시글 조회
     public List<Post> getPostsByHashtag(String tag) {
-        return postRepository.findByHashtags_Tag(tag);
+        return postRepository.findByHashtag(tag);
     }
 
 
