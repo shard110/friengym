@@ -28,3 +28,47 @@ button {
   border-radius: 25px;
   cursor: pointer;
 }
+
+
+
+
+.post-create .link-preview {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.post-create .link-preview img {
+  max-width: 150px;
+  object-fit: cover;
+}
+
+.post-create .link-preview-content {
+  padding: 10px;
+}
+
+.post-create .link-preview-content h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.post-create .link-preview-content p {
+  margin: 5px 0 0;
+  color: #666;
+}
+
+.youtube-preview {
+  display: flex;
+  align-items: center;
+}
+
+.youtube-preview img {
+  max-width: 150px;
+  margin-right: 10px;
+}
+
+.error {
+  color: red;
+}

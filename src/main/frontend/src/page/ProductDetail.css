@@ -86,3 +86,20 @@
     cursor: pointer;
     box-sizing: border-box;
 }
+
+.youtube-video {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .youtube-video img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .youtube-video p {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  

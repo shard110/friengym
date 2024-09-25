@@ -1,9 +1,13 @@
 package com.example.demo.controller;
 
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -282,6 +286,42 @@ public ResponseEntity<?> searchPosts(
     public ResponseEntity<List<String>> getPopularSearchKeywords() {
         List<String> popularKeywords = postService.getPopularSearchKeywords();
         return ResponseEntity.ok(popularKeywords);
+    }
+
+     @GetMapping("/fetch-metadata")
+    public ResponseEntity<?> fetchMetadata(@RequestParam String url) {
+        try {
+            // URL 유효성 검사 및 정규화
+            if (!url.startsWith("http")) {
+                url = "http://" + url;
+            }
+
+            // Jsoup을 사용하여 문서 파싱
+            Document doc = Jsoup.connect(url).get();
+
+            // Open Graph 메타데이터 추출
+            String title = doc.select("meta[property=og:title]").attr("content");
+            String description = doc.select("meta[property=og:description]").attr("content");
+            String image = doc.select("meta[property=og:image]").attr("content");
+
+            // 만약 Open Graph 메타데이터가 없다면 일반 메타데이터 사용
+            if (title.isEmpty()) {
+                title = doc.title();
+            }
+            if (description.isEmpty()) {
+                description = doc.select("meta[name=description]").attr("content");
+            }
+
+            Map<String, String> metadata = new HashMap<>();
+            metadata.put("title", title);
+            metadata.put("description", description);
+            metadata.put("image", image);
+            metadata.put("url", url);
+
+            return ResponseEntity.ok(metadata);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("메타데이터를 가져오는 데 실패했습니다.");
+        }
     }
 
 }

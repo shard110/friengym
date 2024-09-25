@@ -31,7 +31,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"hashtags", "post"})
+@EqualsAndHashCode(exclude = {"hashtags"})
 @Entity
 public class Post {
 

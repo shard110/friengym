@@ -26,6 +26,8 @@ repositories {
 
 dependencies {
    
+   // 웹 페이지의 메타데이터를 파싱
+    implementation 'org.jsoup:jsoup:1.15.4'
 
     // Spring Security 추가
     implementation 'org.springframework.boot:spring-boot-starter-security'
