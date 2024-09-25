@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../components/AuthContext"; // 사용자 인증 정보 사용
 import "./PostDetail.css"; // 스타일 정의
 
 const PostDetail = () => {
+  const isFirstRender = useRef(true);
   const { poNum } = useParams();
   const { user } = useAuth();  // 현재 로그인한 사용자 정보 가져오기
   const [post, setPost] = useState(null);
@@ -16,6 +17,10 @@ const PostDetail = () => {
 
 
   useEffect(() => {
+
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
     fetch(`/posts/${poNum}`)
       .then((response) => response.json())
       .then((data) => {
@@ -36,6 +41,7 @@ const PostDetail = () => {
       .catch((error) => {
         setError("댓글을 불러오는 데 실패했습니다.");
       });
+    }
   }, [poNum]);
 
   // 댓글 추가 핸들러

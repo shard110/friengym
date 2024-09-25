@@ -88,7 +88,7 @@ public class PostController {
 public ResponseEntity<PostResponse> getPostById(@PathVariable("poNum") Integer poNum) {
     try {
         // 게시글만 조회
-        Post post = postService.getPostByIdWithoutIncrementingView(poNum); // 조회수 증가 없는 메서드 사용
+        Post post = postService.getPostById(poNum); // 조회수 증가 포함
         PostResponse response = new PostResponse(post);
         return ResponseEntity.ok(response);
     } catch (Exception e) {
@@ -97,16 +97,7 @@ public ResponseEntity<PostResponse> getPostById(@PathVariable("poNum") Integer p
     }
 }
 
-// 조회수 증가 API
-@PostMapping("/{poNum}/increment-view")
-public ResponseEntity<Void> incrementViewCount(@PathVariable Integer poNum) {
-    try {
-        postService.incrementViewCount(poNum); // 조회수 증가 로직 호출
-        return ResponseEntity.ok().build(); // 성공적인 응답
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
-}
+
 
 
     // 게시글 수정

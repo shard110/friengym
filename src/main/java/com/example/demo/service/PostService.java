@@ -24,6 +24,8 @@ import com.example.demo.repository.HashtagRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 
 @Service
 public class PostService {
@@ -107,19 +109,16 @@ public class PostService {
     
 
 
- // 게시글 조회 메서드
+    // 게시글 조회 메서드
+    @Transactional
     public Post getPostById(Integer poNum) {
-        incrementViewCount(poNum);
-        return postRepository.findById(poNum)
-                .orElseThrow(() -> new PostNotFoundException(poNum));// 게시글이 없으면 예외 발생
-    }
+    Post post = postRepository.findById(poNum)
+            .orElseThrow(() -> new PostNotFoundException(poNum));
+    post.setViewCnt(post.getViewCnt() + 1);
+    return postRepository.save(post);
+  
+}
 
-    public void incrementViewCount(Integer poNum) {
-        Post post = postRepository.findById(poNum)
-                .orElseThrow(() -> new PostNotFoundException(poNum));
-        post.setViewCnt(post.getViewCnt() + 1);
-        postRepository.save(post);
-    }
 
     // 게시글 수정
     public Post updatePost(Integer poNum, PostRequest postRequest, MultipartFile file, String userId) {
