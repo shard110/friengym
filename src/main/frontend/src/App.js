@@ -31,6 +31,7 @@ import ProductList from './page/ProductList';
 import QnaPage from './page/QnaPage';
 import ReviewPage from './page/ReviewPage';
 import OrderPage from './page/OrderPage';
+import PaymentSuccess from './page/PaymentSuccess';
 
 export default function App() {
   return (
@@ -51,7 +52,8 @@ export default function App() {
             <Route path="/productslist/:pNum" element={<ProductDetail />} />
             <Route path="/productslist" element={<ProductList />} />
             <Route path="/post/:poNum" element={<PostDetail />} />
-            <Route path="/order" element={<OrderPage />} /> {/* OrderPage 라우트 추가 */}
+            <Route path="/order" element={<OrderPage />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/edit/:poNum" element={<EditPost />} />
             <Route path="/login" element={<LoginPage />} />

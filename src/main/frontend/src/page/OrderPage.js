@@ -40,11 +40,58 @@ const OrderPage = () => {
         }
     }, [user]);
 
+    async function handlePaymentToss() {
+        const customer = {
+            phoneNumber: user.phone,
+            fullName: user.name,
+        };
+
+        const orderName = cartItems.map(item => item.product.pName).join(', ');
+        const paymentId = `payment-${crypto.randomUUID()}`;
+        const totalAmount = cartItems.reduce((total, item) => total + item.product.pPrice * item.cCount, 0);
+
+        const response = await PortOne.requestPayment({
+            storeId: process.env.REACT_APP_PORTONE_STORE_ID,
+            channelKey: process.env.REACT_APP_PORTONE_TOSS,
+            paymentId: paymentId,
+            orderName: orderName,
+            totalAmount: totalAmount,
+            currency: "CURRENCY_KRW",
+            payMethod: "CARD",
+            customer: customer,
+        });
+
+        if (response.code != null) {
+            console.error('결제 요청 중 오류 발생');
+            return alert(response.message);
+        } else{
+            const notified = await fetch("/payment/complete",{
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                // paymentId와 주문 정보를 서버에 전달합니다
+                body: JSON.stringify({
+                    storeId: process.env.REACT_APP_PORTONE_STORE_ID,
+                    channelKey: process.env.REACT_APP_PORTONE_TOSS,
+                    paymentId: paymentId,
+                    orderName: orderName,
+                    totalAmount: cartItems.reduce((total, item) => total + item.product.pPrice * item.cCount, 0),
+                    currency: "CURRENCY_KRW",
+                    payMethod: "CARD",
+                    customer: customer,
+                }),
+            });
+            console.log('결제 성공: ', response);
+            navigate('/payment-success', {state: {
+                orderName: orderName,
+                totalAmount: totalAmount,
+            }}); 
+        }        
+    };
+
     const handlePaymentPayco = async () => {
         const customer = {
-            email: user.email,
-            phoneNumber: user.phoneNumber,
-            fullName: user.fullName,
+            phoneNumber: user.phone,
+            fullName: user.name,
         };
 
         const orderName = cartItems.map(item => item.product.pName).join(', ');
@@ -75,11 +122,10 @@ const OrderPage = () => {
         }
     };
 
-    const handlePaymentToss = async () => {
+    const handlePaymentToss2 = async () => {
         const customer = {
-            email: user.email,
-            phoneNumber: user.phoneNumber,
-            fullName: user.fullName,
+            phoneNumber: user.phone,
+            fullName: user.name,
         };
 
         const orderName = cartItems.map(item => item.product.pName).join(', ');
@@ -191,8 +237,8 @@ const OrderPage = () => {
             <p>신용카드</p>
             <p>무통장입금</p>
             <p>만나서 결제</p>
-            <button onClick={handlePaymentPayco}>페이코 간편결제</button>
             <button onClick={handlePaymentToss}>토스페이</button>
+            <button onClick={handlePaymentPayco}>페이코 간편결제</button>
             <button onClick={handlePaymentKG}>신용카드 결제</button>
         </div>
     );
