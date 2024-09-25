@@ -18,12 +18,14 @@ import com.example.demo.dto.CommentResponse;
 import com.example.demo.dto.PostRequest;
 import com.example.demo.entity.Comment;
 import com.example.demo.entity.Hashtag;
+import com.example.demo.entity.Notification;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.User;
 import com.example.demo.exception.PostNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.HashtagRepository;
+import com.example.demo.repository.NotificationRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
 
@@ -50,6 +52,10 @@ public class PostService {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
+
 
     // 모든 게시글 조회 메서드
     public List<Post> getAllPosts() {
@@ -182,11 +188,26 @@ public class PostService {
 
 
     //좋아요 기능
-    public Post incrementLikes(Integer poNum) {
+    public Post incrementLikes(Integer poNum, String userId) {
         Post post = postRepository.findById(poNum)
                 .orElseThrow(() -> new PostNotFoundException(poNum));
+                
         post.setLikes(post.getLikes() + 1);
-        return postRepository.save(post);
+        postRepository.save(post);
+
+        // 알림 생성 로직 추가
+        if (!post.getUser().getId().equals(userId)) {
+            User sender = userRepository.findById(userId)
+                    .orElseThrow(() -> new UserNotFoundException(userId));
+            Notification notification = new Notification();
+            notification.setRecipient(post.getUser());
+            notification.setSender(sender);
+            notification.setType(Notification.NotificationType.LIKE);
+            notification.setPost(post);
+            notificationRepository.save(notification);
+        }
+        
+        return post;
     }
 
     ////////////////////////////////////////////
@@ -199,7 +220,20 @@ public class PostService {
 
         // CommentRequest에서 User와 Post를 사용하여 Comment 엔티티 생성
         Comment comment = commentRequest.toEntity(user, post);
-        return commentRepository.save(comment);
+        commentRepository.save(comment);
+
+        // 알림 생성 로직 추가
+        if (!post.getUser().getId().equals(userId)) {
+        Notification notification = new Notification();
+        notification.setRecipient(post.getUser());
+        notification.setSender(user);
+        notification.setType(Notification.NotificationType.COMMENT);
+        notification.setPost(post);
+        notificationRepository.save(notification);
+    }
+
+
+        return comment;
     }
 
     // 댓글 조회

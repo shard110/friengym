@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.config.JwtTokenProvider;
 import com.example.demo.dto.CommentRequest;
 import com.example.demo.dto.CommentResponse;
 import com.example.demo.dto.PostRequest;
@@ -44,6 +45,9 @@ public class PostController {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     // 모든 게시글 조회
     @GetMapping
@@ -247,12 +251,16 @@ public ResponseEntity<String> deletePost(
     }
 
     // 게시글 좋아요 기능
-@PostMapping("/{poNum}/like")
-public ResponseEntity<PostResponse> likePost(@PathVariable Integer poNum) {
-    Post post = postService.incrementLikes(poNum);
-    PostResponse response = new PostResponse(post);
-    return ResponseEntity.ok(response);
-}
+    @PostMapping("/{poNum}/like")
+    public ResponseEntity<?> incrementLikes(@PathVariable Integer poNum, @RequestHeader("Authorization") String authHeader) {
+        try {
+            String userId = postService.getUserIdFromToken(authHeader);
+            Post post = postService.incrementLikes(poNum, userId);
+            return ResponseEntity.ok(new PostResponse(post));
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+    }
 
 // 검색 API
 @GetMapping("/search")

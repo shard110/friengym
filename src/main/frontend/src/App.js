@@ -16,6 +16,7 @@ import HomePage from './components/HomePage';
 import LoginPage from './components/LoginPage';
 import Mypage from './components/Mypage';
 import NewProducts from './components/NewProducts';
+import Notifications from './components/Notification';
 import PopularProductsPage from './components/PopularProductsPage';
 import PostSearch from './components/PostSearch';
 import ProductHome from './components/ProductHome';
@@ -51,6 +52,8 @@ export default function App() {
             <Route path="/recommendations" element={<Recommendations />} />
             <Route path="/hashtag/:tag" element={<HashtagPosts />} />
             <Route path="/post-search" element={<PostSearch />} />
+            <Route path="/notifications" element={<Notifications />} />
+
 
             <Route path="/products" element={<ProductHome />} />
             <Route path="/categories/:catenum" element={<CategoryProductsPage />} />
