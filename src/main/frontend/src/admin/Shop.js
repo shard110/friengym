@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './Shop.css'; // CSS 파일 임포트
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
@@ -15,7 +16,7 @@ const Shop = () => {
     const loadData = async () => {
       await fetchProducts();
       await fetchCategories();
-      loadLocalData(); // 로컬 스토리지에서 데이터 로드
+      loadLocalData();
     };
     loadData();
   }, []);
@@ -85,7 +86,7 @@ const Shop = () => {
       const response = await axios.post('http://localhost:8080/api/products', productData);
       const updatedProducts = [...products, response.data];
       setProducts(updatedProducts);
-      saveLocalData(updatedProducts); // 로컬 스토리지에 저장
+      saveLocalData(updatedProducts);
       setNewProduct({ name: '', price: '', pcate: null, count: '' });
       setImageFile(null);
       setDetailImageFile(null);
@@ -138,10 +139,12 @@ const Shop = () => {
     };
 
     try {
-      await axios.put(`http://localhost:8080/api/products/${editingProduct.pNum}`, updatedProduct);
-      const updatedProducts = products.map(prod => (prod.pNum === updatedProduct.pNum ? updatedProduct : prod));
+      const response = await axios.put(`http://localhost:8080/api/products/${editingProduct.pNum}`, updatedProduct);
+      const updatedProducts = products.map(prod =>
+        prod.pNum === updatedProduct.pNum ? { ...response.data, pImgUrl: imgUrl, pDetailImgUrl: detailImgUrl } : prod
+      );
       setProducts(updatedProducts);
-      saveLocalData(updatedProducts); // 로컬 스토리지에 저장
+      saveLocalData(updatedProducts);
       setEditingProduct(null);
       setNewProduct({ name: '', price: '', pcate: null, count: '' });
       setImageFile(null);
@@ -158,7 +161,7 @@ const Shop = () => {
       await axios.delete(`http://localhost:8080/api/products/${pNum}`);
       const updatedProducts = products.filter((prod) => prod.pNum !== pNum);
       setProducts(updatedProducts);
-      saveLocalData(updatedProducts); // 로컬 스토리지에 저장
+      saveLocalData(updatedProducts);
       setMessage('상품이 삭제되었습니다.');
     } catch (error) {
       console.error(error.response.data);
@@ -172,117 +175,78 @@ const Shop = () => {
     return category ? category.catename : '미지정';
   };
 
-  const filteredProducts = selectedCategory 
-    ? products.filter(product => product.pcate === selectedCategory) 
-    : products;
+  const filteredProducts = products.filter(product => 
+    selectedCategory ? product.pcate === parseInt(selectedCategory) : true
+  );
 
   return (
-    <div>
-      <h1>상품 목록</h1>
-      {message && <p>{message}</p>}
+    <div className="shop-container">
+      <h1 className="shop-title">쇼핑몰 상품 관리</h1>
 
+      {/* 카테고리 선택 기능 */}
       <div>
-        <label>
-          카테고리 선택:
-          <select
-            value={selectedCategory !== null ? selectedCategory : ''}
-            onChange={(e) => setSelectedCategory(e.target.value ? Number(e.target.value) : null)}
-          >
-            <option value="">모든 상품</option>
-            {categories.length > 0 ? (
-              categories.map((category) => (
-                <option key={category.catenum} value={category.catenum}>
-                  {category.catename}
-                </option>
-              ))
-            ) : (
-              <option value="" disabled>카테고리가 없습니다.</option>
-            )}
-          </select>
-        </label>
+        <select onChange={(e) => setSelectedCategory(e.target.value)} value={selectedCategory}>
+          <option value="">모든 카테고리</option>
+          {categories.map(category => (
+            <option key={category.catenum} value={category.catenum}>{category.catename}</option>
+          ))}
+        </select>
       </div>
 
-      <ul>
-        {filteredProducts.map((product) => (
-          <li key={product.pNum}>
-            <img src={product.pImgUrl} alt={product.pName} style={{ width: '100px', height: '100px' }} />
-            {product.pName} - {product.pPrice} 원 - 재고: {product.pCount}개 - 카테고리: {getCategoryName(product.pcate)}
-            <img src={product.pDetailImgUrl} alt={`${product.pName} 상세`} style={{ width: '100px', height: '100px' }} />
-            <button onClick={() => handleEditProduct(product)}>수정</button>
-            <button onClick={() => handleDeleteProduct(product.pNum)}>삭제</button>
-          </li>
-        ))}
-      </ul>
+      {/* 상품 목록을 표 형식으로 표시 */}
+      <table className="shop-table">
+        <thead>
+          <tr>
+            <th>상품명</th>
+            <th>가격</th>
+            <th>재고</th>
+            <th>카테고리</th>
+            <th>등록일</th>
+            <th>이미지</th>
+            <th>상세 이미지</th>
+            <th>작업</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredProducts.map((product) => (
+            <tr key={product.pNum}>
+              <td>{product.pName}</td>
+              <td>{product.pPrice} 원</td>
+              <td>{product.pCount}개</td>
+              <td>{getCategoryName(product.pcate)}</td>
+              <td>{product.pDate ? new Date(product.pDate).toLocaleDateString() : '날짜 없음'}</td>
+              <td>
+                <img src={product.pImgUrl} alt={product.pName} />
+              </td>
+              <td>
+                <img src={product.pDetailImgUrl} alt={`${product.pName} 상세`} />
+              </td>
+              <td>
+                <button onClick={() => handleEditProduct(product)}>수정</button>
+                <button onClick={() => handleDeleteProduct(product.pNum)}>삭제</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-      <h2>{editingProduct ? '상품 수정' : '상품 등록'}</h2>
-      <form onSubmit={editingProduct ? handleUpdateProduct : handleAddProduct}>
-        <label>
-          상품명:
-          <input
-            type="text"
-            placeholder="상품명"
-            value={newProduct.name}
-            onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-            required
-          />
-        </label>
-        <label>
-          가격:
-          <input
-            type="number"
-            placeholder="가격"
-            value={newProduct.price}
-            onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-            required
-          />
-        </label>
-        <label>
-          이미지 업로드:
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setImageFile(e.target.files[0])}
-          />
-        </label>
-        <label>
-          상세 이미지 업로드:
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setDetailImageFile(e.target.files[0])}
-          />
-        </label>
-        <label>
-          재고 수량:
-          <input
-            type="number"
-            placeholder="재고 수량"
-            value={newProduct.count}
-            onChange={(e) => setNewProduct({ ...newProduct, count: e.target.value })}
-            required
-          />
-        </label>
-        <label>
-          카테고리 선택:
-          <select
-            value={newProduct.pcate !== null ? newProduct.pcate : ''}
-            onChange={(e) => setNewProduct({ ...newProduct, pcate: e.target.value ? Number(e.target.value) : null })}
-            required
-          >
-            <option value="">카테고리 선택</option>
-            {categories.length > 0 ? (
-              categories.map((category) => (
-                <option key={category.catenum} value={category.catenum}>
-                  {category.catename}
-                </option>
-              ))
-            ) : (
-              <option value="" disabled>카테고리가 없습니다.</option>
-            )}
-          </select>
-        </label>
+      {/* 상품 등록 및 수정 폼 */}
+      <form className="shop-form" onSubmit={editingProduct ? handleUpdateProduct : handleAddProduct}>
+        <input type="text" placeholder="상품명" value={newProduct.name} onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} required />
+        <input type="number" placeholder="가격" value={newProduct.price} onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })} required />
+        <select value={newProduct.pcate} onChange={(e) => setNewProduct({ ...newProduct, pcate: e.target.value })} required>
+          <option value="">카테고리 선택</option>
+          {categories.map(category => (
+            <option key={category.catenum} value={category.catenum}>{category.catename}</option>
+          ))}
+        </select>
+        <input type="number" placeholder="재고" value={newProduct.count} onChange={(e) => setNewProduct({ ...newProduct, count: e.target.value })} required />
+        <input type="file" onChange={(e) => setImageFile(e.target.files[0])} />
+        <input type="file" onChange={(e) => setDetailImageFile(e.target.files[0])} />
         <button type="submit">{editingProduct ? '수정하기' : '등록하기'}</button>
       </form>
+
+      {message && <p>{message}</p>}
     </div>
   );
 };
