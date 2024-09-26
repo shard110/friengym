@@ -25,6 +25,8 @@ public class Dorder implements Serializable {
     @ManyToOne
     @JoinColumn(name = "pnum")
     private Product product;
+
+    public Dorder(){}
     
     public int getDoNum() {
         return this.doNum;

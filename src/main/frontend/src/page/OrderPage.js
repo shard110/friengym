@@ -50,6 +50,8 @@ const OrderPage = () => {
         const paymentId = `payment-${crypto.randomUUID()}`;
         const totalAmount = cartItems.reduce((total, item) => total + item.product.pPrice * item.cCount, 0);
 
+        console.log("결제 요청 시 UUID 생성: ", paymentId);
+
         const response = await PortOne.requestPayment({
             storeId: process.env.REACT_APP_PORTONE_STORE_ID,
             channelKey: process.env.REACT_APP_PORTONE_TOSS,
@@ -64,28 +66,46 @@ const OrderPage = () => {
         if (response.code != null) {
             console.error('결제 요청 중 오류 발생');
             return alert(response.message);
-        } else{
-            const notified = await fetch("/payment/complete",{
+        } else {
+            console.log("서버로 전송되는 UUID: ", paymentId);
+            const token = user?.token || localStorage.getItem('jwtToken');
+            if (!token) {
+                console.error('토큰을 찾을 수 없습니다.');
+                alert('로그인이 필요합니다.');
+                return;
+            }
+        
+            const notified = await fetch("/api/payment/complete", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                // paymentId와 주문 정보를 서버에 전달합니다
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}` // 헤더에 토큰 추가
+                },
+                // paymentId와 주문 정보를 서버에 전달
                 body: JSON.stringify({
                     storeId: process.env.REACT_APP_PORTONE_STORE_ID,
                     channelKey: process.env.REACT_APP_PORTONE_TOSS,
                     paymentId: paymentId,
+                    status: "결제 성공",
+                    odate: new Date(),
+                    id: user.id,
                     orderName: orderName,
-                    totalAmount: cartItems.reduce((total, item) => total + item.product.pPrice * item.cCount, 0),
-                    currency: "CURRENCY_KRW",
-                    payMethod: "CARD",
-                    customer: customer,
+                    dorders: cartItems.map(item => ({
+                        doCount: item.cCount,
+                        doPrice: item.product.pPrice,
+                        product: item.product
+                    }))
                 }),
             });
             console.log('결제 성공: ', response);
-            navigate('/payment-success', {state: {
-                orderName: orderName,
-                totalAmount: totalAmount,
-            }}); 
-        }        
+            navigate('/payment-success', {
+                state: {
+                    orderName: orderName,
+                    totalAmount: totalAmount,
+                }
+            });
+        }
+        
     };
 
     const handlePaymentPayco = async () => {
@@ -111,37 +131,6 @@ const OrderPage = () => {
                 },
             });
     
-            if (response.code != null) {
-                alert(response.message);
-            } else {
-                console.log('결제 성공:', response);
-            }
-        } catch (error) {
-            console.error('결제 요청 중 오류 발생:', error);
-            alert('결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.');
-        }
-    };
-
-    const handlePaymentToss2 = async () => {
-        const customer = {
-            phoneNumber: user.phone,
-            fullName: user.name,
-        };
-
-        const orderName = cartItems.map(item => item.product.pName).join(', ');
-
-        try {
-            const response = await PortOne.requestPayment({
-                storeId: process.env.REACT_APP_PORTONE_STORE_ID,
-                channelKey: process.env.REACT_APP_PORTONE_TOSS,
-                paymentId: `payment-${crypto.randomUUID()}`,
-                orderName: orderName,
-                totalAmount: cartItems.reduce((total, item) => total + item.product.pPrice * item.cCount, 0),
-                currency: "CURRENCY_KRW",
-                payMethod: "CARD",
-                customer: customer,
-            });
-
             if (response.code != null) {
                 alert(response.message);
             } else {

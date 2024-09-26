@@ -24,4 +24,15 @@ public class PaymentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("결제 요청 중 오류 발생: " + e.getMessage());
         }
     }
+
+    @PostMapping("/complete")
+    public ResponseEntity<?> completePayment(@RequestBody PaymentRequest paymentRequest, @RequestHeader("Authorization") String token) {
+
+        try {
+            paymentService.processPayment(paymentRequest);
+            return ResponseEntity.ok("결제 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("결제 실패");
+        }
+    }
 }

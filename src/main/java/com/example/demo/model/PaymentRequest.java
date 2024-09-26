@@ -1,35 +1,60 @@
 package com.example.demo.model;
 
-public class PaymentRequest {
-    private int amount;
-    private String orderId;
-    // 기타 결제 정보 필드 추가
+import java.sql.Date;
+import java.util.List;
 
-    // 기본 생성자
+public class PaymentRequest {
+    private String paymentId;
+    private String status;
+    private Date odate;
+    private String id;
+    
+    private List<DorderRequest> dorders;
+    private String orderId;
+    private int amount;
+
     public PaymentRequest() {}
 
-    // 매개변수가 있는 생성자
-    public PaymentRequest(int amount, String orderId) {
-        this.amount = amount;
-        this.orderId = orderId;
+    public String getPaymentId() {
+        return paymentId;
     }
-
-    // Getters and Setters
-    public int getAmount() {
-        return amount;
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId;
     }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public String getStatus() {
+        return status;
     }
-
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    public Date getOdate() {
+        return odate;
+    }
+    public void setOdate(Date odate) {
+        this.odate = odate;
+    }
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    public List<DorderRequest> getDorders() {
+        return dorders;
+    }
+    public void setDorders(List<DorderRequest> dorders) {
+        this.dorders = dorders;
+    }
     public String getOrderId() {
         return orderId;
     }
-
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    // 기타 결제 정보 필드의 Getters and Setters 추가
+    public int getAmount() {
+        return amount;
+    }
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
 }

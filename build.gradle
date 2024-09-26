@@ -69,11 +69,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     // 포트원 결제 api 관련
-    implementation 'com.portone:portone-api:1.0.0'
+    // implementation 'com.portone:portone-api:1.0.0'
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
     // implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
     implementation 'org.springframework.boot:spring-boot-starter-json'
-    implementation 'org.springframework.boot:spring-boot-starter-rest'
+    // implementation 'org.springframework.boot:spring-boot-starter-rest'
 }
 
 tasks.named('test') {

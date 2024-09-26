@@ -5,9 +5,10 @@ import { useAuth } from '../components/AuthContext';
 import './Cart.css';
 
 const Cart = () => {
-    const { user, loading } = useAuth();
+    const { user, loading:authLoading } = useAuth();
     const navigate = useNavigate();
     const [cartItems, setCartItems] = useState([]);
+    const [loading, setLoading] = useState(true);  // 페이지 로딩 상태
 
     useEffect(() => {
         if (!user) {
@@ -20,6 +21,7 @@ const Cart = () => {
             if (!token) {
                 console.error('토큰을 찾을 수 없습니다.');
                 alert('로그인이 필요합니다.');
+                setLoading(false);
                 return;
             }
 
@@ -32,6 +34,9 @@ const Cart = () => {
                 setCartItems(response.data);
             } catch (error) {
                 console.error('장바구니 아이템을 불러오는 동안 오류 발생:', error);
+            } finally {
+                setLoading(false);  // 로딩 상태를 false로 설정
+
             }
         };
 
