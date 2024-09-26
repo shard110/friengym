@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import PostSideBar from "../components/PostSideBar";
-import "./Gallery.css"; // 새로 정의된 CSS
+import YouTubePreview from "../components/YouTubePreview";
+import "./Gallery.css";
 
 const Gallery = () => {
   const [posts, setPosts] = useState([]); // 게시글 목록 상태
@@ -12,206 +13,202 @@ const Gallery = () => {
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
   useEffect(() => {
-    fetch("/posts")
+    fetch("/posts") // Spring Boot 백엔드의 엔드포인트에 맞게 수정 필요
       .then((response) => response.json())
       .then((data) => {
         setPosts(data); // 게시글 데이터 설정
         setLoading(false); // 로딩 상태 해제
       })
       .catch((error) => {
+        console.error("Error fetching posts:", error);
         setError("게시글을 불러오는 데 실패했습니다."); // 에러 메시지 설정
         setLoading(false);
       });
   }, []);
 
- 
+  const likedPostsKey = `likedPosts_${user?.id}`;
+  const likedPosts = JSON.parse(localStorage.getItem(likedPostsKey)) || {};
 
-// 사용자별로 likedPosts 가져오기
-const likedPostsKey = `likedPosts_${user?.id}`;
-const likedPosts = JSON.parse(localStorage.getItem(likedPostsKey)) || {};
+  const hasLiked = (postId) => likedPosts[postId];
 
-// 좋아요 여부 확인 함수
-const hasLiked = (postId) => likedPosts[postId];
+  const handleLike = (post) => {
+    const token = localStorage.getItem("jwtToken");
 
-// 좋아요 처리 함수
-const handleLike = (post) => {
-  const token = localStorage.getItem("jwtToken");
-
-  if (!hasLiked(post.poNum)) {
-    fetch(`/posts/${post.poNum}/like`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          return response.text().then((text) => {
-            throw new Error(`Server Error: ${text}`);
-          });
-        }
+    if (!hasLiked(post.poNum)) {
+      fetch(`/posts/${post.poNum}/like`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       })
-      .then((updatedPost) => {
-        setPosts((prevPosts) =>
-          prevPosts.map((p) => (p.poNum === updatedPost.poNum ? updatedPost : p))
-        );
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            return response.text().then((text) => {
+              throw new Error(`Server Error: ${text}`);
+            });
+          }
+        })
+        .then((updatedPost) => {
+          setPosts((prevPosts) =>
+            prevPosts.map((p) => (p.poNum === updatedPost.poNum ? updatedPost : p))
+          );
 
-        // 사용자별로 likedPosts 업데이트
-        const updatedLikedPosts = { ...likedPosts, [post.poNum]: true };
-        localStorage.setItem(likedPostsKey, JSON.stringify(updatedLikedPosts));
+          const updatedLikedPosts = { ...likedPosts, [post.poNum]: true };
+          localStorage.setItem(likedPostsKey, JSON.stringify(updatedLikedPosts));
 
-         // 좋아요 완료 메시지 표시
-         alert("좋아요를 눌렀습니다.");
-      })
-      .catch((error) => {
-        console.error("좋아요 처리 중 오류:", error);
-        alert("좋아요 처리에 실패했습니다.");
-      });
-  } else {
-    alert("이미 이 게시글에 좋아요를 눌렀습니다.");
-  }
-};
+          alert("좋아요를 눌렀습니다.");
+        })
+        .catch((error) => {
+          console.error("좋아요 처리 중 오류:", error);
+          alert("좋아요 처리에 실패했습니다.");
+        });
+    } else {
+      alert("이미 이 게시글에 좋아요를 눌렀습니다.");
+    }
+  };
 
-
-
-  
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
 
   return (
-
     <div className="gallery-layout">
-    {/* 왼쪽에 사이드바 배치 */}
-    <PostSideBar />
+      <PostSideBar />
+      <div className="gallery">
+        <div className="create-post">
+          <button onClick={() => navigate("/create-post")} className="create-btn">
+            + 글 작성
+          </button>
+        </div>
 
-    <div className="gallery">
-      <div className="create-post">
-        <button onClick={() => navigate("/create-post")} className="create-btn">
-          + 글 작성
-        </button>
-      </div>
-
-      {posts.length > 0 ? (
-        posts.map((post) => (
-          <div
-            className="post-card"
-            key={post.poNum}
-            onClick={() => navigate(`/posts/${post.poNum}`)} // 게시글 클릭 시 상세 페이지로 이동
-            style={{ cursor: "pointer" }} // 클릭 가능한 스타일 추가
-          >
-            <div className="user-info">
-              {post.user ? (
-                <>
-                  <img
-                    src={post.user.photo || "default-photo-url"} // 기본 프로필 이미지 설정
-                    alt={post.user.id}
-                    className="user-photo"
-                  />
-                  <span>{post.user.id}</span>
-                </>
-              ) : (
-                <span>Unknown User</span>
-              )}
-            </div>
-
-            {post.fileUrl && (
-              <div className="post-media">
-                {post.fileUrl.endsWith(".mp4") ? (
-                  <video controls className="post-video">
-                    <source src={post.fileUrl} type="video/mp4" />
-                  </video>
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <div
+              className="post-card"
+              key={post.poNum}
+              onClick={() => navigate(`/posts/${post.poNum}`)}
+              style={{ cursor: "pointer" }}
+            >
+              <div className="user-info">
+                {post.user ? (
+                  <>
+                    <img
+                      src={post.user.photo || "default-photo-url"}
+                      alt={post.user.id}
+                      className="user-photo"
+                    />
+                    <span>{post.user.id}</span>
+                  </>
                 ) : (
-                  <img src={post.fileUrl} alt="Uploaded" className="post-image" />
+                  <span>Unknown User</span>
                 )}
               </div>
-            )}
 
-            <div className="post-content">{post.poContents}</div>
-
-            
-            <div className="hashtags">
-                  {post.hashtags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="hashtag"
-                      onClick={(e) => {
-                        e.stopPropagation(); // 부모 클릭 이벤트 방지
-                        navigate(`/hashtag/${tag}`);
-                      }}
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-
-
-            <div className="post-actions">
-              {/* 좋아요 버튼 */}
-              <button
-                className="like-btn"
-                onClick={(e) => {
-                  e.stopPropagation(); // 클릭 이벤트 전파 방지
-                  handleLike(post);
-                }}
-                disabled={hasLiked(post.poNum)} // 이미 좋아요를 누른 경우 버튼 비활성화
-              >
-                👍 {post.likes}
-              </button>
-
-              <span>👁 {post.viewCnt}</span>
-
-              {user?.id === post.user?.id && (
-                <div className="action-buttons">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // 클릭 이벤트 전파 방지
-                      navigate(`/edit-post/${post.poNum}`);
-                    }}
-                    className="edit-btn"
-                  >
-                    수정
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // 클릭 이벤트 전파 방지
-
-                      // JWT 토큰 가져오기 (예시: localStorage에서 가져옴)
-                      const token = localStorage.getItem('jwtToken');
-
-                      fetch(`/posts/${post.poNum}`, {
-                        method: "DELETE",
-                        headers: {
-                          'Authorization': `Bearer ${token}`,  // Authorization 헤더 추가
-                          'Content-Type': 'application/json'
-                        }
-                      })
-                        .then((response) => {
-                          if (!response.ok) {
-                            throw new Error("게시글 삭제에 실패했습니다.");
-                          }
-                          setPosts(posts.filter((p) => p.poNum !== post.poNum)); // 게시글 삭제 후 목록 갱신
-                        })
-                        .catch((error) => {
-                          console.error("Error deleting post:", error);
-                          alert("게시글 삭제에 실패했습니다.");
-                        });
-                    }}
-                    className="delete-btn"
-                  >
-                    삭제
-                  </button>
+              {post.fileUrl && (
+                <div className="post-media">
+                  {/\.(jpeg|jpg|png|gif)$/i.test(post.fileUrl) ? (
+                    <img src={post.fileUrl} alt="Uploaded" className="post-image" />
+                  ) : /\.(mp4|mov)$/i.test(post.fileUrl) ? (
+                    <video controls className="post-video">
+                      <source src={post.fileUrl} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <a href={post.fileUrl} target="_blank" rel="noopener noreferrer">
+                      파일 보기
+                    </a>
+                  )}
                 </div>
               )}
+
+              <div className="post-content">{post.poContents}</div>
+
+              {/* 유튜브 링크가 있는 경우 YouTubePreview 컴포넌트 사용 */}
+              {post.poContents.match(/https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/[^\s]+/g) && (
+                post.poContents
+                  .match(/https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/[^\s]+/g)
+                  .map((url, index) => (
+                    <YouTubePreview key={index} url={url} />
+                  ))
+              )}
+
+              <div className="hashtags">
+                {post.hashtags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="hashtag"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/hashtag/${tag}`);
+                    }}
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+
+              <div className="post-actions">
+                <button
+                  className="like-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleLike(post);
+                  }}
+                  disabled={hasLiked(post.poNum)}
+                >
+                  👍 {post.likes}
+                </button>
+
+                <span>👁 {post.viewCnt}</span>
+
+                {user?.id === post.user?.id && (
+                  <div className="action-buttons">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/edit-post/${post.poNum}`);
+                      }}
+                      className="edit-btn"
+                    >
+                      수정
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const token = localStorage.getItem("jwtToken");
+
+                        fetch(`/posts/${post.poNum}`, {
+                          method: "DELETE",
+                          headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json",
+                          },
+                        })
+                          .then((response) => {
+                            if (!response.ok) {
+                              throw new Error("게시글 삭제에 실패했습니다.");
+                            }
+                            setPosts(posts.filter((p) => p.poNum !== post.poNum));
+                          })
+                          .catch((error) => {
+                            console.error("Error deleting post:", error);
+                            alert("게시글 삭제에 실패했습니다.");
+                          });
+                      }}
+                      className="delete-btn"
+                    >
+                      삭제
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))
-      ) : (
-        <p>게시물이 없습니다.</p>
-      )}
-    </div>
+          ))
+        ) : (
+          <p>게시물이 없습니다.</p>
+        )}
+      </div>
     </div>
   );
 };
