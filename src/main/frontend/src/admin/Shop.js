@@ -9,12 +9,13 @@ const Shop = () => {
   const [message, setMessage] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [detailImageFile, setDetailImageFile] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(null); // 추가: 선택된 카테고리 상태
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     const loadData = async () => {
       await fetchProducts();
       await fetchCategories();
+      loadLocalData(); // 로컬 스토리지에서 데이터 로드
     };
     loadData();
   }, []);
@@ -39,6 +40,17 @@ const Shop = () => {
       console.error(error);
       setMessage('카테고리 목록을 가져오는 데 실패했습니다.');
     }
+  };
+
+  const loadLocalData = () => {
+    const savedProducts = localStorage.getItem('products');
+    if (savedProducts) {
+      setProducts(JSON.parse(savedProducts));
+    }
+  };
+
+  const saveLocalData = (products) => {
+    localStorage.setItem('products', JSON.stringify(products));
   };
 
   const handleAddProduct = async (e) => {
@@ -71,7 +83,9 @@ const Shop = () => {
 
     try {
       const response = await axios.post('http://localhost:8080/api/products', productData);
-      setProducts([...products, response.data]);
+      const updatedProducts = [...products, response.data];
+      setProducts(updatedProducts);
+      saveLocalData(updatedProducts); // 로컬 스토리지에 저장
       setNewProduct({ name: '', price: '', pcate: null, count: '' });
       setImageFile(null);
       setDetailImageFile(null);
@@ -125,9 +139,9 @@ const Shop = () => {
 
     try {
       await axios.put(`http://localhost:8080/api/products/${editingProduct.pNum}`, updatedProduct);
-      setProducts((prevProducts) =>
-        prevProducts.map(prod => (prod.pNum === updatedProduct.pNum ? updatedProduct : prod))
-      );
+      const updatedProducts = products.map(prod => (prod.pNum === updatedProduct.pNum ? updatedProduct : prod));
+      setProducts(updatedProducts);
+      saveLocalData(updatedProducts); // 로컬 스토리지에 저장
       setEditingProduct(null);
       setNewProduct({ name: '', price: '', pcate: null, count: '' });
       setImageFile(null);
@@ -142,7 +156,9 @@ const Shop = () => {
   const handleDeleteProduct = async (pNum) => {
     try {
       await axios.delete(`http://localhost:8080/api/products/${pNum}`);
-      setProducts(products.filter((prod) => prod.pNum !== pNum));
+      const updatedProducts = products.filter((prod) => prod.pNum !== pNum);
+      setProducts(updatedProducts);
+      saveLocalData(updatedProducts); // 로컬 스토리지에 저장
       setMessage('상품이 삭제되었습니다.');
     } catch (error) {
       console.error(error.response.data);
@@ -165,7 +181,6 @@ const Shop = () => {
       <h1>상품 목록</h1>
       {message && <p>{message}</p>}
 
-      {/* 카테고리 필터 메뉴 추가 */}
       <div>
         <label>
           카테고리 선택:
