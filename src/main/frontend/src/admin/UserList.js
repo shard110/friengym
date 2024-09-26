@@ -5,6 +5,7 @@ import './ListStyles.css';
 const UserList = () => {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState('');
+  const [selectedMonths, setSelectedMonths] = useState({});
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -25,17 +26,53 @@ const UserList = () => {
   }, []);
 
   const handleDelete = async (id) => {
+    // 확인창 추가
+    const confirm = window.confirm("정말로 이 사용자를 삭제하시겠습니까?");
+    if (!confirm) {
+      return; // 사용자가 취소하면 함수 종료
+    }
+
     try {
       await axios.delete(`http://localhost:8080/api/admin/users/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
         },
       });
-      // 삭제 후 사용자 목록을 갱신
       setUsers(users.filter(user => user.id !== id));
     } catch (err) {
       setError('유저 삭제 중 오류가 발생했습니다.');
       console.error(err);
+    }
+  };
+
+  const handleAddMonths = async (id) => {
+    const months = selectedMonths[id];
+    if (months) {
+      // 확인창 추가
+      const confirm = window.confirm(`${months}개월을 추가하시겠습니까?`);
+      if (!confirm) {
+        return; // 사용자가 취소하면 함수 종료
+      }
+  
+      try {
+        await axios.patch(`http://localhost:8080/api/admin/users/${id}/addMonths`, { months }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+          },
+        });
+        // 사용자 목록 갱신
+        const response = await axios.get('http://localhost:8080/api/admin/users', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+          },
+        });
+        setUsers(response.data);
+      } catch (err) {
+        setError('개월 수 추가 중 오류가 발생했습니다.');
+        console.error(err);
+      }
+    } else {
+      setError('개월 수를 선택하세요.');
     }
   };
 
@@ -50,10 +87,11 @@ const UserList = () => {
             <th>이름</th>
             <th>전화번호</th>
             <th>성별</th>
-            <th>신장</th>
-            <th>체중</th>
             <th>생일</th>
-            <th>작업</th> {/* 작업 열 추가 */}
+            <th>등록일자</th>
+            <th>남은 일수</th>
+            <th>개월 추가</th>
+            <th>작업</th>
           </tr>
         </thead>
         <tbody>
@@ -63,11 +101,24 @@ const UserList = () => {
               <td>{user.name}</td>
               <td>{user.phone}</td>
               <td>{user.sex}</td>
-              <td>{user.height}</td>
-              <td>{user.weight}</td>
               <td>{user.birth}</td>
+              <td>{user.firstday}</td> {/* 등록일자 추가 */}
+              <td>{user.restday}</td>   {/* 남은 일수 추가 */}
               <td>
-                <button onClick={() => handleDelete(user.id)}>삭제</button> {/* 삭제 버튼 추가 */}
+                <select
+                  onChange={(e) => setSelectedMonths({ ...selectedMonths, [user.id]: e.target.value })}
+                  defaultValue=""
+                >
+                  <option value="" disabled>개월 추가</option>
+                  <option value="1">1개월</option>
+                  <option value="3">3개월</option>
+                  <option value="6">6개월</option>
+                  <option value="12">1년</option>
+                </select>
+                <button onClick={() => handleAddMonths(user.id)}>등록</button>
+              </td>
+              <td>
+                <button onClick={() => handleDelete(user.id)}>삭제</button>
               </td>
             </tr>
           ))}
