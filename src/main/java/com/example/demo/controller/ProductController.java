@@ -74,6 +74,29 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
+    @PostMapping("/{pNum}/uploadDetailImage")
+    public ResponseEntity<Product> uploadDetailImage(@PathVariable("pNum") int pNum, @RequestParam("file") MultipartFile file) throws IOException {
+        Product product = productService.getProductById(pNum);
+        if (product == null) {
+            throw new RuntimeException("상품을 찾을 수 없습니다: " + pNum);
+        }
+
+        String directoryPath = new File("src/main/resources/static/images").getAbsolutePath();
+        File dir = new File(directoryPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        File dest = new File(dir, fileName);
+        file.transferTo(dest);
+
+        product.setpDetailImgUrl("/images/" + fileName + "?t=" + System.currentTimeMillis());
+        productService.saveOrUpdateProduct(product);
+
+        return ResponseEntity.ok(product);
+    }
+
     @GetMapping("/search")
     public List<ProductListDTO> searchProducts(@RequestParam String keyword) {
         return productService.searchProducts(keyword);
