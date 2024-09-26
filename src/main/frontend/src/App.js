@@ -3,9 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { AuthProvider } from './components/AuthContext';
 import NavBar from './components/NavBar'; // NavBar 컴포넌트 임포트
 
-import AddComment from './components/AddComment';
 import CategoryProductsPage from './components/CategoryProductsPage';
-import CommentsList from './components/CommentsList';
 import CreatePost from "./components/CreatePostForm";
 import Customer from './components/Customer';
 import EditPost from './components/EditPost';
@@ -45,8 +43,6 @@ export default function App() {
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/posts/:poNum" element={<PostDetail />} />
             <Route path="/edit-post/:poNum" element={<EditPost />} />
-            <Route path="/post/:poNum/comments" element={<CommentsList />} />
-            <Route path="/post/:poNum/comments/create" element={<AddComment />} />
             <Route path="/recommendations" element={<Recommendations />} />
             <Route path="/hashtag/:tag" element={<HashtagPosts />} />
             <Route path="/post-search" element={<PostSearch />} />
