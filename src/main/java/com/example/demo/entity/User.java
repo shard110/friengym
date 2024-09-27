@@ -17,8 +17,6 @@ public class User {
     private String id;
 
     @NotNull
-    // @Size(min = 6, message = "Password must be at least 6 characters long")
-    // @Column(length = 60) // BCrypt는 기본적으로 60자의 길이를 요구합니다.
     private String pwd;
 
     @NotNull
@@ -33,8 +31,8 @@ public class User {
     private Integer height;
     private Integer weight;
     private Date birth;
-    private Integer firstday;
-    private Integer restday;
+    private Date firstday; // 등록일자 (Date 타입으로 변경)
+    private Integer restday; // 남은 일수
     private String photo;
     private String sessionkey;
     private Date sessionlimit;
@@ -104,12 +102,12 @@ public class User {
         this.birth = birth;
     }
 
-    public Integer getFirstday() {
-        return firstday;
+    public Date getFirstday() {
+        return firstday; // Date 타입으로 변경
     }
 
-    public void setFirstday(Integer firstday) {
-        this.firstday = firstday;
+    public void setFirstday(Date firstday) {
+        this.firstday = firstday; // Date 타입으로 변경
     }
 
     public Integer getRestday() {

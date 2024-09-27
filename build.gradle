@@ -74,6 +74,8 @@ dependencies {
     // implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
     implementation 'org.springframework.boot:spring-boot-starter-json'
     // implementation 'org.springframework.boot:spring-boot-starter-rest'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 }
 
 tasks.named('test') {

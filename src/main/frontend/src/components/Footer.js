@@ -1,5 +1,6 @@
 import React from 'react';
-import './Footer.css'; 
+import './Footer.css';
+import { Link } from 'react-router-dom'; 
 
 const Footer = () => {
     return (
@@ -15,6 +16,12 @@ const Footer = () => {
                 <p></p>
                 <span className="footer-policy">
                     개인정보처리방침
+                </span>
+                <p></p>
+                <span>
+                    <Link to='/adminHome'>
+                    관리자 로그인
+                    </Link>
                 </span>
             </div>
         </footer>
