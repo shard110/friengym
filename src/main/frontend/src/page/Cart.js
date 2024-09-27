@@ -1,38 +1,47 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; // Link 컴포넌트 추가
-import { useAuth } from '../components/AuthContext'; // useAuth 훅 추가
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../components/AuthContext';
 import './Cart.css';
 
 const Cart = () => {
-    const { user, loading } = useAuth(); // useAuth 훅 사용
+    const { user, loading:authLoading } = useAuth();
+    const navigate = useNavigate();
     const [cartItems, setCartItems] = useState([]);
+    const [loading, setLoading] = useState(true);  // 페이지 로딩 상태
 
     useEffect(() => {
+        if (!user) {
+            navigate('/login'); // 로그인되지 않은 경우 로그인 페이지로 이동
+            return;
+        }
+
         const fetchCartItems = async () => {
             const token = user?.token || localStorage.getItem('jwtToken');
             if (!token) {
                 console.error('토큰을 찾을 수 없습니다.');
                 alert('로그인이 필요합니다.');
+                setLoading(false);
                 return;
             }
 
             try {
                 const response = await axios.get(`/api/cart/${user.id}`, {
                     headers: {
-                        'Authorization': `${token}` // 요청 헤더에 JWT 토큰 추가
+                        'Authorization': `${token}`
                     }
                 });
                 setCartItems(response.data);
             } catch (error) {
                 console.error('장바구니 아이템을 불러오는 동안 오류 발생:', error);
+            } finally {
+                setLoading(false);  // 로딩 상태를 false로 설정
+
             }
         };
 
-        if (user) {
-            fetchCartItems();
-        }
-    }, [user]);
+        fetchCartItems();
+    }, [user, navigate]);
 
     const updateCartItemCount = async (cnum, newCount) => {
         const token = user?.token || localStorage.getItem('jwtToken');
@@ -42,9 +51,9 @@ const Cart = () => {
         }
 
         try {
-            const response = await axios.put(`/api/cart/${cnum}`, { cCount: newCount }, {
+            await axios.put(`/api/cart/${cnum}`, { cCount: newCount }, {
                 headers: {
-                    'Authorization': `${token}` // 요청 헤더에 JWT 토큰 추가
+                    'Authorization': `${token}`
                 }
             });
             setCartItems(cartItems.map(item => item.cnum === cnum ? { ...item, cCount: newCount } : item));
@@ -63,13 +72,17 @@ const Cart = () => {
         try {
             await axios.delete(`/api/cart/${cnum}`, {
                 headers: {
-                    'Authorization': `${token}` // 요청 헤더에 JWT 토큰 추가
+                    'Authorization': `${token}`
                 }
             });
             setCartItems(cartItems.filter(item => item.cnum !== cnum));
         } catch (error) {
             console.error('장바구니 아이템 삭제 중 오류 발생:', error);
         }
+    };
+
+    const handleBuyNow = () => {
+        navigate('/order');
     };
 
     if (loading) {
@@ -121,6 +134,7 @@ const Cart = () => {
                     </tbody>
                 </table>
             )}
+            <button onClick={handleBuyNow}>구매하기</button>
         </div>
     );
 };
