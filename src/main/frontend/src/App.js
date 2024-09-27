@@ -32,6 +32,7 @@ import QnaPage from './page/QnaPage';
 import ReviewPage from './page/ReviewPage';
 import OrderPage from './page/OrderPage';
 import PaymentSuccess from './page/PaymentSuccess';
+import OrderHistoryPage from './page/OrderHistoryPage';
 
 export default function App() {
   return (
@@ -53,6 +54,7 @@ export default function App() {
             <Route path="/productslist" element={<ProductList />} />
             <Route path="/post/:poNum" element={<PostDetail />} />
             <Route path="/order" element={<OrderPage />} />
+            <Route path="/order-history" element={<OrderHistoryPage />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/edit/:poNum" element={<EditPost />} />

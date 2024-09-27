@@ -41,6 +41,7 @@ function ShopLnb() {
                 </li>
                 <li><Link to="/products/new">신상품</Link></li>
                 <li><Link to="/products/popular">베스트</Link></li>
+                <li><Link to="/order-history">주문내역</Link></li>
             </ul>
             <div className="search-bar">
                 <input
