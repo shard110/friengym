@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Date;
+
 
 @RestController
 @RequestMapping("/api/products")
@@ -37,12 +39,14 @@ public class ProductController {
 
     @PostMapping
     public Product createProduct(@RequestBody Product product) {
+        product.setpDate(new Date()); // 새로운 상품 등록 시 현재 날짜 설정
         return productService.saveOrUpdateProduct(product);
     }
 
     @PutMapping("/{pNum}")
     public Product updateProduct(@PathVariable("pNum") int pNum, @RequestBody Product product) {
         product.setpNum(pNum);
+        product.setpDate(new Date()); // 상품 수정 시 현재 날짜로 업데이트
         return productService.saveOrUpdateProduct(product);
     }
 
@@ -69,6 +73,29 @@ public class ProductController {
         file.transferTo(dest);
 
         product.setpImgUrl("/images/" + fileName + "?t=" + System.currentTimeMillis());
+        productService.saveOrUpdateProduct(product);
+
+        return ResponseEntity.ok(product);
+    }
+
+    @PostMapping("/{pNum}/uploadDetailImage")
+    public ResponseEntity<Product> uploadDetailImage(@PathVariable("pNum") int pNum, @RequestParam("file") MultipartFile file) throws IOException {
+        Product product = productService.getProductById(pNum);
+        if (product == null) {
+            throw new RuntimeException("상품을 찾을 수 없습니다: " + pNum);
+        }
+
+        String directoryPath = new File("src/main/resources/static/images").getAbsolutePath();
+        File dir = new File(directoryPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        File dest = new File(dir, fileName);
+        file.transferTo(dest);
+
+        product.setpDetailImgUrl("/images/" + fileName + "?t=" + System.currentTimeMillis());
         productService.saveOrUpdateProduct(product);
 
         return ResponseEntity.ok(product);

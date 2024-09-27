@@ -1,0 +1,43 @@
+/* Shop.css */
+.shop-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .shop-title {
+    text-align: center;
+  }
+  
+  .shop-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #e0f0ff; /* 파란색 배경 */
+  }
+  
+  .shop-table th, .shop-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .shop-table th {
+    background-color: rgb(66, 66, 116); /* 헤더 부분의 배경색 */
+  }
+  
+  .shop-table img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .shop-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  
+  .shop-form input, .shop-form select, .shop-form button {
+    margin: 5px 0;
+  }
+  
