@@ -1,0 +1,147 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    flex-direction: column;
+  }
+  
+  .chat-container {
+    display: flex;
+    max-width: 800px;
+    min-width: 800px;
+    min-height: 600px;
+    max-height: 600px;
+    margin: 20px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .users-list {
+    width: 250px; /* 사용자 리스트의 고정 너비 설정 */
+    border-right: 1px solid #ccc;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #3498db;
+    color: #fff;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .users-list h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .users-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+  }
+  
+  .messages {
+    flex: 1; /* 남은 공간을 차지 */
+    max-height: 400px; /* 원하는 최대 높이 설정 */
+    overflow-y: auto; /* 세로 스크롤 가능하게 설정 */
+    border: 1px solid #ccc; /* 테두리 추가 (선택 사항) */
+    display: flex;
+    flex-direction: column-reverse; /* 아래에서 위로 쌓이게 */
+  }
+  
+  .sender {
+    background-color: #3498db;
+    color: #fff;
+    align-self: flex-end;
+    padding: 10px 15px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .receiver {
+    background-color: #ecf0f1;
+    color: #333;
+    align-self: flex-start;
+    padding: 10px 15px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .message-input {
+    margin-top: auto;
+    display: flex;
+  }
+  
+  .message-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  
+  .message-input button {
+    padding: 10px;
+    border: none;
+    background-color: #3498db;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .message-input button:hover {
+    background-color: #2980b9;
+  }
+  
+  .user-form {
+    max-width: 400px;
+    padding: 40px;
+    box-sizing: border-box;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .user-form h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .user-form label {
+    display: block;
+    margin-bottom: 8px;
+  }
+  
+  .user-form input {
+    width: 100%;
+    padding: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .user-form button {
+    padding: 12px;
+    border: none;
+    background-color: #3498db;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
