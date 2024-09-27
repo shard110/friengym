@@ -175,9 +175,11 @@ public class AdminController {
         try {
             User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
 
-            // 현재 날짜를 firstday로 설정
-            LocalDate currentDate = LocalDate.now();
-            user.setFirstday(java.sql.Date.valueOf(currentDate)); // firstday에 현재 날짜 저장
+            // firstday가 null인 경우에만 현재 날짜로 설정
+            if (user.getFirstday() == null) {
+                LocalDate currentDate = LocalDate.now();
+                user.setFirstday(java.sql.Date.valueOf(currentDate)); // firstday에 현재 날짜 저장
+            }
 
             // 기존 남은 일수에 추가된 일수 더하기
             int newRestday = (user.getRestday() != null ? user.getRestday() : 0) + daysToAdd;
