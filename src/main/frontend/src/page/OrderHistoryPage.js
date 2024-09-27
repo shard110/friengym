@@ -46,6 +46,7 @@ const OrderHistoryPage = () => {
                         <th>수량</th>
                         <th>상태</th>
                         <th>결제 날짜</th>
+                        <th>결제 아이디</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,6 +62,7 @@ const OrderHistoryPage = () => {
                                             <img src={dorder.product.pImgUrl} alt={dorder.product.pName} className="cart-img" />
                                         </Link>
                                     </td>
+                                    <td>{order.id}</td>
                                     <td>{dorder.product.pName}</td>
                                     <td>{dorder.doCount}개</td>
                                     {index === 0 && (
