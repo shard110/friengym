@@ -47,7 +47,11 @@ public class CartService {
         return cartRepository.findById(cnum).orElseThrow(() -> new RuntimeException("Cart item not found"));
     }
 
-    public void removeCartItem(int cnum) {
+    public void removeCartItem(int cnum) {  // 개별 삭제
         cartRepository.deleteById(cnum);
+    }
+
+    public void clearCart(String userId) {  // 전체 삭제
+        cartRepository.deleteByUserId(userId);
     }
 }

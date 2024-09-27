@@ -31,6 +31,12 @@ import ProductDetail from './page/ProductDetail';
 import ProductList from './page/ProductList';
 import QnaPage from './page/QnaPage';
 import ReviewPage from './page/ReviewPage';
+import OrderPage from './page/OrderPage';
+import PaymentSuccess from './page/PaymentSuccess';
+import OrderHistoryPage from './page/OrderHistoryPage';
+
+//관리자용 import
+import AdminHome from './admin/AdminHome';
 
 
 export default function App() {
@@ -53,6 +59,9 @@ export default function App() {
             <Route path="/productslist/:pNum" element={<ProductDetail />} />
             <Route path="/productslist" element={<ProductList />} />
             <Route path="/post/:poNum" element={<PostDetail />} />
+            <Route path="/order" element={<OrderPage />} />
+            <Route path="/order-history" element={<OrderHistoryPage />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/edit/:poNum" element={<EditPost />} />
             <Route path="/login" element={<LoginPage />} />
@@ -62,15 +71,19 @@ export default function App() {
             <Route path="/post/:poNum/comments" element={<CommentList />} />
             <Route path="/post/:poNum/comments/create" element={<CommentCreate />} />
             <Route path="/post/:poNum/comments/:commentNo/edit" element={<CommentEdit />} />
-                          <Route path="/qna" element={<QnaPage />} />
-                        <Route path="/asks" element={<AskPage />} />
-                        <Route path="/asks/view/:anum" element={<ViewAsk />} />
-                        <Route path="/asks/update/:anum" element={<UpdateAsk />} />
-                        <Route path="/reviews" element={<ReviewPage />} />
-                        <Route path="/customer" element={<Customer />} />
-                    </Routes>
-                </div>
-            </Router>
-        </AuthProvider>
-    );
+            <Route path="/qna" element={<QnaPage />} />
+            <Route path="/asks" element={<AskPage />} />
+            <Route path="/asks/view/:anum" element={<ViewAsk />} />
+            <Route path="/asks/update/:anum" element={<UpdateAsk />} />
+            <Route path="/reviews" element={<ReviewPage />} />
+            <Route path="/customer" element={<Customer />} />
+
+            {/* 관리자용 */}
+            <Route path="/adminHome/*" element={<AdminHome />} />
+
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
+  );
 }
