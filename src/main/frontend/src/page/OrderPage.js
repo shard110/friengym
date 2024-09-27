@@ -96,6 +96,38 @@ const OrderPage = () => {
         }
     }
 
+    const handlePaymentKG = async () => {
+        const customer = {
+            email: "test@gmail.com",    // to-do user테이블에 메일 추가해야 함
+            phoneNumber: user.phone,
+            fullName: user.name,
+        };
+
+        const orderName = cartItems.map(item => item.product.pName).join(', ');
+
+        try {
+            const response = await PortOne.requestPayment({
+                storeId: process.env.REACT_APP_PORTONE_STORE_ID,
+                channelKey: process.env.REACT_APP_PORTONE_KG,
+                paymentId: `${crypto.randomUUID()}`,    // uuid 수정
+                orderName: orderName,
+                totalAmount: cartItems.reduce((total, item) => total + item.product.pPrice * item.cCount, 0),
+                currency: "CURRENCY_KRW",
+                payMethod: "CARD",
+                customer: customer,
+            });
+
+            if (response.code != null) {
+                alert(response.message);
+            } else {
+                console.log('결제 성공:', response);
+            }
+        } catch (error) {
+            console.error('결제 요청 중 오류 발생:', error);
+            alert('결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.');
+        }
+    };
+
     return (
         <div className="cart">
             <h2>주문서</h2>
@@ -141,6 +173,7 @@ const OrderPage = () => {
             <p>무통장입금</p>
             <p>만나서 결제</p>
             <button onClick={handlePaymentToss}>토스페이</button>
+            <button onClick={handlePaymentKG}>신용카드 결제</button>
         </div>
     );
 };
