@@ -1,31 +1,52 @@
+/* 기존 스타일 */
 .footer {
     width: 100%;
     background-color: #f1f1f1;
     color: #444444;
 }
 
-.footer-wrap{
-    height: 224px;
-    padding: 10px 32px;
+.footer-wrap {
+    height: 200px; /* 원하는 높이로 조정 */
+    padding: 0px 32px; /* 높이에 맞게 패딩 조정 */
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto;
+    flex-wrap: wrap; /* 화면이 좁아질 때 항목들이 줄 바꿈 가능하도록 설정 */
+    gap: 20px; /* 항목들 사이에 여백 추가 */
 }
 
 span {
-    margin-right: 40px;
+    font-size: 14px; /* 일관된 폰트 크기 설정 */
+    margin-right: 20px; /* 오른쪽 여백 조정 */
     text-align: center;
 }
 
-.footer-wrap>p{
+.footer-wrap > p {
     width: 1px;
     height: 16px;
     background-color: #888;
-    margin-right: 40px;
+    margin-right: 20px; /* 구분선의 오른쪽 여백 조정 */
 }
 
 .footer-policy {
-    margin-right: 0;
     font-weight: bold;
+    text-decoration: underline; /* 정책 텍스트에 강조를 주기 위해 밑줄 추가 */
+}
+
+/* 작은 화면에서의 반응형 디자인 */
+@media (max-width: 600px) {
+    .footer-wrap {
+        flex-direction: column; /* 작은 화면에서는 항목들을 수직으로 배치 */
+        text-align: center; /* 중앙 정렬 */
+        height: auto; /* 작은 화면에서는 자동으로 높이 조정 */
+    }
+
+    .footer-wrap > p {
+        display: none; /* 작은 화면에서는 구분선 숨기기 */
+    }
+
+    span {
+        margin-right: 0; /* 작은 화면에서는 오른쪽 여백 제거 */
+    }
 }

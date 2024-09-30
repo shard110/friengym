@@ -4,6 +4,7 @@ import { AuthProvider } from './components/AuthContext';
 import NavBar from './components/NavBar'; // NavBar 컴포넌트 임포트
 
 import CategoryProductsPage from './components/CategoryProductsPage';
+import Chat from './components/Chat'; //Chat 컴포넌트 임포트
 import CreatePost from "./components/CreatePostForm";
 import Customer from './components/Customer';
 import EditPost from './components/EditPost';
@@ -24,12 +25,18 @@ import AskPage from './page/AskPage';
 import Cart from './page/Cart';
 import Gallery from './page/Gallery'; // 게시물 갤러리 컴포넌트 임포트
 import MastersList from './page/MastersList';
+import OrderHistoryPage from './page/OrderHistoryPage';
+import OrderPage from './page/OrderPage';
+import PaymentSuccess from './page/PaymentSuccess';
 import PostDetail from './page/PostDetail';
 import ProductDetail from './page/ProductDetail';
 import ProductList from './page/ProductList';
 import QnaPage from './page/QnaPage';
 import Recommendations from './page/Recommendations'; // 새로운 추천 페이지 임포트
 import ReviewPage from './page/ReviewPage';
+
+//관리자용 import
+
 
 export default function App() {
   return (
@@ -38,6 +45,7 @@ export default function App() {
         <div className="App">
           <NavBar /> {/* NavBar 컴포넌트 추가 */}
           <Routes>
+            <Route path="/chat" element={<Chat />} /> {/* Chat 라우트 추가 */}
             <Route path="/" element={<HomePage />} />
             <Route path="/posts" element={<Gallery />} />
             <Route path="/create-post" element={<CreatePost />} />
@@ -57,6 +65,9 @@ export default function App() {
             <Route path="/productslist/:pNum" element={<ProductDetail />} />
             <Route path="/productslist" element={<ProductList />} />
             <Route path="/reviews" element={<ReviewPage />} />
+            <Route path="/order" element={<OrderPage />} />
+            <Route path="/order-history" element={<OrderHistoryPage />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
 
             <Route path="/masters" element={<MastersList />} />
        

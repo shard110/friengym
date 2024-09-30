@@ -1,0 +1,20 @@
+/* ManagerBar.css */
+.manager-menu {
+  list-style-type: none; /* 기본 리스트 스타일 제거 */
+  padding: 0;           /* 패딩 제거 */
+  display: flex;        /* 가로로 배치 */
+  gap: 20px;            /* 항목 간격 조정 */
+}
+
+.manager-menu li {
+  display: inline;      /* 항목을 인라인으로 설정 */
+}
+
+.manager-menu a {
+  text-decoration: none; /* 링크 밑줄 제거 */
+  color: #007bff;       /* 링크 색상 */
+}
+
+.manager-menu a:hover {
+  text-decoration: underline; /* 호버 시 밑줄 추가 */
+}

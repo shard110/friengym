@@ -133,24 +133,6 @@ const EditProfilePage = () => {
                         onChange={handleChange}
                     />
                 </label>
-                <label>
-                    Firstday:
-                    <input
-                        type="number"
-                        name="firstday"
-                        value={formData.firstday}
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    Restday:
-                    <input
-                        type="number"
-                        name="restday"
-                        value={formData.restday}
-                        onChange={handleChange}
-                    />
-                </label>
                 <button type="submit">회원정보 수정</button>
             </form>
         </div>

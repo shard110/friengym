@@ -13,4 +13,5 @@ import com.example.demo.entity.Cart;
 public interface CartRepository extends JpaRepository<Cart, Integer> {
     List<Cart> findByUserId(String userId);
     Optional<Cart> findByUserIdAndProductPNum(String userId, int productPNum);
+    void deleteByUserId(String userId);
 }
