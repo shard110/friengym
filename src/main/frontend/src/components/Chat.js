@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
-import { useAuth } from "./AuthContext"; 
+import { useAuth } from "./AuthContext";
 import "./Chat.css";
 
 function Chat() {
@@ -12,6 +12,7 @@ function Chat() {
     const [stompClient, setStompClient] = useState(null);
     const [messageInput, setMessageInput] = useState("");
     const [loading, setLoading] = useState(false);
+    const [notifications, setNotifications] = useState({}); //알림추가
     const messagesEndRef = useRef(null);
 
     // 사용자가 클릭했을 때 대화 내용을 가져오는 함수
@@ -32,7 +33,13 @@ function Chat() {
         setSelectedUserId(userId);
         console.log("Selected user ID:", userId);
         await fetchAndDisplayUserChat(userId); // 대화 내용 불러오기
-    };
+
+        // 알림 초기화
+        setNotifications((prev) => ({
+            ...prev,
+            [userId]: 0,
+        }));
+    }
 
     useEffect(() => {
         console.log("Current user:", user); // 사용자 정보를 로그로 출력
@@ -52,7 +59,7 @@ function Chat() {
 
             connect();
         }
-    }, [user?.id]); 
+    }, [user?.id]);
 
     const onConnected = (client) => {
         client.subscribe(`/user/${user.id}/queue/messages`, onMessageReceived);
@@ -76,8 +83,15 @@ function Chat() {
     const onMessageReceived = (payload) => {
         const message = JSON.parse(payload.body);
         setMessages((prevMessages) => [...prevMessages, message]);
-    };
 
+        // 알림 증가
+        if (message.senderId !== user.id) {
+            setNotifications((prev) => ({
+                ...prev,
+                [message.senderId]: (prev[message.senderId] || 0) + 1,
+            }));
+        }
+    };
     const sendMessage = () => {
         if (messageInput && selectedUserId && stompClient) {
             const chatMessage = {
@@ -107,18 +121,7 @@ function Chat() {
 
     return (
         <div className="chat-container">
-            <div className="chat-area">
-                <div className="user-info">
-                    <p>Welcome, {user.name}!</p>
-                </div>
-                {selectedUserId && (
-                    <div className="current-chat">
-                        <p>
-                            대화 중인 사용자:{" "}
-                            {connectedUsers.find((u) => u.id === selectedUserId)?.name || "사용자를 선택하세요."}
-                        </p>
-                    </div>
-                )}
+            <div className="chat-wrapper">
                 <div className="users-list">
                     <h2>Online Users</h2>
                     {loading ? (
@@ -128,6 +131,9 @@ function Chat() {
                             {connectedUsers.map((u) => (
                                 <li key={u.id} onClick={() => handleUserClick(u.id)}>
                                     {u.name}
+                                    {notifications[u.id] > 0 && ( // 해당 사용자에게 알림이 있는 경우
+                                        <span className="notification-badge">{notifications[u.id]}</span> // 알림 배지 추가
+                                    )}
                                 </li>
                             ))}
                         </ul>
@@ -135,28 +141,42 @@ function Chat() {
                         <p>온라인 사용자가 없습니다.</p>
                     )}
                 </div>
-                <div className="messages">
-                    {selectedUserId &&
-                        messages
-                            .filter((msg) => msg.senderId === selectedUserId || msg.recipientId === selectedUserId)
-                            .map((msg, index) => (
-                                <div key={index} className={msg.senderId === user.id ? "sender" : "receiver"}>
-                                    <p>{msg.content}</p>
-                                </div>
-                            ))}
-                    <div ref={messagesEndRef} />
-                </div>
-                {selectedUserId && (
-                    <div className="message-input">
-                        <input
-                            type="text"
-                            placeholder="Type your message..."
-                            value={messageInput}
-                            onChange={(e) => setMessageInput(e.target.value)}
-                        />
-                        <button onClick={sendMessage}>Send</button>
+                <div className="chat-area">
+                    <div className="user-info">
+                        <p>Welcome, {user.name}!</p>
                     </div>
-                )}
+                    {selectedUserId && (
+                        <div className="current-chat">
+                            <p>
+                                대화 중인 사용자:{" "}
+                                {connectedUsers.find((u) => u.id === selectedUserId)?.name || "사용자를 선택하세요."}
+                            </p>
+                        </div>
+                    )}
+
+                    <div className="messages">
+                        {selectedUserId &&
+                            messages
+                                .filter((msg) => msg.senderId === selectedUserId || msg.recipientId === selectedUserId)
+                                .map((msg, index) => (
+                                    <div key={index} className={msg.senderId === user.id ? "sender" : "receiver"}>
+                                        <p>{msg.content}</p>
+                                    </div>
+                                ))}
+                        <div ref={messagesEndRef} />
+                    </div>
+                    {selectedUserId && (
+                        <div className="message-input">
+                            <input
+                                type="text"
+                                placeholder="Type your message..."
+                                value={messageInput}
+                                onChange={(e) => setMessageInput(e.target.value)}
+                            />
+                            <button onClick={sendMessage}>Send</button>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
