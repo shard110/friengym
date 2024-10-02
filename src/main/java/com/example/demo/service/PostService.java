@@ -13,10 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.config.JwtTokenProvider;
-import com.example.demo.dto.CommentRequest;
 import com.example.demo.dto.CommentResponse;
 import com.example.demo.dto.PostRequest;
-import com.example.demo.entity.Comment;
+import com.example.demo.dto.PostResponse;
 import com.example.demo.entity.Hashtag;
 import com.example.demo.entity.Notification;
 import com.example.demo.entity.Post;
@@ -55,6 +54,19 @@ public class PostService {
 
     @Autowired
     private NotificationRepository notificationRepository;
+
+    @Autowired
+    private CommentService commentService;
+
+    //유저 게시물 가져오기
+    public List<Post> getPostsByUser(User user) {
+        return postRepository.findByUser(user);
+    }
+    
+    
+    public Post savePost(Post post) {
+        return postRepository.save(post);
+    }
 
 
     // 모든 게시글 조회 메서드
@@ -120,11 +132,16 @@ public class PostService {
 
     // 게시글 조회 메서드
     @Transactional
-    public Post getPostById(Integer poNum) {
+    public PostResponse getPostById(Integer poNum) {
     Post post = postRepository.findById(poNum)
             .orElseThrow(() -> new PostNotFoundException(poNum));
     post.setViewCnt(post.getViewCnt() + 1);
-    return postRepository.save(post);
+    postRepository.save(post);
+
+    // 모든 댓글과 답글을 가져옵니다.
+        List<CommentResponse> comments = commentService.getTopLevelComments(poNum);
+
+        return new PostResponse(post, comments);
   
 }
 
@@ -210,62 +227,6 @@ public class PostService {
         return post;
     }
 
-    ////////////////////////////////////////////
-    // 댓글 추가
-    public Comment addComment(Integer poNum, CommentRequest commentRequest, String userId) {
-        Post post = postRepository.findById(poNum)
-                .orElseThrow(() -> new PostNotFoundException(poNum));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
-
-        // CommentRequest에서 User와 Post를 사용하여 Comment 엔티티 생성
-        Comment comment = commentRequest.toEntity(user, post);
-        commentRepository.save(comment);
-
-        // 알림 생성 로직 추가
-        if (!post.getUser().getId().equals(userId)) {
-        Notification notification = new Notification();
-        notification.setRecipient(post.getUser());
-        notification.setSender(user);
-        notification.setType(Notification.NotificationType.COMMENT);
-        notification.setPost(post);
-        notificationRepository.save(notification);
-    }
-
-
-        return comment;
-    }
-
-    // 댓글 조회
-    public List<CommentResponse> getCommentsByPostId(Integer poNum) {
-        List<Comment> comments = commentRepository.findByPost_PoNum(poNum);
-        return comments.stream().map(CommentResponse::new).collect(Collectors.toList());
-    }
-
-    // 댓글 수정
-    public Comment updateComment(Integer commentNo, CommentRequest commentRequest, String userId) {
-        Comment comment = commentRepository.findById(commentNo)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
-
-        if (!comment.getUser().getId().equals(userId)) {
-            throw new IllegalArgumentException("댓글을 수정할 권한이 없습니다.");
-        }
-
-        comment.setComment(commentRequest.getComment());
-        return commentRepository.save(comment);
-    }
-
-    // 댓글 삭제
-    public void deleteComment(Integer commentNo, String userId) {
-        Comment comment = commentRepository.findById(commentNo)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
-
-        if (!comment.getUser().getId().equals(userId)) {
-            throw new IllegalArgumentException("댓글을 삭제할 권한이 없습니다.");
-        }
-
-        commentRepository.deleteById(commentNo);
-    }
 
     // 인기 검색 키워드 추적을 위한 맵 (간단한 예시)
     private ConcurrentHashMap<String, AtomicInteger> searchKeywordFrequency = new ConcurrentHashMap<>();
@@ -308,6 +269,10 @@ public class PostService {
     // 키워드 빈도 증가 메서드
     private void incrementKeywordFrequency(String keyword) {
         searchKeywordFrequency.computeIfAbsent(keyword, k -> new AtomicInteger(0)).incrementAndGet();
+    }
+
+    public List<CommentResponse> getCommentsByPostId(Integer poNum) {
+        return commentService.getTopLevelComments(poNum);
     }
 
 }

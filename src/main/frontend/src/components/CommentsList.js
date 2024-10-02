@@ -9,6 +9,7 @@ const CommentsList = ({
   userId,
   onEditComment,
   onDeleteComment,
+  onAddComment,
 }) => {
   return (
     <div className="comments-list">
@@ -20,6 +21,8 @@ const CommentsList = ({
             userId={userId}
             onEdit={onEditComment}
             onDelete={onDeleteComment}
+            onAddReply={onAddComment} // 답글 추가 함수 전달
+            
           />
         ))
       ) : (
@@ -36,11 +39,14 @@ CommentsList.propTypes = {
       id: PropTypes.string.isRequired,
       comment: PropTypes.string.isRequired,
       photo: PropTypes.string,
+      replies: PropTypes.array, // replies 추가
     })
   ).isRequired,
   userId: PropTypes.string,
   onEditComment: PropTypes.func.isRequired,
   onDeleteComment: PropTypes.func.isRequired,
+  onAddComment: PropTypes.func.isRequired, // 추가
 };
+
 
 export default CommentsList;

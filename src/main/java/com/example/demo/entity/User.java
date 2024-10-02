@@ -1,9 +1,16 @@
 package com.example.demo.entity;
 
 import java.sql.Date;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -37,6 +44,22 @@ public class User {
     private String photo;
     private String sessionkey;
     private Date sessionlimit;
+
+    @Column(unique=true, nullable=false)
+    private String email;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference  // 직렬화의 주도권을 가짐
+    private List<Post> posts;
+    
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "following")
+    private List<Follow> following;
+    
+    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference(value = "following")  // 직렬화에서 제외
+    private List<Follow> followers;
+
 
     // Getters and Setters
     public String getId() {

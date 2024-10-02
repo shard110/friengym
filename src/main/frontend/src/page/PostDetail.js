@@ -19,42 +19,30 @@ const PostDetail = () => {
 
   // 게시글과 댓글 데이터를 가져오는 useEffect
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
+  
 
-      // 게시글 데이터 가져오기
-      fetch(`/posts/${poNum}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setPost(data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching post:", error);
-          setError("게시글을 불러오는 데 실패했습니다.");
-          setLoading(false);
-        });
+       // 게시글 데이터 가져오기
+  fetch(`/posts/${poNum}`)
+  .then((response) => response.json())
+  .then((data) => {
+    setPost(data);
+    setComments(data.comments || []); // 댓글 설정
+    setLoading(false);
+  })
+  .catch((error) => {
+    console.error("Error fetching post:", error);
+    setError("게시글을 불러오는 데 실패했습니다.");
+    setLoading(false);
+  });
+}, [poNum]);
 
-      // 댓글 데이터 가져오기
-      fetch(`/posts/${poNum}/comments`)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);  // 댓글 데이터를 출력하여 user 정보 확인
-          setComments(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching comments:", error);
-          setError("댓글을 불러오는 데 실패했습니다.");
-        });
-    }
-  }, [poNum]);
-
-  // 댓글 추가 핸들러 (텍스트만 사용)
-  const handleAddComment = (commentText) => {
+  // 댓글 추가 핸들러
+  const handleAddComment = (commentText, parentId = null) => {
     const token = localStorage.getItem('jwtToken');
-
+  
     const commentPayload = {
       comment: commentText,
+      parentId: parentId, // 부모 댓글 ID
     };
 
     fetch(`/posts/${poNum}/comments`, {
@@ -75,13 +63,26 @@ const PostDetail = () => {
         }
       })
       .then((newCommentData) => {
-        setComments([...comments, newCommentData]);
+        if (parentId) {
+          // 답글인 경우
+          setComments((prevComments) =>
+            prevComments.map((comment) =>
+              comment.commentNo === parentId
+                ? { ...comment, replies: [...(comment.replies || []), newCommentData] }
+                : comment
+            )
+          );
+        } else {
+          // 최상위 댓글인 경우
+          setComments([...comments, newCommentData]);
+        }
       })
       .catch((error) => {
         console.error("댓글 추가 중 오류:", error);
         setError("댓글을 추가하는 데 실패했습니다.");
       });
   };
+
 
   // 댓글 수정 핸들러
   const handleEditComment = (commentId, editedText) => {
@@ -147,7 +148,6 @@ const PostDetail = () => {
     <div className="post-detail">
       {post ? (
         <div>
-          {/* 사용자 정보는 <p> 태그 대신 <div>로 변경 */}
           <div className="user-info">
             {post.user ? (
               <>
@@ -202,6 +202,7 @@ const PostDetail = () => {
               userId={user?.id}
               onEditComment={handleEditComment}
               onDeleteComment={handleDeleteComment}
+              onAddComment={handleAddComment}
             />
           </div>
 

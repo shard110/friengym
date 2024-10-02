@@ -1,7 +1,9 @@
 // src/components/Comment.js
 
+
 import PropTypes from "prop-types";
 import React, { useState } from "react";
+import AddComment from "./AddComment"; // 답글 작성 폼을 위해 임포트
 import "./Comment.css";
 import YouTubePreview from "./YouTubePreview";
 
@@ -10,9 +12,11 @@ const Comment = ({
   userId,
   onEdit,
   onDelete,
+  onAddReply,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedText] = useState(comment.comment);
+  const [showReplyForm, setShowReplyForm] = useState(false); // 답글 작성 폼 표시 여부
 
   const handleSave = () => {
     onEdit(comment.commentNo, editedText);
@@ -40,6 +44,7 @@ const Comment = ({
 
   return (
     <div className="comment">
+       {/* 기존 댓글 내용 표시 */}
       <div className="comment-user-info">
         <img
           src={comment.photo || "default-photo-url"}
@@ -55,7 +60,7 @@ const Comment = ({
         ) : (
           <span className="comment-text">{parseCommentText(comment.comment)}</span>
         )}
-        {userId === comment.id && (
+          {userId === comment.id && (
           <div className="comment-actions">
             {isEditing ? (
               <>
@@ -71,6 +76,39 @@ const Comment = ({
           </div>
         )}
       </div>
+
+      {/* 답글 버튼 */}
+      <div className="reply-button">
+        <button onClick={() => setShowReplyForm(!showReplyForm)}>
+          {showReplyForm ? '답글 취소' : '답글'}
+        </button>
+      </div>
+
+      {/* 답글 작성 폼 */}
+      {showReplyForm && (
+        <div className="add-reply">
+          <AddComment onAdd={(replyText) => {
+            onAddReply(replyText, comment.commentNo);
+            setShowReplyForm(false); // 답글 작성 후 폼 닫기
+          }} />
+        </div>
+      )}
+
+        {/* 답글 리스트 */}
+      {comment.replies && comment.replies.length > 0 && (
+        <div className="replies">
+          {comment.replies.map((reply) => (
+            <Comment
+              key={reply.commentNo}
+              comment={reply}
+              userId={userId}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onAddReply={onAddReply}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -81,10 +119,12 @@ Comment.propTypes = {
     id: PropTypes.string.isRequired,
     comment: PropTypes.string.isRequired,
     photo: PropTypes.string,
+    replies: PropTypes.array, // replies 추가
   }).isRequired,
   userId: PropTypes.string,
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onAddReply: PropTypes.func.isRequired,
 };
 
 export default Comment;

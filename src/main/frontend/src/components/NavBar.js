@@ -1,8 +1,8 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import logo from '../img/logo.png'; // 이미지 파일을 import
 import { useAuth } from './AuthContext'; // 사용자 인증 정보를 가져오는 훅
 import './Navbar.css'; // 스타일을 적용하기 위한 CSS 파일
-import logo from '../img/logo.png'; // 이미지 파일을 import
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -47,7 +47,7 @@ export default function Navbar() {
             <div className="user-menu-logged-in">
               <span className="nav-link">환영합니다! {user.name}님</span>
               <button onClick={handleLogout} className="nav-link">로그아웃</button>
-              <button onClick={() => navigate('/mypage')} className="nav-link">마이페이지</button>
+              <button onClick={() => navigate('/totalmypage')} className="nav-link">마이페이지</button>
             </div>
           ) : (
             <div className="user-menu-logged-out">

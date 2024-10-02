@@ -25,7 +25,7 @@ const Mypage = () => {
 
         try {
             const response = await axios.get('/api/mypage', {
-                headers: { 
+                headers: {
                     Authorization: `Bearer ${token}`  // 토큰을 헤더에 포함
                 }
             });

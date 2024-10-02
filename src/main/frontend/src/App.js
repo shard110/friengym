@@ -24,6 +24,7 @@ import AskPage from './page/AskPage';
 import Cart from './page/Cart';
 import Gallery from './page/Gallery'; // 게시물 갤러리 컴포넌트 임포트
 import MastersList from './page/MastersList';
+import Mypostpage from './page/Mypostpage';
 import PostDetail from './page/PostDetail';
 import ProductDetail from './page/ProductDetail';
 import ProductList from './page/ProductList';
@@ -63,6 +64,7 @@ export default function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/mypage" element={<Mypage />} />
+            <Route path="/totalmypage" element={<Mypostpage />} />
             <Route path="/edit-profile" element={<EditProfilePage />} />
       
             <Route path="/qna" element={<QnaPage />} />

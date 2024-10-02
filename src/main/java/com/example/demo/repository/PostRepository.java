@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Post;
+import com.example.demo.entity.User;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer>, JpaSpecificationExecutor<Post> {
@@ -33,8 +34,8 @@ public interface PostRepository extends JpaRepository<Post, Integer>, JpaSpecifi
     // 최신 게시글 10개 가져오기 (추가)
     List<Post> findTop10ByOrderByPoDateDesc();
 
-    
-
+    //유저 찾기
+    List<Post> findByUser(User user);
 
 
 }

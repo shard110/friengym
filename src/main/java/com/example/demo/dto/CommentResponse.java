@@ -2,6 +2,8 @@ package com.example.demo.dto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.example.demo.entity.Comment;
 
@@ -20,6 +22,7 @@ public class CommentResponse {
     private String name; // 작성자 이름
     private String id; // 댓글 작성자 ID
     private String photo; // 댓글 작성자의 프로필 사진 추가
+    private List<CommentResponse> replies; // 답글들
 
     /* Entity -> Dto */
     public CommentResponse(Comment comment) {
@@ -31,7 +34,17 @@ public class CommentResponse {
         this.name = (comment.getUser() != null) ? comment.getUser().getName() : "Anonymous"; // 작성자 이름
         this.id = (comment.getUser() != null) ? comment.getUser().getId() : null; // 댓글 작성자 ID
         this.photo = (comment.getUser() != null && comment.getUser().getPhoto() != null) ? comment.getUser().getPhoto() : "default-photo-url"; // 작성자의 프로필 사진
+        
+         // 답글 처리 (순환 참조 방지)
+        if (comment.getReplies() != null && !comment.getReplies().isEmpty()) {
+            this.replies = comment.getReplies().stream()
+                .map(reply -> new CommentResponse(reply))
+                .collect(Collectors.toList());
+        }
     }
+
+
+
 
     // 날짜 포맷팅 메서드
     private String formatDate(LocalDateTime dateTime) {
@@ -40,4 +53,6 @@ public class CommentResponse {
         }
         return dateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
     }
+
+
 }

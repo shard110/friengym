@@ -4,12 +4,12 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import "./AddComment.css";
 
-const AddComment = ({ onAdd }) => {
+const AddComment = ({ onAdd, parentId = null }) => {
   const [newComment, setNewComment] = useState("");
 
   const handleSubmit = () => {
     if (!newComment.trim()) return;
-    onAdd(newComment);
+    onAdd(newComment, parentId); // parentId 전달
     setNewComment("");
   };
 
@@ -28,6 +28,7 @@ const AddComment = ({ onAdd }) => {
 
 AddComment.propTypes = {
   onAdd: PropTypes.func.isRequired,
+  parentId: PropTypes.number,
 };
 
 export default AddComment;

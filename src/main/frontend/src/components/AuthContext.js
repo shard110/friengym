@@ -34,12 +34,19 @@ export const AuthProvider = ({ children }) => {
         fetchUser();
     }, []);
 
-    const login = (userData) => {
-        setUser(userData);
-        localStorage.setItem('jwtToken', userData.token);
-        // 로그인 시, 이전 사용자의 좋아요 데이터를 초기화
-        localStorage.setItem('likedPosts', JSON.stringify({}));
-    };
+    const login = async (loginData) => {
+        try {
+          const response = await axios.post("/api/login", loginData); // 로그인 요청
+          const token = response.data.token; // 서버에서 받은 JWT 토큰
+          localStorage.setItem("jwtToken", token); // JWT 토큰 저장
+          localStorage.setItem('likedPosts', JSON.stringify({}));
+          setUser(response.data.user); // 유저 정보 저장
+        } catch (error) {
+          console.error("Failed to log in:", error);
+          throw error;
+        }
+      };
+
 
     const logout = () => {
         setUser(null);

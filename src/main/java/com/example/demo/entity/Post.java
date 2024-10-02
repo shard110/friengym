@@ -2,15 +2,13 @@ package com.example.demo.entity;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -64,15 +62,13 @@ public class Post {
 
     @ManyToOne // 다대일 관계를 설정합니다.
     @JoinColumn(name = "id", nullable = false) // 외래키 컬럼 이름
+    @JsonBackReference  // 직렬화에서 제외
     private User user; // 작성자 (User 엔티티와 연결)
 
     @Transient
     private String userId; // 데이터베이스에 저장되지않음(DTO와 상호작용하는데 사용됨)
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JsonManagedReference
-    @OrderBy("createdDate desc") // 댓글 정렬 기준: 최근 날짜가 위로
-    private List<Comment> comments;
+   
 
     // 생성자
     public Post( String poContents, User user) {
@@ -101,6 +97,10 @@ public class Post {
     )
     private Set<Hashtag> hashtags = new HashSet<>();
     
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("createdDate desc")
+    private Set<Comment> comments = new HashSet<>();
 
 
 }
