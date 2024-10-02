@@ -27,8 +27,16 @@ public class PaymentController {
     @Autowired
     private CartService cartService;
 
-     @GetMapping("/orders/{id}")
-     public ResponseEntity<List<OrderDTO>> getOrdersByUserId(@PathVariable String id) {
+    // 모든 주문 정보 조회
+    @GetMapping("/orders")
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<OrderDTO> orders = orderService.getAllOrders(); // 모든 주문을 가져오는 서비스 메서드
+        return ResponseEntity.ok(orders);
+    }
+
+
+    @GetMapping("/orders/{id}")
+    public ResponseEntity<List<OrderDTO>> getOrdersByUserId(@PathVariable String id) {
         List<OrderDTO> orders = orderService.getOrdersByUserId(id);
         return ResponseEntity.ok(orders);
     }
