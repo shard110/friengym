@@ -3,6 +3,7 @@ package com.example.demo.message;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Comparator;
 
 import org.springframework.stereotype.Service;
 
@@ -37,12 +38,16 @@ public class ChatMessageService {
 		return chatMessage; // 저장된 메시지 반환
 	}
 	
-	 // 특정 송신자와 수신자의 메시지 조회
-	public List<ChatMessage> findChatMessages (String senderId, String recipientId) {
-	    // 채팅방 ID를 조회
+	// 특정 송신자와 수신자의 메시지 조회
+	public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
+		// 채팅방 ID를 조회
 		var chatId = chatRoomService.getChatRoomId(senderId, recipientId, false);
 		// 채팅방 ID가 존재하면 해당 ID로 메시지 조회, 없으면 빈 리스트 반환
-		return chatId.map(repository::findByChatId).orElse(new ArrayList<>());
+		return chatId.map(repository::findByChatId)
+					  .orElse(new ArrayList<>())
+					  .stream()	 // 리스트를 스트림으로 변환
+					  .sorted(Comparator.comparing(ChatMessage::getTimestamp)) // 타임스탬프 기준 정렬
+					  .toList(); // 정렬된 요소를 리스트로 변환하여 반환
 	}
 
 }
