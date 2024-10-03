@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import java.sql.Date;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -17,8 +16,6 @@ public class User {
     private String id;
 
     @NotNull
-    // @Size(min = 6, message = "Password must be at least 6 characters long")
-    // @Column(length = 60) // BCrypt는 기본적으로 60자의 길이를 요구합니다.
     private String pwd;
 
     @NotNull
@@ -29,6 +26,9 @@ public class User {
 
     @NotNull
     private String sex;
+
+    @NotNull
+    private String email; // 이메일 필드 추가
 
     private Integer height;
     private Integer weight;
@@ -62,6 +62,14 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+    //이메일
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPhone() {

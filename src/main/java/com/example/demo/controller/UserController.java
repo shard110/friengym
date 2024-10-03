@@ -50,7 +50,7 @@ public class UserController {
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         if (registerRequest.getId() == null || registerRequest.getPwd() == null ||
             registerRequest.getName() == null || registerRequest.getPhone() == null ||
-            registerRequest.getSex() == null) {
+            registerRequest.getSex() == null || registerRequest.getEmail() == null) { // 이메일 추가 체크
             return ResponseEntity.badRequest().body("All fields are required");
         }
         try {
@@ -60,6 +60,7 @@ public class UserController {
             user.setName(registerRequest.getName());
             user.setPhone(registerRequest.getPhone());
             user.setSex(registerRequest.getSex());
+            user.setEmail(registerRequest.getEmail()); // 이메일 설정 추가
             User registeredUser = userService.registerUser(user);
             return ResponseEntity.ok(registeredUser);
         } catch (Exception e) {
@@ -139,6 +140,7 @@ public class UserController {
 
             // Update fields
             existingUser.setName(updatedUser.getName());
+            existingUser.setEmail(updatedUser.getEmail());
             existingUser.setPhone(updatedUser.getPhone());
             existingUser.setSex(updatedUser.getSex());
             existingUser.setHeight(updatedUser.getHeight());

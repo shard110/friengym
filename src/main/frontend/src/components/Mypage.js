@@ -101,6 +101,7 @@ const Mypage = () => {
                         <div className="user-info">
                             <p><span>ID:</span> {userInfo.id}</p>
                             <p><span>Name:</span> {userInfo.name}</p>
+                            <p><span>Email:</span> {userInfo.email}</p> {/* 이메일 추가 */}
                             <p><span>Phone:</span> {userInfo.phone}</p>
                             <p><span>Sex:</span> {userInfo.sex}</p>
                             <p><span>Height:</span> {userInfo.height}</p>
@@ -108,6 +109,7 @@ const Mypage = () => {
                             <p><span>Birth:</span> {userInfo.birth}</p>
                             <p><span>Firstday:</span> {userInfo.firstday}</p>
                             <p><span>Restday:</span> {userInfo.restday}</p>
+
                         </div>
                         <Button variant="contained" color="primary" component={Link} to="/edit-profile">
                             회원정보 수정
