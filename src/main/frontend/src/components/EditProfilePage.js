@@ -157,28 +157,6 @@ const EditProfilePage = () => {
                         />
                     </label>
                 </div>
-                <div className={styles.formGroup}>
-                    <label>
-                        Firstday:
-                        <input
-                            type="number"
-                            name="firstday"
-                            value={formData.firstday}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className={styles.formGroup}>
-                    <label>
-                        Restday:
-                        <input
-                            type="number"
-                            name="restday"
-                            value={formData.restday}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
 
                 <button type="submit">회원정보 수정</button> {/* 버튼 스타일 추가 */}
             </form>

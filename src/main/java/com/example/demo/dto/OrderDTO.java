@@ -1,38 +1,18 @@
-package com.example.demo.entity;
+package com.example.demo.dto;
 
-import jakarta.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-@Entity
-@Table(name = "ordertbl")
-public class Ordertbl implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "onum")
+public class OrderDTO {
     private int onum;
-
-    @Column
     private String paymentId;
-
-    @Column
     private String status;
-
-    @Column(name = "odate")
     private Date odate;
-
-    @Column(name = "id", length = 50)
     private String id;
-
-    @OneToMany(mappedBy = "ordertbl")
-    private List<Dorder> dorders;
-
-    public Ordertbl(){}
+    private List<DorderDTO> dorders;
 
     public int getOnum() {
-        return this.onum;
+        return onum;
     }
 
     public void setOnum(int onum) {
@@ -46,7 +26,7 @@ public class Ordertbl implements Serializable {
     public void setPaymentId(String paymentId) {
         this.paymentId = paymentId;
     }
-    
+
     public String getStatus() {
         return status;
     }
@@ -56,7 +36,7 @@ public class Ordertbl implements Serializable {
     }
 
     public Date getOdate() {
-        return this.odate;
+        return odate;
     }
 
     public void setOdate(Date odate) {
@@ -64,19 +44,18 @@ public class Ordertbl implements Serializable {
     }
 
     public String getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public List<Dorder> getDorders() {
-        return this.dorders;
+    public List<DorderDTO> getDorders() {
+        return dorders;
     }
 
-    public void setDorders(List<Dorder> dorders) {
+    public void setDorders(List<DorderDTO> dorders) {
         this.dorders = dorders;
     }
-
 }

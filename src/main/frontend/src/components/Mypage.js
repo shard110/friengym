@@ -69,6 +69,22 @@ const Mypage = () => {
         }
     };
 
+    const calculateBMI = () => {
+        if (userInfo && userInfo.height && userInfo.weight) {
+            const heightInMeters = userInfo.height / 100;  // 신장을 m 단위로 변환
+            const bmi = (userInfo.weight / (heightInMeters * heightInMeters)).toFixed(2);  // BMI 계산
+            return bmi;
+        }
+        return null;
+    };
+
+    const getBMICategory = (bmi) => {
+        if (bmi < 18.5) return "저체중";
+        if (bmi >= 18.5 && bmi < 23) return "정상";
+        if (bmi >= 23 && bmi < 25) return "과체중";
+        return "비만";
+    };
+
     if (authLoading || loading) {
         return <p>Loading...</p>;  // 인증 상태 또는 페이지 로딩 중일 때 표시
     }
@@ -76,6 +92,9 @@ const Mypage = () => {
     if (error) {
         return <p className="error">{error}</p>;  // 에러가 있을 때 표시
     }
+
+    const bmi = calculateBMI();  // BMI 계산
+    const bmiCategory = bmi !== null ? getBMICategory(bmi) : null;  // BMI 범주 계산
 
     return (
         <div className="page-wrapper">
@@ -104,13 +123,15 @@ const Mypage = () => {
                             <p><span>Email:</span> {userInfo.email}</p> {/* 이메일 추가 */}
                             <p><span>Phone:</span> {userInfo.phone}</p>
                             <p><span>Sex:</span> {userInfo.sex}</p>
-                            <p><span>Height:</span> {userInfo.height}</p>
-                            <p><span>Weight:</span> {userInfo.weight}</p>
+                            <p><span>Height:</span> {userInfo.height} cm</p>
+                            <p><span>Weight:</span> {userInfo.weight} kg</p>
+                            {bmi !== null && <p><span>BMI:</span> {bmi} ({bmiCategory})</p>}  {/* BMI와 범주 표시 */}
                             <p><span>Birth:</span> {userInfo.birth}</p>
                             <p><span>Firstday:</span> {userInfo.firstday}</p>
                             <p><span>Restday:</span> {userInfo.restday}</p>
 
                         </div>
+
                         <Button variant="contained" color="primary" component={Link} to="/edit-profile">
                             회원정보 수정
                         </Button>

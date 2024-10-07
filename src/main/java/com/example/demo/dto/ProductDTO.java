@@ -6,6 +6,7 @@ public class ProductDTO {
     private int pPrice;
     private String pImgUrl;
     
+    public ProductDTO(){}
 
     public ProductDTO(int pNum, String pName, int pPrice, String pImgUrl) {
         this.pNum = pNum;

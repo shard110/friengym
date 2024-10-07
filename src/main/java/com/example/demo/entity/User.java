@@ -2,6 +2,8 @@ package com.example.demo.entity;
 
 import java.sql.Date;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -33,11 +35,15 @@ public class User {
     private Integer height;
     private Integer weight;
     private Date birth;
-    private Integer firstday;
-    private Integer restday;
+    private Date firstday; // 등록일자 (Date 타입으로 변경)
+    private Integer restday; // 남은 일수
     private String photo;
     private String sessionkey;
     private Date sessionlimit;
+
+        // Status enum 추가 (선택적)
+    @Enumerated(EnumType.STRING) // ENUM을 문자열로 저장
+    private Status status; // 상태 필드 (선택적)
 
     // Getters and Setters
     public String getId() {
@@ -112,12 +118,12 @@ public class User {
         this.birth = birth;
     }
 
-    public Integer getFirstday() {
-        return firstday;
+    public Date getFirstday() {
+        return firstday; // Date 타입으로 변경
     }
 
-    public void setFirstday(Integer firstday) {
-        this.firstday = firstday;
+    public void setFirstday(Date firstday) {
+        this.firstday = firstday; // Date 타입으로 변경
     }
 
     public Integer getRestday() {

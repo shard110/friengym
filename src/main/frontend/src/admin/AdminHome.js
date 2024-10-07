@@ -24,27 +24,40 @@ const AdminHome = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/api/admin/login', { aid, apwd });
+        const response = await axios.post('http://localhost:8080/api/admin/login', { aid, apwd });
+        console.log(response.data);
 
-      console.log(response.data);
-
-      if (response.data.success) {
-        localStorage.setItem('adminToken', response.data.token);
-        setMessage('안녕하세요 관리자님');
-        setIsLoggedIn(true);
-      } else {
-        setMessage('로그인 실패. 아이디와 비밀번호를 확인하세요.');
-      }
+        if (response.data.success) {
+            localStorage.setItem('adminToken', response.data.token);
+            setMessage('안녕하세요 관리자님');
+            setIsLoggedIn(true);
+        } else {
+            // 로그인 실패 시 사용자에게 보여줄 메시지
+            setMessage('로그인 실패. 아이디와 비밀번호를 확인하세요.');
+        }
     } catch (error) {
-      console.error(error);
-      setMessage('서버 오류. 다시 시도하세요.');
+        console.error(error);
+        if (error.response) {
+            // 서버가 응답했지만 오류인 경우
+            if (error.response.status === 401) { // 401 Unauthorized 처리
+                setMessage('로그인 실패. 아이디와 비밀번호를 확인하세요.');
+            } else {
+                setMessage('서버 오류. 다시 시도하세요.');
+            }
+        } else {
+            // 네트워크 오류 등 서버에 도달하지 못한 경우
+            setMessage('서버에 연결할 수 없습니다. 다시 시도하세요.');
+        }
     }
   };
 
+
   const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    setIsLoggedIn(false);
-    setMessage('로그아웃 되었습니다.');
+    localStorage.removeItem('adminToken'); // 토큰 삭제
+    setIsLoggedIn(false); // 로그인 상태 업데이트
+    setMessage('로그아웃 되었습니다.'); // 로그아웃 메시지 설정
+    setAid(''); // 아이디 초기화
+    setApwd(''); // 비밀번호 초기화
   };
 
   return (

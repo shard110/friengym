@@ -22,6 +22,7 @@ import ProductHome from './components/ProductHome';
 import RegisterPage from './components/RegisterPage';
 import UpdateAsk from './components/UpdateAsk';
 import ViewAsk from './components/ViewAsk';
+import Chat from './components/Chat'; //Chat 컴포넌트 임포트
 import AskPage from './page/AskPage';
 import Board from './page/Board';
 import Cart from './page/Cart';
@@ -30,6 +31,9 @@ import ProductDetail from './page/ProductDetail';
 import ProductList from './page/ProductList';
 import QnaPage from './page/QnaPage';
 import ReviewPage from './page/ReviewPage';
+import OrderPage from './page/OrderPage';
+import PaymentSuccess from './page/PaymentSuccess';
+import OrderHistoryPage from './page/OrderHistoryPage';
 
 //관리자용 import
 import AdminHome from './admin/AdminHome';
@@ -44,6 +48,7 @@ export default function App() {
         <div className="App">
           <NavBar /> {/* NavBar 컴포넌트 추가 */}
           <Routes>
+            <Route path="/chat" element={<Chat />} /> {/* Chat 라우트 추가 */}
             <Route path="/" element={<HomePage />} />
             <Route path="/posts" element={<PostsList />} />
             <Route path="/products" element={<ProductHome />} />
@@ -56,6 +61,9 @@ export default function App() {
             <Route path="/productslist/:pNum" element={<ProductDetail />} />
             <Route path="/productslist" element={<ProductList />} />
             <Route path="/post/:poNum" element={<PostDetail />} />
+            <Route path="/order" element={<OrderPage />} />
+            <Route path="/order-history" element={<OrderHistoryPage />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/edit/:poNum" element={<EditPost />} />
             <Route path="/login" element={<LoginPage />} />
