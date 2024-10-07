@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Collections;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.config.JwtTokenProvider;
+import com.example.demo.dto.FindIdRequest; // FindIdRequest 추가
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.RegisterRequest;
@@ -50,7 +52,7 @@ public class UserController {
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         if (registerRequest.getId() == null || registerRequest.getPwd() == null ||
             registerRequest.getName() == null || registerRequest.getPhone() == null ||
-            registerRequest.getSex() == null) {
+            registerRequest.getSex() == null || registerRequest.getEmail() == null) {
             return ResponseEntity.badRequest().body("All fields are required");
         }
         try {
@@ -60,6 +62,7 @@ public class UserController {
             user.setName(registerRequest.getName());
             user.setPhone(registerRequest.getPhone());
             user.setSex(registerRequest.getSex());
+            user.setEmail(registerRequest.getEmail());
             User registeredUser = userService.registerUser(user);
             return ResponseEntity.ok(registeredUser);
         } catch (Exception e) {
@@ -125,20 +128,17 @@ public class UserController {
     public ResponseEntity<?> updateUserInfo(@RequestBody User updatedUser, @RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
 
-        // Validate token
         if (!jwtTokenProvider.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
         }
 
-        // Extract user information from token
         String username = jwtTokenProvider.getClaims(token).getSubject();
         Optional<User> userOpt = userService.findById(username);
 
         if (userOpt.isPresent()) {
             User existingUser = userOpt.get();
-
-            // Update fields
             existingUser.setName(updatedUser.getName());
+            existingUser.setEmail(updatedUser.getEmail());
             existingUser.setPhone(updatedUser.getPhone());
             existingUser.setSex(updatedUser.getSex());
             existingUser.setHeight(updatedUser.getHeight());
@@ -147,9 +147,7 @@ public class UserController {
             existingUser.setFirstday(updatedUser.getFirstday());
             existingUser.setRestday(updatedUser.getRestday());
 
-            // Save updated user
             User updated = userService.save(existingUser);
-
             return ResponseEntity.ok(updated);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
@@ -163,41 +161,33 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid Authorization header");
         }
         token = token.substring(7); // Remove "Bearer " prefix
-
-        // Add token to blacklist
         jwtTokenProvider.blacklistToken(token);
-
         return ResponseEntity.ok("Logout successful");
     }
 
     @PutMapping("/user/update-photo")
     public ResponseEntity<?> updateProfilePhoto(@RequestParam("file") MultipartFile file, @RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
-    
+
         if (!jwtTokenProvider.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
         }
-    
+
         String username = jwtTokenProvider.getClaims(token).getSubject();
         Optional<User> userOpt = userService.findById(username);
-    
+
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             try {
-                // Get original file name and make it safe for storage
                 String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
-                String fileName = originalFilename; // Use original filename or modify as needed
-    
-                // Define file path
+                String fileName = originalFilename;
+
                 Path filePath = Paths.get("uploads/" + fileName);
-    
-                // Save file to server
                 Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-    
-                // Update user with the new photo URL
+
                 user.setPhoto("/api/user/photo/" + fileName);
                 userService.save(user);
-    
+
                 return ResponseEntity.ok(user);
             } catch (IOException e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save photo");
@@ -206,19 +196,18 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
     }
-    
+
     @GetMapping("/user/photo/{filename}")
     public ResponseEntity<Resource> getProfilePhoto(@PathVariable String filename) {
         try {
             Path filePath = Paths.get("uploads/" + filename);
             Resource resource = new UrlResource(filePath.toUri());
-    
-            // Automatically determine content type based on file extension
+
             String contentType = Files.probeContentType(filePath);
             if (contentType == null) {
-                contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE; // Default to binary stream if type can't be determined
+                contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
             }
-    
+
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))
                     .body(resource);
@@ -228,4 +217,16 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+    //아이디 찾기
+    @PostMapping("/find-id")
+public ResponseEntity<?> findId(@RequestBody FindIdRequest request) {
+    Optional<User> user = userService.findByNameAndEmail(request.getName(), request.getEmail());
+    if (user.isPresent()) {
+        return ResponseEntity.ok(Collections.singletonMap("id", user.get().getId()));
+    } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("일치하는 사용자를 찾을 수 없습니다.");
+    }
+}
+
 }

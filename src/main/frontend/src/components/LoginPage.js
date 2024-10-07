@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
-import styles from './LoginPage.module.css'; // Corrected import for CSS module
-
+import styles from './LoginPage.module.css';
 
 function LoginPage() {
   const [id, setId] = useState('');
@@ -14,11 +13,8 @@ function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      // 서버에 JSON 형식으로 로그인 요청
       const response = await axios.post('/api/login', { id, pwd });
-      const { token, user } = response.data; // 서버가 token과 user를 반환한다고 가정
-
-      // 로그인 상태를 업데이트하고 토큰을 저장
+      const { token, user } = response.data;
       login({ ...user, token });
       navigate('/');
     } catch (error) {
@@ -46,6 +42,7 @@ function LoginPage() {
         className={styles.input}
       />
       <button onClick={handleLogin} className={styles.button}>Login</button>
+      <button onClick={() => navigate('/find-id')} className={styles.button}>아이디 찾기</button> {/* 수정된 버튼 경로 */}
     </div>
   );
 }
