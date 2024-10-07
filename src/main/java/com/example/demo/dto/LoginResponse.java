@@ -4,13 +4,13 @@ import com.example.demo.entity.User;
 
 public class LoginResponse {
     private String token;
-    private User user;
+    private String userId;  // User 객체 대신 간단한 정보만 포함
 
     public LoginResponse() {}
 
     public LoginResponse(String token, User user) {
         this.token = token;
-        this.user = user;
+        this.userId = user.getId();  // 여기서 중요한 정보만 포함
     }
 
     public String getToken() {
@@ -21,11 +21,11 @@ public class LoginResponse {
         this.token = token;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

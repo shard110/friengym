@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from './AuthContext';
 import styles from './LoginPage.module.css'; // Corrected import for CSS module
 
@@ -14,19 +13,26 @@ function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      // 서버에 JSON 형식으로 로그인 요청
-      const response = await axios.post('/api/login', { id, pwd });
-      const { token, user } = response.data; // 서버가 token과 user를 반환한다고 가정
 
-      // 로그인 상태를 업데이트하고 토큰을 저장
-      login({ ...user, token });
-      navigate('/');
+      console.log("ID:", id);
+      console.log("Password:", pwd);
+
+      if (!id || !pwd) {
+        setError('ID와 비밀번호를 모두 입력하세요.');
+        return;
+      }
+
+      // `AuthContext`의 `login` 함수 호출
+      await login({ id, pwd });
+      navigate('/');  // 로그인 성공 후 메인 페이지로 이동
+
     } catch (error) {
       setError('Login failed. Please check your credentials and try again.');
       console.error('Login failed', error);
     }
   };
-
+     
+    
   return (
     <div className={styles.LoginPage}>
       <h2 className={styles.heading}>로그인</h2>

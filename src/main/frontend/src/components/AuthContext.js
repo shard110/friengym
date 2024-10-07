@@ -11,28 +11,42 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchUser = async () => {
-            const token = localStorage.getItem('jwtToken');
-            if (token) {
-                try {
-                    const response = await axios.get('/api/mypage', {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    });
-                    console.log('User fetched in AuthProvider:', response.data);
-                    setUser(response.data);
-                } catch (error) {
-                    console.error('Failed to fetch user info in AuthProvider:', error);
-                    setUser(null);
-                    localStorage.removeItem('jwtToken');
+            // Axios 인터셉터 설정
+            axios.interceptors.request.use(
+                (config) => {
+                    const token = localStorage.getItem('jwtToken');
+                    if (token) {
+                        config.headers.Authorization = `Bearer ${token}`;
+                    }
+                    return config;
+                },
+                (error) => {
+                    return Promise.reject(error);
                 }
-            }
-            setLoading(false);
-        };
-
-        fetchUser();
-    }, []);
+            );
+    
+            const fetchUser = async () => {
+                const token = localStorage.getItem('jwtToken');
+                if (token) {
+                    try {
+                        const response = await axios.get('/api/mypostpage', {
+                            headers: {
+                                Authorization: `Bearer ${token}`
+                            }
+                        });
+                        console.log('User fetched in AuthProvider:', response.data);
+                        setUser(response.data);
+                    } catch (error) {
+                        console.error('Failed to fetch user info in AuthProvider:', error);
+                        setUser(null);
+                        localStorage.removeItem('jwtToken');
+                    }
+                }
+                setLoading(false);
+            };
+    
+            fetchUser();
+        }, []);
 
     const login = async (loginData) => {
         try {
@@ -40,7 +54,15 @@ export const AuthProvider = ({ children }) => {
           const token = response.data.token; // 서버에서 받은 JWT 토큰
           localStorage.setItem("jwtToken", token); // JWT 토큰 저장
           localStorage.setItem('likedPosts', JSON.stringify({}));
-          setUser(response.data.user); // 유저 정보 저장
+
+         // 로그인 후 사용자 정보를 다시 가져옴
+        const userResponse = await axios.get('/api/mypostpage', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        console.log("User data fetched after login:", userResponse.data);
+        setUser(userResponse.data);
         } catch (error) {
           console.error("Failed to log in:", error);
           throw error;

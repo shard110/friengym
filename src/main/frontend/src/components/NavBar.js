@@ -13,6 +13,8 @@ export default function Navbar() {
     navigate('/');
   };
 
+  console.log("Navbar user state:", user); // user 상태 확인
+
   return (
     <nav className="navbarH">
       <div className="navbar-container">

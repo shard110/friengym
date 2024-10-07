@@ -3,8 +3,7 @@ package com.example.demo.entity;
 import java.sql.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -13,8 +12,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
-
+@Setter
+@Getter
 @Entity
 @Table(name = "usertbl")
 public class User {
@@ -49,120 +51,17 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference  // 직렬화의 주도권을 가짐
+    @JsonIgnore  // 직렬화에서 제외하여 순환 참조 방지
     private List<Post> posts;
     
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "following")
+    @JsonIgnore
     private List<Follow> following;
     
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference(value = "following")  // 직렬화에서 제외
+    @JsonIgnore
     private List<Follow> followers;
 
 
-    // Getters and Setters
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getPwd() {
-        return pwd;
-    }
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
-
-    public void setHeight(Integer height) {
-        this.height = height;
-    }
-
-    public Integer getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Integer weight) {
-        this.weight = weight;
-    }
-
-    public Date getBirth() {
-        return birth;
-    }
-
-    public void setBirth(Date birth) {
-        this.birth = birth;
-    }
-
-    public Integer getFirstday() {
-        return firstday;
-    }
-
-    public void setFirstday(Integer firstday) {
-        this.firstday = firstday;
-    }
-
-    public Integer getRestday() {
-        return restday;
-    }
-
-    public void setRestday(Integer restday) {
-        this.restday = restday;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
-    public String getSessionkey() {
-        return sessionkey;
-    }
-
-    public void setSessionkey(String sessionkey) {
-        this.sessionkey = sessionkey;
-    }
-
-    public Date getSessionlimit() {
-        return sessionlimit;
-    }
-
-    public void setSessionlimit(Date sessionlimit) {
-        this.sessionlimit = sessionlimit;
-    }
 }

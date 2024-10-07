@@ -31,19 +31,32 @@ const Mypostpage = () => {
           Authorization: `Bearer ${token}`, // 토큰을 헤더에 포함
         },
       });
-      const { posts, following, followers, user: userData } = response.data;
-      setUserInfo(userData);
-      setImage(userData.photo || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+
+
+      // 서버 응답 데이터 구조를 확인하고 안전하게 처리
+    if (response.data) {
+      const { posts = [], following = [], followers = [], user: userData = {} } = response.data;
+
+      // userData가 존재하는지 확인한 후 상태 업데이트
+      if (userData) {
+        setUserInfo(userData);
+        setImage(userData.photo || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+      }
+
       setPosts(posts);
       setFollowing(following);
       setFollowers(followers);
-    } catch (error) {
-      console.error("Error fetching mypostpage data:", error);
-      setError("Failed to fetch user info.");
-    } finally {
-      setLoading(false);
+    } else {
+      setError("Invalid response data format");
     }
-  }, []);
+
+  } catch (error) {
+    console.error("Error fetching mypostpage data:", error);
+    setError("Failed to fetch user info.");
+  } finally {
+    setLoading(false);
+  }
+}, []);
 
   useEffect(() => {
     if (!authLoading) {
@@ -81,10 +94,11 @@ const Mypostpage = () => {
   if (loading || authLoading) {
     return <div>Loading...</div>;
   }
-
-  if (!user) {
-    return <div>Please log in</div>;
+  
+  if (!userInfo) {
+    return <div>Error: Failed to load user information.</div>;
   }
+  
 
   if (error) {
     return <div>Error: {error}</div>; // 에러 발생 시 에러 메시지 출력
@@ -107,10 +121,10 @@ const Mypostpage = () => {
               style={{ display: "none" }}
               onChange={handleProfilePhotoChange} // 파일 선택 시 이벤트 발생
             />
-            <span>{user.id}</span>
+            <span>{userInfo.id}</span>
           </div>
           <div className="profile-info">
-            <h2>{user.name}</h2>
+          <h2>{userInfo.name}</h2>
             <div className="stats">
               <span>게시물 {posts.length}</span>
               <span>팔로워 {followers.length}</span>

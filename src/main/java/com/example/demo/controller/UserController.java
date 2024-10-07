@@ -10,9 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ServerProperties.Tomcat.Resource;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,9 +32,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.config.JwtTokenProvider;
+import com.example.demo.dto.FollowResponse;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
+import com.example.demo.dto.PostResponse;
 import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.UserResponse;
 import com.example.demo.entity.Follow;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.User;
@@ -82,8 +86,12 @@ public class UserController {
         return ResponseEntity.ok(!exists);
     }
 
-    @PostMapping("/api/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+       
+        if (loginRequest.getId() == null || loginRequest.getPwd() == null) {
+            return ResponseEntity.badRequest().body("ID and password must not be null");
+        }
         try {
             Optional<User> user = userService.authenticateUser(loginRequest.getId(), loginRequest.getPwd());
             if (user.isPresent()) {
@@ -121,20 +129,22 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.replace("Bearer ", "");
-        if (!jwtTokenProvider.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
-        }
-
-        String username = jwtTokenProvider.getClaims(token).getSubject();
-        Optional<User> user = userService.findById(username);
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
+public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String authHeader) {
+    String token = authHeader.replace("Bearer ", "");
+    if (!jwtTokenProvider.validateToken(token)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
     }
+
+    String username = jwtTokenProvider.getClaims(token).getSubject();
+    Optional<User> user = userService.findById(username);
+    if (user.isPresent()) {
+        UserResponse userResponse = new UserResponse(user.get());
+        return ResponseEntity.ok(userResponse);
+    } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+}
+
 
     @PutMapping("/user/update")
     public ResponseEntity<?> updateUserInfo(@RequestBody User updatedUser, @RequestHeader("Authorization") String authHeader) {
@@ -253,41 +263,49 @@ public class UserController {
     private FollowService followService;
 
     @GetMapping("/mypostpage")
-public ResponseEntity<?> getMyPostPage(@RequestHeader("Authorization") String authHeader) {
-    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid Authorization header");
-    }
-
+    public ResponseEntity<?> getUserPostInfo(@RequestHeader("Authorization") String authHeader) {
     String token = authHeader.replace("Bearer ", "");
     if (!jwtTokenProvider.validateToken(token)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
     }
 
-    String userId = jwtTokenProvider.getClaims(token).getSubject();
-    Optional<User> userOpt = userService.findById(userId);
+    String username = jwtTokenProvider.getClaims(token).getSubject();
+    Optional<User> userOpt = userService.findById(username);
 
     if (userOpt.isPresent()) {
         User user = userOpt.get();
-        
+        UserResponse userResponse = new UserResponse(user);
+
         // 내가 작성한 게시물 가져오기
         List<Post> posts = postService.getPostsByUser(user);
-        
+        List<PostResponse> postResponses = posts.stream()
+                .map(PostResponse::new)
+                .collect(Collectors.toList());
+
         // 팔로잉과 팔로워 가져오기
         List<Follow> following = followService.getFollowing(user);
+        List<FollowResponse> followingResponses = following.stream()
+                .map(FollowResponse::new)
+                .collect(Collectors.toList());
+
         List<Follow> followers = followService.getFollowers(user);
-        
+        List<FollowResponse> followerResponses = followers.stream()
+                .map(FollowResponse::new)
+                .collect(Collectors.toList());
+
         // 응답에 필요한 정보들을 모두 담음
         Map<String, Object> response = new HashMap<>();
-        response.put("user", user);
-        response.put("posts", posts);
-        response.put("following", following);
-        response.put("followers", followers);
-        
+        response.put("user", userResponse);
+        response.put("posts", postResponses);
+        response.put("following", followingResponses);
+        response.put("followers", followerResponses);
+
         return ResponseEntity.ok(response);
     } else {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
     }
 }
+
 
 
 }
