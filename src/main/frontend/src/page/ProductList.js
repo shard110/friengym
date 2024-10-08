@@ -57,12 +57,14 @@ const ProductList = () => {
                     <section className="product-grid">
                         {products.map(product => (
                             <div className="product-card" key={product.pNum}>
-                                <Link to={`/productslist/${product.pNum}`}>
-                                    <img className='product-img' src={product.pImgUrl} alt={product.pName} />
-                                </Link>
-                                <button className='cartIconBtn' onClick={() => addToCart(product)}>
-                                    <img src={icon_cart} alt='장바구니'></img>
-                                </button>
+                                <div className="product-img-container">
+                                    <Link to={`/productslist/${product.pNum}`}>
+                                        <img className='product-img' src={product.pImgUrl} alt={product.pName} />
+                                    </Link>
+                                    <button className='cartIconBtn' onClick={() => addToCart(product)}>
+                                        <img src={icon_cart} alt='장바구니'></img>
+                                    </button>
+                                </div>
                                 <Link to={`/productslist/${product.pNum}`}>
                                     <h3>{product.pName}</h3>
                                 </Link>

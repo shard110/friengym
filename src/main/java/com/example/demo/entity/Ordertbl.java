@@ -14,6 +14,12 @@ public class Ordertbl implements Serializable {
     @Column(name = "onum")
     private int onum;
 
+    @Column
+    private String paymentId;
+
+    @Column
+    private String status;
+
     @Column(name = "odate")
     private Date odate;
 
@@ -23,12 +29,30 @@ public class Ordertbl implements Serializable {
     @OneToMany(mappedBy = "ordertbl")
     private List<Dorder> dorders;
 
+    public Ordertbl(){}
+
     public int getOnum() {
         return this.onum;
     }
 
     public void setOnum(int onum) {
         this.onum = onum;
+    }
+
+    public String getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Date getOdate() {
