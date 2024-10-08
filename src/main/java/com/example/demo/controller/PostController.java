@@ -35,6 +35,7 @@ import com.example.demo.dto.PostRequest;
 import com.example.demo.dto.PostResponse;
 import com.example.demo.entity.Post;
 import com.example.demo.exception.PostNotFoundException;
+import com.example.demo.exception.UnauthorizedException;
 import com.example.demo.service.CommentService;
 import com.example.demo.service.FileService;
 import com.example.demo.service.PostService;
@@ -175,15 +176,21 @@ public class PostController {
 
     // 게시글 좋아요 기능
     @PostMapping("/{poNum}/like")
-    public ResponseEntity<?> incrementLikes(@PathVariable Integer poNum, @RequestHeader("Authorization") String authHeader) {
-        try {
-            String userId = postService.getUserIdFromToken(authHeader);
-            Post post = postService.incrementLikes(poNum, userId);
-            return ResponseEntity.ok(new PostResponse(post, commentService.getTopLevelComments(poNum)));
-        } catch (Exception e) {
-            return ResponseEntity.status(401).body("Unauthorized");
-        }
+    public ResponseEntity<Object> incrementLikes(
+        @PathVariable Integer poNum,
+        @RequestHeader("Authorization") String authHeader) {
+    
+    try {
+        String userId = postService.getUserIdFromToken(authHeader);
+        Post post = postService.incrementLikes(poNum, userId);
+        PostResponse postResponse = new PostResponse(post);  // PostResponse DTO 반환
+        return ResponseEntity.ok(postResponse);  // 성공 시 PostResponse 반환
+        
+    } catch (UnauthorizedException e) {
+        return ResponseEntity.status(401).body("Unauthorized");  // 실패 시 401 에러 반환
     }
+}
+
 
 // 검색 API
 @GetMapping("/search")
@@ -275,5 +282,17 @@ public ResponseEntity<?> reportPost(
     }
 }
 
+    //신고 중복 체크
+    @GetMapping("/{poNum}/report/check")
+    public ResponseEntity<?> checkIfAlreadyReported(@PathVariable Integer poNum, @RequestHeader("Authorization") String authHeader) {
+        String userId = postService.getUserIdFromToken(authHeader);
+        
+        boolean alreadyReported = postService.hasUserAlreadyReported(poNum, userId);
+        
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("alreadyReported", alreadyReported);
+        
+        return ResponseEntity.ok(response);
+    }
 
 }

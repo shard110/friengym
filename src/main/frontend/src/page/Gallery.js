@@ -14,6 +14,7 @@ const Gallery = () => {
   const [selectedPost, setSelectedPost] = useState(null); // 선택된 게시글
   const { user } = useAuth(); // 인증된 사용자 정보 가져오기
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
+  const [likedPosts, setLikedPosts] = useState({}); // 좋아요 상태를 관리하는 상태
 
   useEffect(() => {
     fetch("api/posts") // Spring Boot 백엔드의 엔드포인트에 맞게 수정 필요
@@ -29,6 +30,8 @@ const Gallery = () => {
       });
   }, []);
 
+
+  //신고관련
   const handleReportClick = (post) => {
     setSelectedPost(post);
     setReportOpen(true);
@@ -37,74 +40,111 @@ const Gallery = () => {
   const handleReportSubmit = (reason) => {
     const token = localStorage.getItem("jwtToken");
   
-    fetch(`/api/posts/${selectedPost.poNum}/report`, {
-      method: "POST",
+    if (!reason || reason.trim() === "") {
+      alert("신고 사유를 입력해주세요.");
+      return;
+    }
+  
+    if (!selectedPost || !selectedPost.poNum) {
+      alert("게시글을 찾을 수 없습니다.");
+      return;
+    }
+  
+    // 중복 신고 여부 확인
+    fetch(`/api/posts/${selectedPost.poNum}/report/check`, {
+      method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/x-www-form-urlencoded", // Content-Type 수정
       },
-      body: new URLSearchParams({ reason }), // 파라미터 형식으로 수정
     })
-      .then((response) => {
-        if (!response.ok) {
-          return response.text().then((text) => {
-            throw new Error(text || "신고 처리에 실패했습니다.");
-          });
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.alreadyReported) {
+          alert("이미 이 게시글을 신고하셨습니다.");
+          return;  // 이미 신고된 경우 더 이상 진행하지 않음
         }
-        alert("신고가 접수되었습니다.");
-        setReportOpen(false);
+  
+        // 중복 신고가 아닌 경우 실제 신고 처리
+        fetch(`/api/posts/${selectedPost.poNum}/report`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({ reason }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              return response.text().then((text) => {
+                throw new Error(`Server Error: ${text}`);
+              });
+            }
+            alert("신고가 접수되었습니다.");
+            setReportOpen(false);  // 팝업 닫기
+          })
+          .catch((error) => {
+            alert(`신고 처리 중 오류: ${error.message}`);
+          });
       })
       .catch((error) => {
-        console.error("신고 처리 중 오류:", error);
-        alert(`신고 처리 중 오류가 발생했습니다: ${error.message}`);
+        alert(`중복 신고 확인 중 오류: ${error.message}`);
       });
   };
   
   
 
-  const likedPostsKey = `likedPosts_${user?.id}`;
-  const likedPosts = JSON.parse(localStorage.getItem(likedPostsKey)) || {};
-
-  const hasLiked = (postId) => likedPosts[postId];
-
   const handleLike = (post) => {
     const token = localStorage.getItem("jwtToken");
-
-    if (!hasLiked(post.poNum)) {
-      fetch(`/api/posts/${post.poNum}/like`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            return response.text().then((text) => {
-              throw new Error(`Server Error: ${text}`);
-            });
-          }
-        })
-        .then((updatedPost) => {
-          setPosts((prevPosts) =>
-            prevPosts.map((p) => (p.poNum === updatedPost.poNum ? updatedPost : p))
-          );
-
-          const updatedLikedPosts = { ...likedPosts, [post.poNum]: true };
-          localStorage.setItem(likedPostsKey, JSON.stringify(updatedLikedPosts));
-
-          alert("좋아요를 눌렀습니다.");
-        })
-        .catch((error) => {
-          console.error("좋아요 처리 중 오류:", error);
-          alert("좋아요 처리에 실패했습니다.");
-        });
-    } else {
-      alert("이미 이 게시글에 좋아요를 눌렀습니다.");
+  
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      return;
     }
+  
+    const likedPostsKey = `likedPosts_${user?.id}`; // 유저별로 좋아요 누른 게시글을 관리
+    const likedPosts = JSON.parse(localStorage.getItem(likedPostsKey)) || {};
+  
+    // 이미 좋아요를 누른 경우 처리 (서버에 요청 보내기 전에 체크)
+    if (likedPosts[post.poNum]) {
+      alert("이미 이 게시글에 좋아요를 눌렀습니다."); // 알림 띄우기
+      return;
+    }
+  
+    // 좋아요 처리
+    fetch(`/api/posts/${post.poNum}/like`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((text) => {
+            throw new Error(`Server Error: ${text}`);
+          });
+        }
+        return response.json(); // PostResponse 받음
+      })
+      .then((updatedPost) => {
+        // 게시글 목록을 업데이트
+        setPosts((prevPosts) =>
+          prevPosts.map((p) => (p.poNum === updatedPost.poNum ? updatedPost : p))
+        );
+  
+        // 로컬 스토리지에 유저가 좋아요를 누른 기록을 업데이트
+        const updatedLikedPosts = { ...likedPosts, [post.poNum]: true };
+        localStorage.setItem(likedPostsKey, JSON.stringify(updatedLikedPosts));
+  
+        alert("좋아요를 눌렀습니다.");
+      })
+      .catch((error) => {
+        console.error("좋아요 처리 중 오류:", error);
+        alert("좋아요 처리에 실패했습니다.");
+      });
   };
+  
+
 
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
@@ -141,7 +181,7 @@ const Gallery = () => {
                       className="report-btn"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleReportClick(post);
+                        handleReportClick(post, "신고 사유");
                       }}
                     >
                       신고
@@ -202,7 +242,7 @@ const Gallery = () => {
                     e.stopPropagation();
                     handleLike(post);
                   }}
-                  disabled={hasLiked(post.poNum)}
+                  disabled={likedPosts[post.poNum]} // 이미 좋아요를 눌렀다면 버튼 비활성화
                 >
                   👍 {post.likes}
                 </button>

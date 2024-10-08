@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -77,7 +76,7 @@ public class PostService {
 
     // 모든 게시글 조회 메서드
     public List<Post> getAllPosts() {
-        return postRepository.findAllByOrderByPoDateDesc(); // 모든 게시글을 조회
+        return postRepository.findAllWithUserOrderedByDateDesc();
     }
 
      // 조회수 증가 없는 게시글 조회 메서드 추가
@@ -293,30 +292,39 @@ public class PostService {
     }
 
 
-    // 게시글 신고 메서드
-    public void reportPost(Integer poNum, String userId, String reason) throws PostNotFoundException {
-        Post post = postRepository.findById(poNum)
-                .orElseThrow(() -> new PostNotFoundException(poNum));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+   // 게시글 신고 메서드
+   public void reportPost(Integer poNum, String userId, String reason) throws PostNotFoundException {
+    // 게시글 존재 여부 확인
+    Post post = postRepository.findById(poNum)
+            .orElseThrow(() -> new PostNotFoundException(poNum));
 
-        // 이미 해당 유저가 신고했는지 확인 (중복 신고 방지)
-        Optional<Warning> existingWarning = warningRepository.findByPostPoNum(poNum)
-                .stream()
-                .filter(w -> w.getUser().getId().equals(userId))
-                .findFirst();
+    // 유저 존재 여부 확인
+    User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException(userId));
 
-        if (existingWarning.isPresent()) {
-            throw new IllegalArgumentException("이미 신고한 게시글입니다.");
-        }
+    // 이미 해당 유저가 신고했는지 확인 (중복 신고 방지)
+    boolean alreadyReported = hasUserAlreadyReported(poNum, userId);
 
-        if (reason == null || reason.trim().isEmpty()) {
-            throw new IllegalArgumentException("신고 사유를 입력해주세요.");
-        }
+    if (alreadyReported) {
+        throw new IllegalArgumentException("이미 신고한 게시글입니다.");
+    }
 
-        // 신고 정보 저장
-        Warning warning = new Warning(post, user, reason);
-        warningRepository.save(warning);
+    // 신고 사유가 비어 있으면 예외 처리
+    if (reason == null || reason.trim().isEmpty()) {
+        throw new IllegalArgumentException("신고 사유를 입력해주세요.");
+    }
+
+    // 신고 정보 저장
+    Warning warning = new Warning(post, user, reason);
+    warningRepository.save(warning);
+}
+
+     // 유저가 해당 게시글을 이미 신고했는지 확인하는 메서드
+     public boolean hasUserAlreadyReported(Integer poNum, String userId) {
+        // Warning 테이블에서 특정 게시글에 대한 특정 유저의 신고가 있는지 확인
+        List<Warning> warnings = warningRepository.findByPostPoNum(poNum);
+        return warnings.stream()
+            .anyMatch(warning -> warning.getUser().getId().equals(userId));
     }
 
 }

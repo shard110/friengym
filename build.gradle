@@ -80,3 +80,8 @@ tasks.withType(JavaCompile) {
     options.compilerArgs << '-parameters'
 }
 
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:deprecation"
+}
+

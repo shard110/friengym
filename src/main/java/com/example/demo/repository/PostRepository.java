@@ -14,6 +14,9 @@ import com.example.demo.entity.User;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer>, JpaSpecificationExecutor<Post> {
 
+    @Query("SELECT p FROM Post p JOIN FETCH p.user ORDER BY p.poDate DESC")
+    List<Post> findAllWithUserOrderedByDateDesc();
+
     // 모든 게시글을 최신순으로 조회하는 메서드
     List<Post> findAllByOrderByPoDateDesc();
 
