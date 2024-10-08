@@ -12,6 +12,7 @@ function RegisterPage() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [sex, setSex] = useState('');
+  const [email, setEmail] = useState(''); // 이메일 상태 추가
   const [error, setError] = useState('');
   const [idError, setIdError] = useState('');
   const [idSuccess, setIdSuccess] = useState('');
@@ -23,7 +24,25 @@ function RegisterPage() {
   };
 
   const handleRegister = async () => {
-    // ... (이전 코드 유지)
+    if (!isIdAvailable) {
+      setError('회원가입 전 ID 중복 확인을 해주세요.');
+      return;
+    }
+
+    try {
+      const response = await axios.post('/api/register', {
+        id,
+        pwd,
+        name,
+        phone,
+        sex
+      });
+      console.log('회원가입 성공:', response.data);
+      navigate('/login');
+    } catch (error) {
+      setError('회원가입 실패. 다시 시도해 주세요.');
+      console.error('회원가입 실패:', error);
+    }
   };
 
   return (
@@ -71,6 +90,13 @@ function RegisterPage() {
           placeholder="이름"
           className={styles.input}
         />
+              <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="이메일"
+        className={styles.input}
+      />
         <input
           type="text"
           value={phone}

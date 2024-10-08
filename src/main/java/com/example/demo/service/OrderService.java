@@ -19,6 +19,12 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
+    // 모든 주문을 가져오는 메서드
+    public List<OrderDTO> getAllOrders() {
+        List<Ordertbl> orders = orderRepository.findAll(); // 모든 주문을 조회
+        return orders.stream().map(this::convertToDTO).collect(Collectors.toList()); // DTO로 변환하여 반환
+    }
+
     public List<OrderDTO> getOrdersByUserId(String id) {
         List<Ordertbl> orders = orderRepository.findById(id);
         return orders.stream().map(this::convertToDTO).collect(Collectors.toList());

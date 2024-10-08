@@ -33,5 +33,10 @@ public class UserService {
     public User save(User user) {
         return userRepository.save(user);
     }
+
+    public Optional<User> findByNameAndEmail(String name, String email) {
+        return userRepository.findByNameAndEmail(name, email); // UserRepository에서 적절한 메소드 구현 필요
+    }
+    
     
 }

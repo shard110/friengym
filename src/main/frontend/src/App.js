@@ -38,6 +38,8 @@ import OrderHistoryPage from './page/OrderHistoryPage';
 //관리자용 import
 import AdminHome from './admin/AdminHome';
 
+//아이디 찾기
+import FindIdPage from './components/FindIdPage'; 
 
 export default function App() {
   return (
@@ -81,6 +83,9 @@ export default function App() {
             {/* 관리자용 */}
             <Route path="/adminHome/*" element={<AdminHome />} />
 
+
+          {/*아이디 찾기 */}
+          <Route path="/find-id" element={<FindIdPage />} />
           </Routes>
         </div>
       </Router>
