@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './RegisterPage.module.css';
-import logo from '../img/logo.png'; // 경로는 실제 파일 위치에 맞게 조정
-import googleIcon from '../img/google.png'; // 구글 아이콘 경로
-import kakaoIcon from '../img/kakao.png'; // 카카오톡 아이콘 경로
+import logo from '../img/logo.png'; // Adjust the path as needed
+import googleIcon from '../img/google.png'; // Google icon path
+import kakaoIcon from '../img/kakao.png'; // Kakao icon path
 
 function RegisterPage() {
   const [id, setId] = useState('');
@@ -12,7 +12,7 @@ function RegisterPage() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [sex, setSex] = useState('');
-  const [email, setEmail] = useState(''); // 이메일 상태 추가
+  const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [idError, setIdError] = useState('');
   const [idSuccess, setIdSuccess] = useState('');
@@ -56,7 +56,8 @@ function RegisterPage() {
         pwd,
         name,
         phone,
-        sex
+        sex,
+        email
       });
       console.log('회원가입 성공:', response.data);
       navigate('/login');
@@ -71,7 +72,6 @@ function RegisterPage() {
       <img src={logo} alt="Logo" className={styles.logo} />
       <h3 className={styles.snsMessage}>SNS 계정으로 간편하게 회원가입</h3>
 
-      {/* SNS 로그인 아이콘 추가 */}
       <div className={styles.snsIcons}>
         <button className={styles.snsButton}>
           <img src={googleIcon} alt="Google" className={styles.snsIcon} />
@@ -80,8 +80,7 @@ function RegisterPage() {
           <img src={kakaoIcon} alt="Kakao" className={styles.snsIcon} />
         </button>
       </div>
-      
-      {/* 가로 줄 추가 */}
+
       <hr className={styles.separator} />
 
       <div className={styles.RegisterPage}>
@@ -89,49 +88,63 @@ function RegisterPage() {
         {error && <p className={styles.error}>{error}</p>}
         {idError && <p className={styles.error}>{idError}</p>}
         {idSuccess && <p className={styles.success}>{idSuccess}</p>}
-        <input
-          type="text"
-          value={id}
-          onChange={(e) => setId(e.target.value)}
-          placeholder="사용자 ID"
-          className={styles.input}
-        />
-        <button onClick={checkIdAvailability} className={styles.button}>ID 중복 확인</button>
+        
+        <label className={styles.inputLabel}>사용자 ID <span style={{ color: 'red' }}>*</span></label>
+        <div className={styles.inputGroup}>
+          <input
+            type="text"
+            value={id}
+            onChange={(e) => setId(e.target.value)}
+            className={styles.input}
+          />
+          <button
+            onClick={checkIdAvailability}
+            className={styles.buttonCheckId}
+          >
+            ID 중복 확인
+          </button>
+        </div>
+
+        <label className={styles.inputLabel}>비밀번호 <span style={{ color: 'red' }}>*</span></label>
         <input
           type="password"
           value={pwd}
           onChange={(e) => setPwd(e.target.value)}
-          placeholder="비밀번호"
           className={styles.input}
         />
+
+        <label className={styles.inputLabel}>이름 <span style={{ color: 'red' }}>*</span></label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="이름"
           className={styles.input}
         />
-              <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="이메일"
-        className={styles.input}
-      />
+
+        <label className={styles.inputLabel}>이메일 <span style={{ color: 'red' }}>*</span></label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className={styles.input}
+        />
+
+        <label className={styles.inputLabel}>전화번호 <span style={{ color: 'red' }}>*</span></label>
         <input
           type="text"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          placeholder="전화번호"
           className={styles.input}
         />
+
+        <label className={styles.inputLabel}>성별</label>
         <input
           type="text"
           value={sex}
           onChange={(e) => setSex(e.target.value)}
-          placeholder="성별"
           className={styles.input}
         />
+        
         <button onClick={handleRegister} className={styles.button}>회원가입</button>
       </div>
     </div>
