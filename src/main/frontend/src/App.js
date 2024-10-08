@@ -44,7 +44,7 @@ export default function App() {
     <AuthProvider>
       <Router>
         <div className="App">
-          <NavBar /> {/* NavBar 컴포넌트 추가 */}
+          {/* <NavBar /> NavBar 컴포넌트 추가 */}
           <Routes>
             <Route path="/chat" element={<Chat />} /> {/* Chat 라우트 추가 */}
             <Route path="/" element={<HomePage />} />
