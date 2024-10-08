@@ -23,7 +23,7 @@ import com.example.demo.service.PostService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/posts/{poNum}/comments")
+@RequestMapping("api/posts/{poNum}/comments")
 public class CommentController {
 
     @Autowired

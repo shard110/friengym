@@ -1,7 +1,25 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import "./Mypostpage.css";
+
+// MyPageSideBar 컴포넌트 추가
+const MyPageSideBar = () => {
+  return (
+    <div className="mypage-sidebar">
+      <ul>
+        <li>
+          <Link to="/mypage">회원정보수정</Link>
+        </li>
+        <li>
+          <Link to="/myorderpage">나의 주문내역보기</Link>
+        </li>
+      </ul>
+    </div>
+  );
+};
+
 
 const Mypostpage = () => {
   const { user, loading: authLoading } = useAuth(); // useAuth에서 user와 loading을 가져옴
@@ -10,8 +28,10 @@ const Mypostpage = () => {
   const [following, setFollowing] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [image, setImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+  const [introduction, setIntroduction] = useState(""); // 소개 정보
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
   const fileInput = useRef(null); // 파일 입력 참조
 
   // 유저의 게시물, 팔로잉, 팔로워 정보를 가져오는 함수
@@ -40,23 +60,23 @@ const Mypostpage = () => {
       // userData가 존재하는지 확인한 후 상태 업데이트
       if (userData) {
         setUserInfo(userData);
-        setImage(userData.photo || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+          setImage(userData.photo || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+          setIntroduction(userData.introduction || ""); // 소개 설정
+        }
+
+        setPosts(posts);
+        setFollowing(following);
+        setFollowers(followers);
+      } else {
+        setError("Invalid response data format");
       }
-
-      setPosts(posts);
-      setFollowing(following);
-      setFollowers(followers);
-    } else {
-      setError("Invalid response data format");
+    } catch (error) {
+      console.error("Error fetching mypostpage data:", error);
+      setError("Failed to fetch user info.");
+    } finally {
+      setLoading(false);
     }
-
-  } catch (error) {
-    console.error("Error fetching mypostpage data:", error);
-    setError("Failed to fetch user info.");
-  } finally {
-    setLoading(false);
-  }
-}, []);
+  }, []);
 
   useEffect(() => {
     if (!authLoading) {
@@ -91,6 +111,38 @@ const Mypostpage = () => {
     }
   };
 
+  // 소개 변경 함수
+  const handleIntroductionChange = (e) => {
+    setIntroduction(e.target.value);
+  };
+
+  // 프로필 편집 저장 함수
+  const handleSaveProfile = async () => {
+    try {
+      const token = localStorage.getItem("jwtToken");
+      if (!token) {
+        setError("No valid token found.");
+        return;
+      }
+
+      const response = await axios.put(
+        "/api/user/update-profile",
+        { introduction },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setUserInfo((prev) => ({ ...prev, introduction: response.data.introduction }));
+      setIsEditing(false); // 편집 모드 종료
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+    }
+  };
+
+
   if (loading || authLoading) {
     return <div>Loading...</div>;
   }
@@ -106,6 +158,7 @@ const Mypostpage = () => {
 
   return (
     <div className="mypostpage-container">
+         <MyPageSideBar /> {/* 사이드바 추가 */}
       <div className="profile-section">
         <div className="profile-header">
           <div className="user-info">
@@ -132,9 +185,23 @@ const Mypostpage = () => {
             </div>
           </div>
         </div>
+        {isEditing ? (
+              <textarea
+                className="user-introduction"
+                value={introduction}
+                onChange={handleIntroductionChange}
+                placeholder="자기 소개를 입력하세요."
+              />
+            ) : (
+              <p>{introduction || "소개가 없습니다."}</p>
+            )}
         <div className="profile-actions">
-          <button className="edit-profile-btn">프로필 편집</button>
-          <button className="contact-btn">연락처</button>
+        {isEditing ? (
+            <button className="edit-profile-btn" onClick={handleSaveProfile}>프로필 편집 저장</button>
+          ) : (
+            <button className="edit-profile-btn" onClick={() => setIsEditing(true)}>프로필 편집</button>
+          )}
+          <button className="contact-btn">프로필공유</button>
         </div>
       </div>
 

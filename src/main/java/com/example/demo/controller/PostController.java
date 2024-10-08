@@ -34,12 +34,13 @@ import com.example.demo.dto.CommentResponse;
 import com.example.demo.dto.PostRequest;
 import com.example.demo.dto.PostResponse;
 import com.example.demo.entity.Post;
+import com.example.demo.exception.PostNotFoundException;
 import com.example.demo.service.CommentService;
 import com.example.demo.service.FileService;
 import com.example.demo.service.PostService;
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("api/posts")
 @CrossOrigin(origins = "http://localhost:3000")
 public class PostController {
 
@@ -241,5 +242,38 @@ public ResponseEntity<?> searchPosts(
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("메타데이터를 가져오는 데 실패했습니다.");
         }
     }
+
+    
+    // 게시글 신고 API
+@PostMapping("/{poNum}/report")
+public ResponseEntity<?> reportPost(
+        @PathVariable("poNum") Integer postId,
+        @RequestHeader("Authorization") String authHeader,
+        @RequestParam("reason") String reason) {
+
+    try {
+        // JWT 토큰 처리
+        String userId = postService.getUserIdFromToken(authHeader);
+        if (userId == null || userId.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token.");
+        }
+
+        // 게시글 신고 처리
+        postService.reportPost(postId, userId, reason);
+        return ResponseEntity.ok("신고가 접수되었습니다.");
+
+    } catch (PostNotFoundException e) {
+        // 게시글을 찾을 수 없는 경우 처리
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 게시글을 찾을 수 없습니다.");
+    } catch (IllegalArgumentException e) {
+        // 잘못된 요청 파라미터에 대한 처리
+        return ResponseEntity.badRequest().body("신고 사유가 올바르지 않습니다.");
+    } catch (Exception e) {
+        // 그 외 예기치 않은 서버 오류 처리
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+    }
+}
+
 
 }

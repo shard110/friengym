@@ -47,7 +47,7 @@ export default function Navbar() {
         <div className="navbar-user-menu">
           {user ? (
             <div className="user-menu-logged-in">
-              <span className="nav-link">환영합니다! {user.name}님</span>
+              <span className="nav-link">환영합니다! {user.name ? user.name : "사용자"}님</span>
               <button onClick={handleLogout} className="nav-link">로그아웃</button>
               <button onClick={() => navigate('/totalmypage')} className="nav-link">마이페이지</button>
             </div>

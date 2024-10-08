@@ -48,4 +48,23 @@ public class PostResponse {
 
     }
 
+    // Post 객체만을 받는 생성자 추가
+    public PostResponse(Post post) {
+    this.poNum = post.getPoNum();
+    this.poContents = post.getPoContents();
+    this.poDate = post.getPoDate();
+    this.createdDate = post.getPoDate() != null ?
+                       post.getPoDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")) : "No Date";
+    this.viewCnt = post.getViewCnt();
+    this.likes = post.getLikes();
+    this.name = post.getUser() != null ? post.getUser().getName() : "Unknown";
+    this.id = post.getUser() != null ? post.getUser().getId() : "Unknown";
+    this.fileUrl = post.getFileUrl();
+    this.user = new UserResponse(post.getUser());
+    this.hashtags = post.getHashtags().stream()
+            .map(hashtag -> hashtag.getTag())
+            .collect(Collectors.toList());
+}
+
+
 }

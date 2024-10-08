@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import AddComment from "../components/AddComment"; // AddComment 컴포넌트 임포트
 import { useAuth } from "../components/AuthContext"; // 사용자 인증 정보 사용
 import CommentsList from "../components/CommentsList"; // CommentsList 컴포넌트 임포트
+import ReportPopup from "../components/ReportPopup"; // 신고 팝업 추가
 import YouTubePreview from "../components/YouTubePreview"; // YouTubePreview 컴포넌트 임포트
 import "./PostDetail.css"; // 스타일 정의
 
@@ -16,13 +17,14 @@ const PostDetail = () => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isReportOpen, setReportOpen] = useState(false); // 신고 팝업 상태
 
   // 게시글과 댓글 데이터를 가져오는 useEffect
   useEffect(() => {
   
 
        // 게시글 데이터 가져오기
-  fetch(`/posts/${poNum}`)
+  fetch(`/api/posts/${poNum}`) // 절대 경로로 수정
   .then((response) => response.json())
   .then((data) => {
     setPost(data);
@@ -36,6 +38,30 @@ const PostDetail = () => {
   });
 }, [poNum]);
 
+//신고
+const handleReportSubmit = (reason) => {
+  const token = localStorage.getItem("jwtToken");
+  fetch(`/api/posts/${post.poNum}/report`, { // 절대 경로로 수정
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ reason }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("신고 처리에 실패했습니다.");
+      }
+      alert("신고가 접수되었습니다.");
+      setReportOpen(false);
+    })
+    .catch((error) => {
+      console.error("신고 처리 중 오류:", error);
+      alert("신고 처리에 실패했습니다.");
+    });
+};
+
   // 댓글 추가 핸들러
   const handleAddComment = (commentText, parentId = null) => {
     const token = localStorage.getItem('jwtToken');
@@ -45,7 +71,7 @@ const PostDetail = () => {
       parentId: parentId, // 부모 댓글 ID
     };
 
-    fetch(`/posts/${poNum}/comments`, {
+    fetch(`/api/posts/${poNum}/comments`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json', // JSON 형식으로 전송
@@ -88,7 +114,7 @@ const PostDetail = () => {
   const handleEditComment = (commentId, editedText) => {
     const token = localStorage.getItem('jwtToken');
 
-    fetch(`/posts/${poNum}/comments/${commentId}`, {
+    fetch(`/api/posts/${poNum}/comments/${commentId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -120,7 +146,7 @@ const PostDetail = () => {
   const handleDeleteComment = (commentId) => {
     const token = localStorage.getItem('jwtToken');
 
-    fetch(`/posts/${poNum}/comments/${commentId}`, {
+    fetch(`/api/posts/${poNum}/comments/${commentId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -157,6 +183,13 @@ const PostDetail = () => {
                   className="user-photo"
                 />
                 <span>{post.user.id}</span>
+                  {/* 신고 버튼 */}
+                  <button
+                  className="report-btn"
+                  onClick={() => setReportOpen(true)}
+                >
+                  신고
+                </button>
               </>
             ) : (
               <span>Unknown User</span>
@@ -211,6 +244,12 @@ const PostDetail = () => {
             <AddComment onAdd={handleAddComment} />
           )}
 
+          {/* 신고 팝업 */}
+          <ReportPopup
+            isOpen={isReportOpen}
+            onClose={() => setReportOpen(false)}
+            onSubmit={handleReportSubmit}
+          />
         </div>
       ) : (
         <p>게시글을 찾을 수 없습니다.</p>

@@ -45,7 +45,7 @@ async function fetchYouTubeVideoInfo(videoId) {
 // Open Graph 메타데이터 가져오기
 async function fetchOpenGraphData(url) {
   try {
-    const response = await fetch(`/posts/fetch-metadata?url=${encodeURIComponent(url)}`);
+    const response = await fetch(`/api/posts/fetch-metadata?url=${encodeURIComponent(url)}`);
     if (response.ok) {
       const data = await response.json();
       return data;
@@ -137,7 +137,7 @@ const CreatePostForm = () => {
     }
 
     try {
-      await axios.post("http://localhost:8080/posts", formData, {
+      await axios.post("http://localhost:8080/api/posts", formData, {
         headers: {
           Authorization: `Bearer ${
             user.token || localStorage.getItem("jwtToken")

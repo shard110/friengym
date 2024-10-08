@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,6 +21,7 @@ import com.example.demo.entity.Hashtag;
 import com.example.demo.entity.Notification;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.User;
+import com.example.demo.entity.Warning;
 import com.example.demo.exception.PostNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.CommentRepository;
@@ -27,6 +29,7 @@ import com.example.demo.repository.HashtagRepository;
 import com.example.demo.repository.NotificationRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.WarningRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -57,6 +60,9 @@ public class PostService {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private WarningRepository warningRepository;
 
     //유저 게시물 가져오기
     public List<Post> getPostsByUser(User user) {
@@ -208,7 +214,18 @@ public class PostService {
     public Post incrementLikes(Integer poNum, String userId) {
         Post post = postRepository.findById(poNum)
                 .orElseThrow(() -> new PostNotFoundException(poNum));
-                
+
+        User user = userRepository.findById(userId)
+        .orElseThrow(() -> new UserNotFoundException(userId));
+
+         // 유저가 해당 게시글에 좋아요를 이미 눌렀는지 확인
+         if (user.getLikedPosts().contains(post)) {
+            throw new IllegalArgumentException("이미 이 게시글에 좋아요를 눌렀습니다.");
+        }
+         // 유저의 likedPosts에 추가
+         user.getLikedPosts().add(post);
+         userRepository.save(user);
+
         post.setLikes(post.getLikes() + 1);
         postRepository.save(post);
 
@@ -273,6 +290,33 @@ public class PostService {
 
     public List<CommentResponse> getCommentsByPostId(Integer poNum) {
         return commentService.getTopLevelComments(poNum);
+    }
+
+
+    // 게시글 신고 메서드
+    public void reportPost(Integer poNum, String userId, String reason) throws PostNotFoundException {
+        Post post = postRepository.findById(poNum)
+                .orElseThrow(() -> new PostNotFoundException(poNum));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+
+        // 이미 해당 유저가 신고했는지 확인 (중복 신고 방지)
+        Optional<Warning> existingWarning = warningRepository.findByPostPoNum(poNum)
+                .stream()
+                .filter(w -> w.getUser().getId().equals(userId))
+                .findFirst();
+
+        if (existingWarning.isPresent()) {
+            throw new IllegalArgumentException("이미 신고한 게시글입니다.");
+        }
+
+        if (reason == null || reason.trim().isEmpty()) {
+            throw new IllegalArgumentException("신고 사유를 입력해주세요.");
+        }
+
+        // 신고 정보 저장
+        Warning warning = new Warning(post, user, reason);
+        warningRepository.save(warning);
     }
 
 }

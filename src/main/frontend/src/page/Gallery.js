@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import PostSideBar from "../components/PostSideBar";
+import ReportPopup from "../components/ReportPopup"; // 신고 팝업 추가
 import YouTubePreview from "../components/YouTubePreview";
 import "./Gallery.css";
 
@@ -9,11 +10,13 @@ const Gallery = () => {
   const [posts, setPosts] = useState([]); // 게시글 목록 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [error, setError] = useState(null); // 에러 상태
+  const [isReportOpen, setReportOpen] = useState(false); // 신고 팝업 상태
+  const [selectedPost, setSelectedPost] = useState(null); // 선택된 게시글
   const { user } = useAuth(); // 인증된 사용자 정보 가져오기
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
   useEffect(() => {
-    fetch("/posts") // Spring Boot 백엔드의 엔드포인트에 맞게 수정 필요
+    fetch("api/posts") // Spring Boot 백엔드의 엔드포인트에 맞게 수정 필요
       .then((response) => response.json())
       .then((data) => {
         setPosts(data); // 게시글 데이터 설정
@@ -26,6 +29,39 @@ const Gallery = () => {
       });
   }, []);
 
+  const handleReportClick = (post) => {
+    setSelectedPost(post);
+    setReportOpen(true);
+  };
+
+  const handleReportSubmit = (reason) => {
+    const token = localStorage.getItem("jwtToken");
+  
+    fetch(`/api/posts/${selectedPost.poNum}/report`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/x-www-form-urlencoded", // Content-Type 수정
+      },
+      body: new URLSearchParams({ reason }), // 파라미터 형식으로 수정
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((text) => {
+            throw new Error(text || "신고 처리에 실패했습니다.");
+          });
+        }
+        alert("신고가 접수되었습니다.");
+        setReportOpen(false);
+      })
+      .catch((error) => {
+        console.error("신고 처리 중 오류:", error);
+        alert(`신고 처리 중 오류가 발생했습니다: ${error.message}`);
+      });
+  };
+  
+  
+
   const likedPostsKey = `likedPosts_${user?.id}`;
   const likedPosts = JSON.parse(localStorage.getItem(likedPostsKey)) || {};
 
@@ -35,7 +71,7 @@ const Gallery = () => {
     const token = localStorage.getItem("jwtToken");
 
     if (!hasLiked(post.poNum)) {
-      fetch(`/posts/${post.poNum}/like`, {
+      fetch(`/api/posts/${post.poNum}/like`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -100,9 +136,20 @@ const Gallery = () => {
                       className="user-photo"
                     />
                     <span>{post.user.id}</span>
+                       {/* 신고 버튼 */}
+                       <button
+                      className="report-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleReportClick(post);
+                      }}
+                    >
+                      신고
+                    </button>
                   </>
                 ) : (
                   <span>Unknown User</span>
+                  
                 )}
               </div>
 
@@ -178,7 +225,7 @@ const Gallery = () => {
                         e.stopPropagation();
                         const token = localStorage.getItem("jwtToken");
 
-                        fetch(`/posts/${post.poNum}`, {
+                        fetch(`/api/posts/${post.poNum}`, {
                           method: "DELETE",
                           headers: {
                             Authorization: `Bearer ${token}`,
@@ -209,6 +256,12 @@ const Gallery = () => {
           <p>게시물이 없습니다.</p>
         )}
       </div>
+        {/* 신고 팝업 */}
+        <ReportPopup
+        isOpen={isReportOpen}
+        onClose={() => setReportOpen(false)}
+        onSubmit={handleReportSubmit}
+      />
     </div>
   );
 };

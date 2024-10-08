@@ -1,14 +1,19 @@
 package com.example.demo.entity;
 
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -18,6 +23,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "usertbl")
 public class User {
     @Id
@@ -47,19 +53,24 @@ public class User {
     private String sessionkey;
     private Date sessionlimit;
 
+    @ManyToMany
+    @JoinTable(
+        name = "user_likes",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "post_id")
+    )
+    private Set<Post> likedPosts = new HashSet<>(); // 좋아요를 누른 게시글 목록
+
     @Column(unique=true, nullable=false)
     private String email;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore  // 직렬화에서 제외하여 순환 참조 방지
     private List<Post> posts;
     
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<Follow> following;
     
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<Follow> followers;
 
 
