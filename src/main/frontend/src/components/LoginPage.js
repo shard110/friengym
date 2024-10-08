@@ -43,6 +43,7 @@ function LoginPage() {
       />
       <button onClick={handleLogin} className={styles.button}>Login</button>
       <button onClick={() => navigate('/find-id')} className={styles.button}>아이디 찾기</button> {/* 수정된 버튼 경로 */}
+      <button onClick={() => navigate('/mail/check/findPw')} className={styles.button}>비밀번호 찾기</button>
     </div>
   );
 }

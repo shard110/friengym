@@ -60,6 +60,9 @@ dependencies {
     
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+
+    //mail 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-mail:3.2.0'
 }
 
 tasks.named('test') {

@@ -15,7 +15,8 @@ const EditProfilePage = () => {
         birth: '',
         firstday: '',
         restday: '',
-        email: '' // 이메일 추가
+        email: '', // 이메일 추가
+        pwd: ''
     });
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -39,7 +40,8 @@ const EditProfilePage = () => {
                         birth: response.data.birth || '',
                         firstday: response.data.firstday || '',
                         restday: response.data.restday || '',
-                        email: response.data.email || '' // 이메일 설정
+                        email: response.data.email || '', // 이메일 설정
+                        pwd: response.data.pwd || '' // 비밀번호
                     });
                 }
             } catch (error) {
@@ -87,6 +89,17 @@ const EditProfilePage = () => {
                             type="text"
                             name="name"
                             value={formData.name}
+                            onChange={handleChange}
+                        />
+                    </label>
+                </div>
+                <div className={styles.formGroup}>
+                    <label>
+                        Pwd:
+                        <input
+                            type="password"
+                            name="pwd"
+                            value={formData.pwd}
                             onChange={handleChange}
                         />
                     </label>

@@ -5,7 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@mui/material": "^6.1.0",
+    "@mui/material": "^6.1.1",
     "@portone/browser-sdk": "^0.0.10",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -28,6 +28,8 @@
     "react-stomp": "^5.1.0",
     "sockjs": "^0.3.24",
     "sockjs-client": "^1.6.1",
+    "stomp": "^0.1.1",
+    "sweetalert2": "^11.14.2",
     "web-vitals": "^2.1.4"
   },
   "proxy": "http://localhost:8080",

@@ -39,7 +39,8 @@ import OrderHistoryPage from './page/OrderHistoryPage';
 import AdminHome from './admin/AdminHome';
 
 //아이디 찾기
-import FindIdPage from './components/FindIdPage'; 
+import FindIdPage from './components/FindIdPage';
+import FindPwdPage from './components/FindPwdPage';
 
 export default function App() {
   return (
@@ -84,8 +85,9 @@ export default function App() {
             <Route path="/adminHome/*" element={<AdminHome />} />
 
 
-          {/*아이디 찾기 */}
-          <Route path="/find-id" element={<FindIdPage />} />
+            {/*아이디 찾기 */}
+            <Route path="/find-id" element={<FindIdPage />} />
+            <Route path="/mail/check/findPw" element={<FindPwdPage />} />
           </Routes>
         </div>
       </Router>

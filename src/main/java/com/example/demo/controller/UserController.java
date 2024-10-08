@@ -138,6 +138,7 @@ public class UserController {
         if (userOpt.isPresent()) {
             User existingUser = userOpt.get();
             existingUser.setName(updatedUser.getName());
+            existingUser.setPwd(updatedUser.getPwd());
             existingUser.setEmail(updatedUser.getEmail());
             existingUser.setPhone(updatedUser.getPhone());
             existingUser.setSex(updatedUser.getSex());
@@ -220,13 +221,15 @@ public class UserController {
 
     //아이디 찾기
     @PostMapping("/find-id")
-public ResponseEntity<?> findId(@RequestBody FindIdRequest request) {
-    Optional<User> user = userService.findByNameAndEmail(request.getName(), request.getEmail());
-    if (user.isPresent()) {
-        return ResponseEntity.ok(Collections.singletonMap("id", user.get().getId()));
-    } else {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("일치하는 사용자를 찾을 수 없습니다.");
+    public ResponseEntity<?> findId(@RequestBody FindIdRequest request) {
+        Optional<User> user = userService.findByNameAndEmail(request.getName(), request.getEmail());
+        if (user.isPresent()) {
+            return ResponseEntity.ok(Collections.singletonMap("id", user.get().getId()));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("일치하는 사용자를 찾을 수 없습니다.");
+        }
     }
-}
+
+    //비밀번호 찾기
 
 }
