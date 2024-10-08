@@ -20,7 +20,28 @@ function RegisterPage() {
   const navigate = useNavigate();
 
   const checkIdAvailability = async () => {
-    // ... (이전 코드 유지)
+    if (id.length > 0) {
+      try {
+        const response = await axios.get(`/api/check-id/${id}`);
+        if (response.data) {
+          setIsIdAvailable(true);
+          setIdError('');
+          setIdSuccess('사용할 수 있는 아이디입니다.');
+        } else {
+          setIsIdAvailable(false);
+          setIdError('ID가 이미 사용 중입니다.');
+          setIdSuccess('');
+        }
+      } catch (error) {
+        setIdError('ID 중복 확인 중 오류가 발생했습니다.');
+        setIdSuccess('');
+        console.error('ID 중복 확인 중 오류 발생:', error);
+      }
+    } else {
+      setIdError('ID는 빈 칸일 수 없습니다.');
+      setIsIdAvailable(false);
+      setIdSuccess('');
+    }
   };
 
   const handleRegister = async () => {
