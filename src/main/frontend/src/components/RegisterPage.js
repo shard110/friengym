@@ -18,6 +18,22 @@ function RegisterPage() {
   const [idError, setIdError] = useState('');
   const [idSuccess, setIdSuccess] = useState('');
   const [isIdAvailable, setIsIdAvailable] = useState(true);
+
+  // 전화번호 상태 수정
+const [areaCode, setAreaCode] = useState(''); // 지역 번호
+const [middleNumber, setMiddleNumber] = useState(''); // 가운데 번호
+const [lastNumber, setLastNumber] = useState(''); // 마지막 번호
+
+  // 약관 동의 상태 관리
+  const [isAgreedAll, setIsAgreedAll] = useState(false);
+  const [isAgreedAge, setIsAgreedAge] = useState(false);
+  const [isAgreedTerms, setIsAgreedTerms] = useState(false);
+  const [isAgreedPrivacy, setIsAgreedPrivacy] = useState(false);
+  const [isAgreedOptionalPrivacy, setIsAgreedOptionalPrivacy] = useState(false);
+  const [isAgreedOptionalInfo, setIsAgreedOptionalInfo] = useState(false);
+  const [isAgreedSMS, setIsAgreedSMS] = useState(false);
+  const [isAgreedEmail, setIsAgreedEmail] = useState(false);
+  
   const navigate = useNavigate();
 
   const checkIdAvailability = async () => {
@@ -53,6 +69,12 @@ function RegisterPage() {
 
     const email = `${emailId}@${emailDomain}`;
 
+    // 약관 동의 체크
+    if (!isAgreedAge || !isAgreedTerms || !isAgreedPrivacy) {
+      setError('이용 약관에 동의해 주세요.');
+      return;
+    }
+
     try {
       const response = await axios.post('/api/register', {
         id,
@@ -61,6 +83,8 @@ function RegisterPage() {
         phone,
         sex,
         email,
+        isAgreedSMS,
+        isAgreedEmail,
       });
       console.log('회원가입 성공:', response.data);
       navigate('/login');
@@ -68,6 +92,14 @@ function RegisterPage() {
       setError('회원가입 실패. 다시 시도해 주세요.');
       console.error('회원가입 실패:', error);
     }
+  };
+
+  const handleAgreeAll = () => {
+    const newValue = !isAgreedAll;
+    setIsAgreedAll(newValue);
+    setIsAgreedAge(newValue);
+    setIsAgreedTerms(newValue);
+    setIsAgreedPrivacy(newValue);
   };
 
   return (
@@ -144,14 +176,36 @@ function RegisterPage() {
             <option value="yahoo.com">yahoo.com</option>
           </select>
         </div>
-
+        
         <label className={styles.inputLabel}>전화번호 <span style={{ color: 'red' }}>*</span></label>
-        <input
-          type="text"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          className={`${styles.input} ${styles.shortInput}`}
-        />
+<div className={styles.inputGroup}>
+  <select
+    className={`${styles.phoneInput}`}
+    value={areaCode}
+    onChange={(e) => setAreaCode(e.target.value)}
+  >
+    <option value="">-선택-</option>
+    <option value="010">010</option>
+    <option value="02">02</option>
+    <option value="011">011</option>
+  </select>
+  <input
+    type="text"
+    value={middleNumber}
+    onChange={(e) => setMiddleNumber(e.target.value)}
+    className={`${styles.middleInput}`}
+    placeholder="가운데 번호"
+  />
+  <input
+    type="text"
+    value={lastNumber}
+    onChange={(e) => setLastNumber(e.target.value)}
+    className={`${styles.lastInput}`}
+    placeholder="마지막 번호"
+  />
+</div>
+
+
 
         <label className={styles.inputLabel}>성별</label>
         <div className={styles.genderGroup}>
@@ -177,6 +231,100 @@ function RegisterPage() {
             />
             여
           </label>
+        </div>
+
+        {/* 이용 약관 동의 섹션 추가 */}
+        <div className={styles.termsGroup}>
+          <label className={styles.termsLabel}>이용 약관 동의 <span style={{ color: 'red' }}>*</span></label>
+          <div>
+            <label className={styles.customCheckbox}>
+              <input
+                type="checkbox"
+                checked={isAgreedAll}
+                onChange={handleAgreeAll}
+                className={styles.checkbox}
+              />
+              <span className={styles.checkmark}></span>
+              <strong style={{ fontSize: '1.1em', color: 'black'}}>전체 동의합니다.</strong>
+            </label>
+            <small style={{ display: 'block', fontSize: '0.9em', color: '#828282', marginTop: '-4%', marginBottom: '5%' }}>
+              선택 항목을 포함해 전체 동의합니다.
+            </small>
+          </div>
+          <div>
+            <label className={styles.customCheckbox}>
+              <input
+                type="checkbox"
+                checked={isAgreedAge}
+                onChange={() => setIsAgreedAge(!isAgreedAge)}
+                className={styles.checkbox}
+              />
+              <span className={styles.checkmark}></span>
+              본인은 만 14세 이상입니다. <span style={{ color: '#828282' }}>(필수)</span>
+            </label>
+            <label className={styles.customCheckbox}>
+              <input
+                type="checkbox"
+                checked={isAgreedTerms}
+                onChange={() => setIsAgreedTerms(!isAgreedTerms)}
+                className={styles.checkbox}
+              />
+              <span className={styles.checkmark}></span>
+              이용 약관 동의 <span style={{ color: '#828282' }}>(필수)</span>
+            </label>
+            <label className={styles.customCheckbox}>
+              <input
+                type="checkbox"
+                checked={isAgreedPrivacy}
+                onChange={() => setIsAgreedPrivacy(!isAgreedPrivacy)}
+                className={styles.checkbox}
+              />
+              <span className={styles.checkmark}></span>
+              개인정보 수집 및 이용 동의 <span style={{ color: '#828282' }}>(필수)</span>
+            </label>
+            <label className={styles.customCheckbox}>
+              <input
+                type="checkbox"
+                checked={isAgreedOptionalPrivacy}
+                onChange={() => setIsAgreedOptionalPrivacy(!isAgreedOptionalPrivacy)}
+                className={styles.checkbox}
+              />
+              <span className={styles.checkmark}></span>
+              개인정보 수집 및 이용 동의 <span style={{ color: '#828282' }}>(선택)</span>
+            </label>
+            <label className={styles.customCheckbox}>
+              <input
+                type="checkbox"
+                checked={isAgreedOptionalInfo}
+                onChange={() => setIsAgreedOptionalInfo(!isAgreedOptionalInfo)}
+                className={styles.checkbox}
+              />
+              <span className={styles.checkmark}></span>
+              혜택/정보 수신 동의 <span style={{ color:'#828282' }}>(선택)</span>
+            </label>
+            <div style={{ display: 'flex', marginTop: '5px' }}>
+              <label className={styles.customCheckbox} style={{ marginRight: '20px' }}>
+                <input
+                  type="checkbox"
+                  checked={isAgreedSMS}
+                  onChange={() => setIsAgreedSMS(!isAgreedSMS)}
+                  className={styles.checkbox}
+                />
+                <span className={styles.checkmark}></span>
+                SMS 
+              </label>
+              <label className={styles.customCheckbox}>
+                <input
+                  type="checkbox"
+                  checked={isAgreedEmail}
+                  onChange={() => setIsAgreedEmail(!isAgreedEmail)}
+                  className={styles.checkbox}
+                />
+                <span className={styles.checkmark}></span>
+                Email 
+              </label>
+            </div>
+          </div>
         </div>
 
         <button onClick={handleRegister} className={styles.button}>회원가입</button>
