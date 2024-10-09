@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './RegisterPage.module.css';
-import logo from '../img/logo.png'; // Adjust the path as needed
-import googleIcon from '../img/google.png'; // Google icon path
-import kakaoIcon from '../img/kakao.png'; // Kakao icon path
+import logo from '../img/logo.png';
+import googleIcon from '../img/google.png';
+import kakaoIcon from '../img/kakao.png';
 
 function RegisterPage() {
   const [id, setId] = useState('');
@@ -12,7 +12,8 @@ function RegisterPage() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [sex, setSex] = useState('');
-  const [email, setEmail] = useState('');
+  const [emailId, setEmailId] = useState('');
+  const [emailDomain, setEmailDomain] = useState('naver.com');
   const [error, setError] = useState('');
   const [idError, setIdError] = useState('');
   const [idSuccess, setIdSuccess] = useState('');
@@ -50,6 +51,8 @@ function RegisterPage() {
       return;
     }
 
+    const email = `${emailId}@${emailDomain}`;
+
     try {
       const response = await axios.post('/api/register', {
         id,
@@ -57,7 +60,7 @@ function RegisterPage() {
         name,
         phone,
         sex,
-        email
+        email,
       });
       console.log('회원가입 성공:', response.data);
       navigate('/login');
@@ -110,7 +113,7 @@ function RegisterPage() {
           type="password"
           value={pwd}
           onChange={(e) => setPwd(e.target.value)}
-          className={styles.input}
+          className={`${styles.input} ${styles.shortInput}`}
         />
 
         <label className={styles.inputLabel}>이름 <span style={{ color: 'red' }}>*</span></label>
@@ -118,33 +121,64 @@ function RegisterPage() {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className={styles.input}
+          className={`${styles.input} ${styles.shortInput}`}
         />
 
         <label className={styles.inputLabel}>이메일 <span style={{ color: 'red' }}>*</span></label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={styles.input}
-        />
+        <div className={styles.inputGroup}>
+          <input
+            type="text"
+            value={emailId}
+            onChange={(e) => setEmailId(e.target.value)}
+            className={`${styles.input} ${styles.emailInput}`}
+            placeholder="이메일 아이디"
+          />
+          <span>@</span>
+          <select className={styles.select} title="이메일 도메인 주소 선택" onChange={(e) => setEmailDomain(e.target.value)} value={emailDomain}>
+            <option value="naver.com">naver.com</option>
+            <option value="gmail.com">gmail.com</option>
+            <option value="hanmail.net">hanmail.net</option>
+            <option value="hotmail.com">hotmail.com</option>
+            <option value="korea.com">korea.com</option>
+            <option value="nate.com">nate.com</option>
+            <option value="yahoo.com">yahoo.com</option>
+          </select>
+        </div>
 
         <label className={styles.inputLabel}>전화번호 <span style={{ color: 'red' }}>*</span></label>
         <input
           type="text"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className={styles.input}
+          className={`${styles.input} ${styles.shortInput}`}
         />
 
         <label className={styles.inputLabel}>성별</label>
-        <input
-          type="text"
-          value={sex}
-          onChange={(e) => setSex(e.target.value)}
-          className={styles.input}
-        />
-        
+        <div className={styles.genderGroup}>
+          <label className={styles.genderLabel} htmlFor="gender-male">
+            <input
+              type="radio"
+              value="남"
+              checked={sex === '남'}
+              onChange={(e) => setSex(e.target.value)}
+              className={styles.radioInput}
+              id="gender-male"
+            />
+            남
+          </label>
+          <label className={styles.genderLabel} htmlFor="gender-female">
+            <input
+              type="radio"
+              value="여"
+              checked={sex === '여'}
+              onChange={(e) => setSex(e.target.value)}
+              className={styles.radioInput}
+              id="gender-female"
+            />
+            여
+          </label>
+        </div>
+
         <button onClick={handleRegister} className={styles.button}>회원가입</button>
       </div>
     </div>
