@@ -1,0 +1,74 @@
+.create-post-form, .edit-post-form {
+  width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  border: 1px solid #e1e8ed;
+  border-radius: 10px;
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #e1e8ed;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+input[type="file"] {
+  margin-bottom: 10px;
+}
+
+button {
+  background-color: #1da1f2;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+
+
+
+.post-create .link-preview {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.post-create .link-preview img {
+  max-width: 150px;
+  object-fit: cover;
+}
+
+.post-create .link-preview-content {
+  padding: 10px;
+}
+
+.post-create .link-preview-content h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.post-create .link-preview-content p {
+  margin: 5px 0 0;
+  color: #666;
+}
+
+.youtube-preview {
+  display: flex;
+  align-items: center;
+}
+
+.youtube-preview img {
+  max-width: 150px;
+  margin-right: 10px;
+}
+
+.error {
+  color: red;
+}

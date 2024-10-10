@@ -1,13 +1,12 @@
 package com.example.demo.service;
 
-import org.springframework.core.io.Resource;
+import java.io.IOException;
+import java.nio.file.Path;
+
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FileService {
-
-	String save(MultipartFile file); //파일 저장
+    String save(MultipartFile file) throws IOException;
+    Path getFile(String fileName);
 	
-	Resource getFile(String fileName); //파일 불러오기
-		
-	}
-	
+}

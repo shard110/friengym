@@ -7,7 +7,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -30,10 +34,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.config.JwtTokenProvider;
 import com.example.demo.dto.FindIdRequest; // FindIdRequest 추가
+import com.example.demo.dto.FollowResponse;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
+import com.example.demo.dto.PostResponse;
 import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.UserResponse;
+import com.example.demo.entity.Follow;
+import com.example.demo.entity.Post;
 import com.example.demo.entity.User;
+import com.example.demo.service.FollowService;
+import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,6 +58,8 @@ public class UserController {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
@@ -78,16 +91,26 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        Optional<User> user = userService.authenticateUser(loginRequest.getId(), loginRequest.getPwd());
-        if (user.isPresent()) {
-            String token = jwtTokenProvider.createToken(user.get().getId());
-            LoginResponse loginResponse = new LoginResponse(token, user.get());
-            return ResponseEntity.ok(loginResponse);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+       
+        if (loginRequest.getId() == null || loginRequest.getPwd() == null) {
+            return ResponseEntity.badRequest().body("ID and password must not be null");
+        }
+        try {
+            Optional<User> user = userService.authenticateUser(loginRequest.getId(), loginRequest.getPwd());
+            if (user.isPresent()) {
+                System.out.println("User authenticated: " + user.get().getId());
+                String token = jwtTokenProvider.createToken(user.get().getId());
+                LoginResponse loginResponse = new LoginResponse(token, user.get());
+                return ResponseEntity.ok(loginResponse);
+            } else {
+                System.out.println("Invalid credentials for user: " + loginRequest.getId());
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+            }
+        } catch (Exception e) {
+            System.err.println("Error during login process: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server error");
         }
     }
-
     @GetMapping("/user/{id}")
     public ResponseEntity<?> getUserInfo(@PathVariable String id, @RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
@@ -109,20 +132,22 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.replace("Bearer ", "");
-        if (!jwtTokenProvider.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
-        }
-
-        String username = jwtTokenProvider.getClaims(token).getSubject();
-        Optional<User> user = userService.findById(username);
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
+public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String authHeader) {
+    String token = authHeader.replace("Bearer ", "");
+    if (!jwtTokenProvider.validateToken(token)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
     }
+
+    String username = jwtTokenProvider.getClaims(token).getSubject();
+    Optional<User> user = userService.findById(username);
+    if (user.isPresent()) {
+        UserResponse userResponse = new UserResponse(user.get());
+        return ResponseEntity.ok(userResponse);
+    } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+}
+
 
     @PutMapping("/user/update")
     public ResponseEntity<?> updateUserInfo(@RequestBody User updatedUser, @RequestHeader("Authorization") String authHeader) {
@@ -217,6 +242,61 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+
+
+    @Autowired
+    private PostService postService;
+
+    @Autowired
+    private FollowService followService;
+
+    @GetMapping("/mypostpage")
+    public ResponseEntity<?> getUserPostInfo(@RequestHeader("Authorization") String authHeader) {
+    String token = authHeader.replace("Bearer ", "");
+    if (!jwtTokenProvider.validateToken(token)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+    }
+
+    String username = jwtTokenProvider.getClaims(token).getSubject();
+    Optional<User> userOpt = userService.findById(username);
+
+    if (userOpt.isPresent()) {
+        User user = userOpt.get();
+        UserResponse userResponse = new UserResponse(user);
+
+        // 내가 작성한 게시물 가져오기
+        List<Post> posts = postService.getPostsByUser(user);
+        List<PostResponse> postResponses = posts.stream()
+                .map(PostResponse::new)
+                .collect(Collectors.toList());
+
+        // 팔로잉과 팔로워 가져오기
+        List<Follow> following = followService.getFollowing(user);
+        List<FollowResponse> followingResponses = following.stream()
+                .map(FollowResponse::new)
+                .collect(Collectors.toList());
+
+        List<Follow> followers = followService.getFollowers(user);
+        List<FollowResponse> followerResponses = followers.stream()
+                .map(FollowResponse::new)
+                .collect(Collectors.toList());
+
+        // 응답에 필요한 정보들을 모두 담음
+        Map<String, Object> response = new HashMap<>();
+        response.put("user", userResponse);
+        response.put("posts", postResponses);
+        response.put("following", followingResponses);
+        response.put("followers", followerResponses);
+
+        return ResponseEntity.ok(response);
+    } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+}
+
+
+
 
     //아이디 찾기
     @PostMapping("/find-id")
