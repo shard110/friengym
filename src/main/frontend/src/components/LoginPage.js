@@ -53,6 +53,12 @@ function LoginPage() {
         <span onClick={() => navigate('/find-password')} className={styles.link}>비밀번호 찾기</span>
       </div>
       <button onClick={handleLogin} className={styles.loginButton}>Login</button>
+      
+      <div className={styles.orContainer}>
+        <hr className={styles.orLine} />
+        <span className={styles.orText}>또는</span>
+        <hr className={styles.orLine} />
+      </div>
     </div>
   );
 }

@@ -74,43 +74,22 @@
   transform: translateY(1px); /* 클릭 시 살짝 아래로 이동 */
 }
 
-/* 미디어 쿼리 */
-@media (max-width: 768px) {
-  .inputContainer,
-  .linksContainer,
-  .button {
-    max-width: 100%;
-  }
-
-  .linksContainer {
-    justify-content: flex-start; /* 작은 화면에서는 왼쪽 정렬 */
-  }
+.orContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px 0;
 }
 
-@media (max-width: 425px) {
-  .input {
-    font-size: 14px;
-  }
-
-  .button {
-    font-size: 14px;
-  }
-
-  .linksContainer {
-    justify-content: flex-start; /* 작은 화면에서는 왼쪽 정렬 */
-  }
+.orLine {
+  flex-grow: 3;
+  background-color: #ccc;
+  margin: 0 10px;
 }
 
-@media (max-width: 375px) {
-  .input {
-    font-size: 14px;
-  }
-
-  .button {
-    font-size: 14px;
-  }
-
-  .linksContainer {
-    justify-content: flex-start; /* 작은 화면에서는 왼쪽 정렬 */
-  }
+.orText {
+  font-size: 18px;
+  color: #828282;
+  padding: 0 10px;
 }
