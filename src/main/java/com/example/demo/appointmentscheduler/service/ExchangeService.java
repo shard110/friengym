@@ -1,20 +1,20 @@
-package com.example.appointmentscheduler.service;
+package com.example.demo.appointmentscheduler.service;
 
 import java.util.List;
 
-import com.example.appointmentscheduler.Appointment;
+import com.example.demo.appointmentscheduler.entity.Appointment;
 
 public interface ExchangeService {
 
-    boolean checkIfEligibleForExchange(int userId, int appointmentId);
+    boolean checkIfEligibleForExchange(String userId, int appointmentId);
 
     List<Appointment> getEligibleAppointmentsForExchange(int appointmentId);
 
-    boolean checkIfExchangeIsPossible(int oldAppointmentId, int newAppointmentId, int userId);
+    boolean checkIfExchangeIsPossible(int oldAppointmentId, int newAppointmentId, String userId);
 
-    boolean acceptExchange(int exchangeId, int userId);
+    boolean acceptExchange(int exchangeId, String userId);
 
-    boolean rejectExchange(int exchangeId, int userId);
+    boolean rejectExchange(int exchangeId, String userId);
 
-    boolean requestExchange(int oldAppointmentId, int newAppointmentId, int userId);
+    boolean requestExchange(int oldAppointmentId, int newAppointmentId, String userId);
 }

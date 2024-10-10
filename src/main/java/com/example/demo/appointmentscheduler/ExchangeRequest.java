@@ -1,4 +1,6 @@
-package com.example.appointmentscheduler;
+package com.example.demo.appointmentscheduler;
+
+import com.example.demo.appointmentscheduler.entity.Appointment;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

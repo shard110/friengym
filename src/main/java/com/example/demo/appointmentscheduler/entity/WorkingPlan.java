@@ -1,8 +1,12 @@
 package com.example.demo.appointmentscheduler.entity;
 
-import com.fasterxml.jackson.databind.introspect.AccessorNamingStrategy.Provider;
+
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
+
+import com.example.demo.appointmentscheduler.model.DayPlan;
+import com.example.demo.appointmentscheduler.model.TimePeriod;
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
@@ -15,13 +19,13 @@ import java.time.LocalTime;
 public class WorkingPlan {
 
     @Id
-    @Column(name = "id_provider") // 트레이너 ID
+    @Column(name = "id_trainer") // 트레이너 ID
     private int id;
 
     @MapsId
     @OneToOne
-    @JoinColumn(name = "id_provider") // 트레이너와의 관계를 매핑
-    private Provider provider; // 트레이너
+    @JoinColumn(name = "id_trainer") // 트레이너와의 관계를 매핑
+    private Trainer trainer; // 트레이너
 
     // 요일별 작업 계획
     @Type(type = "json")
@@ -65,12 +69,12 @@ public class WorkingPlan {
         this.id = id;
     }
 
-    public Provider getProvider() { // Provider 객체를 반환
-        return provider;
+    public Trainer getTrainer() { // Trainer 객체를 반환
+        return trainer;
     }
 
-    public void setProvider(Provider provider) {
-        this.provider = provider;
+    public void setTrainer(Trainer trainer) {
+        this.trainer = trainer;
     }
 
     // 특정 요일의 작업 계획을 반환하는 메소드

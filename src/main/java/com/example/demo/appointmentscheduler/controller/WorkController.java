@@ -1,12 +1,11 @@
-package com.example.appointmentscheduler.controller;
+package com.example.demo.appointmentscheduler.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.appointmentscheduler.Work;
-import com.example.appointmentscheduler.service.WorkService;
-
+import com.example.demo.appointmentscheduler.entity.Work;
+import com.example.demo.appointmentscheduler.service.WorkService;
 
 import java.util.List;
 

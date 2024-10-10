@@ -1,4 +1,4 @@
-package com.example.appointmentscheduler;
+package com.example.demo.appointmentscheduler.entity;
 
 public enum AppointmentStatus {
     SCHEDULED,

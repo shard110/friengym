@@ -3,7 +3,7 @@ package com.example.demo.appointmentscheduler.model;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class TimePeroid implements Comparable<TimePeroid> {
+public class TimePeriod implements Comparable<TimePeriod> {
 
     // 시간 기간의 시작 시간
     private LocalTime start;
@@ -12,11 +12,11 @@ public class TimePeroid implements Comparable<TimePeroid> {
     private LocalTime end;
 
     // 기본 생성자
-    public TimePeroid() {
+    public TimePeriod() {
     }
 
     // 시작 시간과 종료 시간으로 시간 기간을 초기화하는 생성자
-    public TimePeroid(LocalTime start, LocalTime end) {
+    public TimePeriod(LocalTime start, LocalTime end) {
         this.start = start;
         this.end = end;
     }
@@ -43,7 +43,7 @@ public class TimePeroid implements Comparable<TimePeroid> {
 
     // 이 TimePeroid 객체를 다른 객체와 비교하여 시작 시간에 따라 정렬
     @Override
-    public int compareTo(TimePeroid o) {
+    public int compareTo(TimePeriod o) {
         return this.getStart().compareTo(o.getStart());
     }
 
@@ -52,7 +52,7 @@ public class TimePeroid implements Comparable<TimePeroid> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TimePeroid peroid = (TimePeroid) o;
+        TimePeriod peroid = (TimePeriod) o;
         return this.start.equals(peroid.getStart()) &&
                this.end.equals(peroid.getEnd());
     }

@@ -1,9 +1,17 @@
 package com.example.demo.appointmentscheduler.entity;
 
-import jakarta.persistence.*;
 import java.util.List;
-
+import jakarta.persistence.*; // 모든 JPA 관련 어노테이션을 임포트
 import com.example.demo.entity.User;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "works") // 데이터베이스의 'works' 테이블과 매핑
@@ -32,9 +40,11 @@ public class Work {
     private String targetCustomer;
 
     @ManyToMany // 다대다 관계 설정
-    @JoinTable(name = "works_trainers", // 중간 테이블 'works_trainers'와 매핑
+    @JoinTable(
+            name = "works_trainers", // 중간 테이블 'works_trainers'와 매핑
             joinColumns = @JoinColumn(name = "id_work"), // 'id_work' 컬럼
-            inverseJoinColumns = @JoinColumn(name = "id_trainer")) // 'id_trainer' 컬럼
+            inverseJoinColumns = @JoinColumn(name = "id_trainer") // 'id_trainer' 컬럼
+    )
     private List<User> trainers; // 트레이너 목록
 
     // 기본 생성자
@@ -82,15 +92,7 @@ public class Work {
         this.duration = duration;
     }
 
-    public List<User> getTrainers() {
-        return trainers;
-    }
-
-    public void setTrainers(List<User> trainers) {
-        this.trainers = trainers;
-    }
-
-    public boolean isEditable() {
+    public boolean getEditable() {
         return editable;
     }
 
@@ -104,6 +106,14 @@ public class Work {
 
     public void setTargetCustomer(String targetCustomer) {
         this.targetCustomer = targetCustomer;
+    }
+
+    public List<User> getTrainers() {
+        return trainers;
+    }
+
+    public void setTrainers(List<User> trainers) {
+        this.trainers = trainers;
     }
 
     // equals 메소드 (객체 비교)

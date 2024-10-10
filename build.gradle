@@ -38,6 +38,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation group: 'org.webjars', name: 'sockjs-client', version: '1.5.1'
 	implementation group: 'org.webjars', name: 'stomp-websocket', version: '2.3.4'
+    //
+     implementation 'org.hibernate:hibernate-core:5.4.32.Final' // 필요한 버전으로 변경
+     annotationProcessor 'org.hibernate:hibernate-jpamodelgen:5.4.32.Final' // 필요한 버전으로 변경
+     implementation 'com.vladmihalcea:hibernate-types-55:2.20.0'
    
 
     // Lombok (compile-time code generation)

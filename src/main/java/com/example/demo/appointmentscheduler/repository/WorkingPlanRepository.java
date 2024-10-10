@@ -12,5 +12,5 @@ public interface WorkingPlanRepository extends JpaRepository<WorkingPlan, Intege
 
     // 특정 제공자의 작업 계획을 찾습니다.
     @Query("select w from WorkingPlan w where w.trainer.id = :trainerId")
-    WorkingPlan getWorkingPlanByTrainerId(@Param("trainerId") int trainerId);
+    WorkingPlan getWorkingPlanByTrainerId(@Param("trainerId") String trainerId);
 }

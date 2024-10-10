@@ -1,4 +1,4 @@
-package com.example.appointmentscheduler;
+package com.example.demo.appointmentscheduler;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,7 +1,9 @@
 package com.example.demo.appointmentscheduler.entity;
 
 
+import com.example.demo.appointmentscheduler.ExchangeRequest;
 import com.example.demo.appointmentscheduler.model.AppointmentSerializer;
+import com.example.demo.entity.User;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -51,8 +53,8 @@ public class Appointment implements Comparable<Appointment> {
     @JoinColumn(name = "id_work") // 작업 ID
     private Work work;
 
-    @OneToMany(mappedBy = "appointment") // 채팅 메시지
-    private List<ChatMessage> chatMessages;
+    // @OneToMany(mappedBy = "appointment") // 채팅 메시지
+    // private List<ChatMessage> chatMessages;
 
     @OneToOne(mappedBy = "requested", cascade = {CascadeType.ALL}) // 교환 요청
     private ExchangeRequest exchangeRequest;
@@ -133,10 +135,10 @@ public class Appointment implements Comparable<Appointment> {
         this.status = status;
     }
 
-    public List<ChatMessage> getChatMessages() {
-        Collections.sort(chatMessages); // 채팅 메시지 정렬
-        return chatMessages;
-    }
+    // public List<ChatMessage> getChatMessages() {
+    //     Collections.sort(chatMessages); // 채팅 메시지 정렬
+    //     return chatMessages;
+    // }
 
     public User getCanceler() {
         return canceler;
@@ -146,9 +148,9 @@ public class Appointment implements Comparable<Appointment> {
         this.canceler = canceler;
     }
 
-    public void setChatMessages(List<ChatMessage> chatMessages) {
-        this.chatMessages = chatMessages;
-    }
+    // public void setChatMessages(List<ChatMessage> chatMessages) {
+    //     this.chatMessages = chatMessages;
+    // }
 
     public LocalDateTime getCanceledAt() {
         return canceledAt;

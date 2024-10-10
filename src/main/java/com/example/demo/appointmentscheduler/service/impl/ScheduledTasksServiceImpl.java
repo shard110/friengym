@@ -1,10 +1,10 @@
-package com.example.appointmentscheduler.service.impl;
+package com.example.demo.appointmentscheduler.service.impl;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.example.appointmentscheduler.service.AppointmentService;
-import com.example.appointmentscheduler.service.ScheduledTasksService;
+import com.example.demo.appointmentscheduler.service.AppointmentService;
+import com.example.demo.appointmentscheduler.service.ScheduledTasksService;
 
 // ScheduledTasksServiceImpl 클래스는 예약된 작업을 관리합니다.
 @Component
