@@ -4,31 +4,40 @@ import Swal from 'sweetalert2';
 
 function FindPwdPage() {
     const [userEmail, setUserEmail] = useState('');
-    const [userName, setUserName] = useState('');
+    const [userId, setUserId] = useState('');
     const [checkMsg, setCheckMsg] = useState('');
 
     const handleCheckEmail = async () => {
         try {
-            const response = await axios.get('/check/findPw', {
-                params: {
-                    userEmail,
-                    userName,
-                },
+            // 이메일과 ID가 비어있지 않은지 확인
+            if (!userEmail || !userId) {
+                setCheckMsg('이메일과 사용자 ID를 모두 입력해 주세요.');
+                return;
+            }
+    
+            // 로그로 확인
+            console.log("Sending data:", { userEmail, userId });
+    
+            // GET 요청을 사용하여 사용자 확인
+            const response = await axios.get('/api/mail/check/findPw', {
+                params: { userEmail, userId },
             });
-
+    
             if (response.data.check) {
+                // POST 요청을 쿼리 파라미터로 전송
+                await axios.post('/api/mail/check/findPw/sendEmail', null, {
+                    params: {
+                        userEmail,
+                        userId,
+                    },
+                });
+    
                 Swal.fire({
                     title: '발송 완료!',
                     text: "입력하신 이메일로 임시비밀번호가 발송되었습니다.",
                     icon: 'success',
-                }).then(async (OK) => {
-                    if (OK.isConfirmed) {
-                        await axios.post('/check/findPw/sendEmail', {
-                            userEmail,
-                            userName,
-                        });
-                        window.location = '/login';
-                    }
+                }).then(() => {
+                    window.location = '/login';
                 });
                 setCheckMsg('');
             } else {
@@ -36,7 +45,12 @@ function FindPwdPage() {
             }
         } catch (error) {
             console.error('Error occurred during password recovery:', error);
-            setCheckMsg('서버 오류가 발생했습니다. 다시 시도해 주세요.');
+            if (error.response) {
+                console.error('Error response data:', error.response.data);
+                setCheckMsg(error.response.data.message || '서버 오류가 발생했습니다. 다시 시도해 주세요.');
+            } else {
+                setCheckMsg('서버 오류가 발생했습니다. 다시 시도해 주세요.');
+            }
         }
     };
 
@@ -66,14 +80,14 @@ function FindPwdPage() {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="userName"><span className="glyphicon glyphicon-eye-open"></span> Name</label>
+                                    <label htmlFor="userId"><span className="glyphicon glyphicon-eye-open"></span> User ID</label>
                                     <input
                                         type="text"
                                         className="form-control"
-                                        id="userName"
-                                        placeholder="가입시 등록한 이름을 입력하세요."
-                                        value={userName}
-                                        onChange={(e) => setUserName(e.target.value)}
+                                        id="userId"
+                                        placeholder="가입시 등록한 아이디를 입력하세요."
+                                        value={userId}
+                                        onChange={(e) => setUserId(e.target.value)}
                                     />
                                 </div>
                                 <button
