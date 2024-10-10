@@ -47,23 +47,31 @@
     border-color: #03c7a6;
     outline: none;
 }
-
-.button {
+/* 회원가입 */
+.registerButton {
     width: 100%;
-    padding: 10px;
-    background-color: #03c7a6;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 1.1em;
-    transition: background-color 0.3s;
+    padding: 15px; /* 패딩을 조금 더 주어 버튼이 더 크고 클릭하기 쉽게 */
+    margin-top: 10%;
+    background-color: #03c7a6; 
+    color: white; /* 텍스트 색상 */
+    border: none; /* 테두리 제거 */
+    border-radius: 50px; 
+    font-size: 1.2em; 
+    font-weight: bold; /* 볼드체 */
+    cursor: pointer; /* 커서를 포인터로 변경 */
+    transition: background-color 0.3s, transform 0.2s; /* 배경색과 변환 효과 */
 }
 
-.button:hover {
-    background-color: #03c7a6;
+.registerButton:hover {
+    background-color: #029b8d; /* 마우스 오버 시 색상 변경 */
+    transform: translateY(-2px); /* 마우스 오버 시 약간 위로 이동 */
 }
 
+.registerButton:active {
+    transform: translateY(1px); /* 클릭 시 살짝 아래로 이동 */
+}
+
+/* 아이디 중복체크  */
 .buttonCheckId {
     padding: 10px 15px;
     font-size: 1em;
@@ -102,7 +110,7 @@
 .inputLabel {
     width: 100%;
     text-align: left;
-    margin-bottom: 5px;
+    margin-top: 5%;
     font-size: 16px;
     color: #333;
 }
@@ -159,10 +167,18 @@
     margin: 20px 0;
 }
 
+
+/* 성별 부분 */
+.inputLabelsex{
+    text-align: left;
+    margin-top: -7%;
+    font-size: 16px;
+}
+
 .genderGroup {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .genderLabel {
@@ -190,8 +206,9 @@ input[type='radio']:checked {
 }
 
 
+/* 이용약관 */
 .termsGroup {
-    margin: 20px 0;
+    margin-top: 0%;
 }
 
 .termsGroup label {
@@ -269,7 +286,7 @@ input[type='radio']:checked {
 .lastInput {
     width: 100px; /* 가운데 및 마지막 번호 입력창의 너비 조정 */
     margin-right: 5px; /* 입력창 간의 간격 조정 */
-    margin-top: -10%;
+    margin-top: -11%;
     height: 50px; /* 높이 조정 */
     padding: 10px; /* 패딩 조정 */
     font-size: 13px; /* 폰트 크기 조정 */
@@ -278,7 +295,32 @@ input[type='radio']:checked {
     box-sizing: border-box; /* 박스 크기 모델 조정 */
 }
   
-  
+ /* 미디어 쿼리 부분  */
+ @media (max-width: 375px) {
+    .snsButton {
+        width: 45px;
+        height: 45px;
+    }
+
+    .snsIcon {
+        width: 50%;
+        height: 50%;
+    }
+
+    .registerButton {
+        padding: 10px; /* 패딩을 줄여서 공간 절약 */
+        font-size: 1em; /* 폰트 크기 조정 */
+    }
+
+    .input {
+        font-size: 14px; /* 입력 폰트 크기 조정 */
+    }
+
+    .heading {
+        font-size: 20px; /* 제목 폰트 크기 조정 */
+    }
+}
+
 @media (max-width: 480px) {
     .snsButton {
         width: 50px;

@@ -10,7 +10,9 @@ function RegisterPage() {
   const [id, setId] = useState('');
   const [pwd, setPwd] = useState('');
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [areaCode, setAreaCode] = useState('');
+  const [middleNumber, setMiddleNumber] = useState('');
+  const [lastNumber, setLastNumber] = useState('');
   const [sex, setSex] = useState('');
   const [emailId, setEmailId] = useState('');
   const [emailDomain, setEmailDomain] = useState('naver.com');
@@ -18,13 +20,6 @@ function RegisterPage() {
   const [idError, setIdError] = useState('');
   const [idSuccess, setIdSuccess] = useState('');
   const [isIdAvailable, setIsIdAvailable] = useState(true);
-
-  // 전화번호 상태 수정
-  const [areaCode, setAreaCode] = useState(''); // 지역 번호
-  const [middleNumber, setMiddleNumber] = useState(''); // 가운데 번호
-  const [lastNumber, setLastNumber] = useState(''); // 마지막 번호
-
-  // 약관 동의 상태 관리
   const [isAgreedAll, setIsAgreedAll] = useState(false);
   const [isAgreedAge, setIsAgreedAge] = useState(false);
   const [isAgreedTerms, setIsAgreedTerms] = useState(false);
@@ -69,18 +64,20 @@ function RegisterPage() {
 
     const email = `${emailId}@${emailDomain}`;
 
-    // 약관 동의 체크
     if (!isAgreedAge || !isAgreedTerms || !isAgreedPrivacy) {
       setError('이용 약관에 동의해 주세요.');
       return;
     }
+
+    // 전화번호를 하나의 문자열로 결합
+    const phone = `${areaCode}-${middleNumber}-${lastNumber}`;
 
     try {
       const response = await axios.post('/api/register', {
         id,
         pwd,
         name,
-        phone,
+        phone, // 결합된 전화번호 사용
         sex,
         email,
         isAgreedSMS,
@@ -100,6 +97,10 @@ function RegisterPage() {
     setIsAgreedAge(newValue);
     setIsAgreedTerms(newValue);
     setIsAgreedPrivacy(newValue);
+    setIsAgreedOptionalPrivacy(newValue);
+    setIsAgreedOptionalInfo(newValue);
+    setIsAgreedSMS(newValue);
+    setIsAgreedEmail(newValue);
   };
 
   return (
@@ -211,7 +212,7 @@ function RegisterPage() {
           />
         </div>
 
-        <label className={styles.inputLabel}>성별</label>
+        <label className={styles.inputLabelsex}>성별</label>
         <div className={styles.genderGroup}>
           <label className={styles.genderLabel} htmlFor="gender-male">
             <input
@@ -237,7 +238,6 @@ function RegisterPage() {
           </label>
         </div>
 
-        {/* 이용 약관 동의 섹션 추가 */}
         <div className={styles.termsGroup}>
           <label className={styles.termsLabel}>이용 약관 동의 <span style={{ color: 'red' }}>*</span></label>
           <div>
@@ -249,7 +249,7 @@ function RegisterPage() {
                 className={styles.checkbox}
               />
               <span className={styles.checkmark}></span>
-              <strong style={{ fontSize: '1.1em', color: 'black'}}>전체 동의합니다.</strong>
+              <strong style={{ fontSize: '1.1em', color: 'black' }}>전체 동의합니다.</strong>
             </label>
             <small style={{ display: 'block', fontSize: '0.9em', color: '#828282', marginTop: '-4%', marginBottom: '5%' }}>
               선택 항목을 포함해 전체 동의합니다.
@@ -304,7 +304,7 @@ function RegisterPage() {
                 className={styles.checkbox}
               />
               <span className={styles.checkmark}></span>
-              혜택/정보 수신 동의 <span style={{ color:'#828282' }}>(선택)</span>
+              혜택/정보 수신 동의 <span style={{ color: '#828282' }}>(선택)</span>
             </label>
             <div style={{ display: 'flex', marginTop: '5px' }}>
               <label className={styles.customCheckbox} style={{ marginRight: '20px' }}>
@@ -330,8 +330,8 @@ function RegisterPage() {
             </div>
           </div>
         </div>
-
-        <button onClick={handleRegister} className={styles.button}>회원가입</button>
+        
+        <button onClick={handleRegister} className={styles.registerButton}>회원가입</button>
       </div>
     </div>
   );
