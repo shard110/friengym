@@ -6,6 +6,7 @@ public class RegisterRequest {
     private String name;
     private String phone;
     private String sex; // 필수 필드 추가
+    private String email; // 이메일 필드 추가
 
     // Getters and Setters
     public String getId() {
@@ -46,5 +47,13 @@ public class RegisterRequest {
 
     public void setSex(String sex) {
         this.sex = sex;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

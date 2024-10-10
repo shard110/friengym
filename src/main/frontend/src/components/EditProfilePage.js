@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import styles from './EditProfilePage.module.css'; // CSS 모듈 임포트
 import { useAuth } from './AuthContext';
 
-
 const EditProfilePage = () => {
     const { user } = useAuth();
     const [formData, setFormData] = useState({
@@ -15,7 +14,8 @@ const EditProfilePage = () => {
         weight: '',
         birth: '',
         firstday: '',
-        restday: ''
+        restday: '',
+        email: '' // 이메일 추가
     });
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -38,7 +38,8 @@ const EditProfilePage = () => {
                         weight: response.data.weight || '',
                         birth: response.data.birth || '',
                         firstday: response.data.firstday || '',
-                        restday: response.data.restday || ''
+                        restday: response.data.restday || '',
+                        email: response.data.email || '' // 이메일 설정
                     });
                 }
             } catch (error) {
@@ -76,64 +77,88 @@ const EditProfilePage = () => {
 
     return (
         <div className={styles.EditProfilePage}>
-            <h2>회원 정보 수정 </h2>
-            {error && <p>{error}</p>}
+            <h2>회원 정보 수정</h2>
+            {error && <p className={styles.error}>{error}</p>} {/* 오류 메시지 스타일 적용 */}
             <form onSubmit={handleSubmit}>
-                <label>
-                    Name:
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    Phone:
-                    <input
-                        type="text"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    Sex:
-                    <input
-                        type="text"
-                        name="sex"
-                        value={formData.sex}
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    Height:
-                    <input
-                        type="number"
-                        name="height"
-                        value={formData.height}
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    Weight:
-                    <input
-                        type="number"
-                        name="weight"
-                        value={formData.weight}
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    Birth:
-                    <input
-                        type="date"
-                        name="birth"
-                        value={formData.birth}
-                        onChange={handleChange}
-                    />
-                </label>
-                <button type="submit">회원정보 수정</button>
+                <div className={styles.formGroup}>
+                    <label>
+                        Name:
+                        <input
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                        />
+                    </label>
+                </div>
+                <div className={styles.formGroup}>
+                    <label>
+                        Email:
+                        <input
+                            type="text"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                        />
+                    </label>
+                </div>
+                <div className={styles.formGroup}>
+                    <label>
+                        Phone:
+                        <input
+                            type="text"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleChange}
+                        />
+                    </label>
+                </div>
+                <div className={styles.formGroup}>
+                    <label>
+                        Sex:
+                        <input
+                            type="text"
+                            name="sex"
+                            value={formData.sex}
+                            onChange={handleChange}
+                        />
+                    </label>
+                </div>
+                <div className={styles.formGroup}>
+                    <label>
+                        Height:
+                        <input
+                            type="number"
+                            name="height"
+                            value={formData.height}
+                            onChange={handleChange}
+                        />
+                    </label>
+                </div>
+                <div className={styles.formGroup}>
+                    <label>
+                        Weight:
+                        <input
+                            type="number"
+                            name="weight"
+                            value={formData.weight}
+                            onChange={handleChange}
+                        />
+                    </label>
+                </div>
+                <div className={styles.formGroup}>
+                    <label>
+                        Birth:
+                        <input
+                            type="date"
+                            name="birth"
+                            value={formData.birth}
+                            onChange={handleChange}
+                        />
+                    </label>
+                </div>
+
+                <button type="submit">회원정보 수정</button> {/* 버튼 스타일 추가 */}
             </form>
         </div>
     );

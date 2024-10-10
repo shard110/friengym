@@ -45,6 +45,9 @@ public class User {
     @NotNull
     private String sex;
 
+    @NotNull
+    private String email; // 이메일 필드 추가
+
     private Integer height;
     private Integer weight;
     private Date birth;

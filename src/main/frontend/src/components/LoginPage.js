@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import styles from './LoginPage.module.css'; // Corrected import for CSS module
-
+import styles from './LoginPage.module.css';
 
 function LoginPage() {
   const [id, setId] = useState('');
@@ -52,6 +51,7 @@ function LoginPage() {
         className={styles.input}
       />
       <button onClick={handleLogin} className={styles.button}>Login</button>
+      <button onClick={() => navigate('/find-id')} className={styles.button}>아이디 찾기</button> {/* 수정된 버튼 경로 */}
     </div>
   );
 }
