@@ -16,4 +16,12 @@ public class Trainer { // 클래스 이름 변경
     private String tpwd; // 트레이너 패스워드 (mpwd에서 tpwd로 변경)
 
     private WorkingPlan workingPlan; // WorkingPlan 필드 추가
+
+    public WorkingPlan getWorkingPlan() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public String getTrainerId() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

@@ -4,7 +4,6 @@ package com.example.demo.appointmentscheduler.service.impl;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.appointmentscheduler.ExchangeRequest;
-import com.example.demo.appointmentscheduler.ExchangeRequestRepository;
 import com.example.demo.appointmentscheduler.ExchangeStatus;
 
 import com.example.demo.appointmentscheduler.entity.AppointmentStatus;
@@ -13,6 +12,7 @@ import com.example.demo.appointmentscheduler.entity.Appointment; // Appointment 
 import com.example.demo.appointmentscheduler.exception.AppointmentNotFoundException; // Exception import
 
 import com.example.demo.appointmentscheduler.repository.AppointmentRepository;
+import com.example.demo.appointmentscheduler.repository.ExchangeRequestRepository;
 import com.example.demo.appointmentscheduler.service.ExchangeService;
 
 import java.time.LocalDateTime;

@@ -35,6 +35,11 @@ import OrderPage from './page/OrderPage';
 import PaymentSuccess from './page/PaymentSuccess';
 import OrderHistoryPage from './page/OrderHistoryPage';
 
+//예약
+import WorkList from './components/WorkList'; // WorkList 컴포넌트 임포트
+import WorkForm from './components/WorkForm'; // WorkForm 컴포넌트 임포트
+import WorkDetail from './components/WorkDetail'; // WorkDetail 컴포넌트 임포트
+
 //관리자용 import
 import AdminHome from './admin/AdminHome';
 
@@ -46,6 +51,9 @@ export default function App() {
         <div className="App">
           <NavBar /> {/* NavBar 컴포넌트 추가 */}
           <Routes>
+          <Route path="/works" element={<WorkList />} /> {/* 작업 목록 페이지 */}
+            <Route path="/works/new" element={<WorkForm />} /> {/* 새 작업 추가 페이지 */}
+            <Route path="/works/:workId" element={<WorkDetail />} /> {/* 작업 세부 정보 페이지 */}
             <Route path="/chat" element={<Chat />} /> {/* Chat 라우트 추가 */}
             <Route path="/" element={<HomePage />} />
             <Route path="/posts" element={<PostsList />} />
