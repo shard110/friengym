@@ -20,9 +20,9 @@ function RegisterPage() {
   const [isIdAvailable, setIsIdAvailable] = useState(true);
 
   // 전화번호 상태 수정
-const [areaCode, setAreaCode] = useState(''); // 지역 번호
-const [middleNumber, setMiddleNumber] = useState(''); // 가운데 번호
-const [lastNumber, setLastNumber] = useState(''); // 마지막 번호
+  const [areaCode, setAreaCode] = useState(''); // 지역 번호
+  const [middleNumber, setMiddleNumber] = useState(''); // 가운데 번호
+  const [lastNumber, setLastNumber] = useState(''); // 마지막 번호
 
   // 약관 동의 상태 관리
   const [isAgreedAll, setIsAgreedAll] = useState(false);
@@ -129,6 +129,7 @@ const [lastNumber, setLastNumber] = useState(''); // 마지막 번호
           <input
             type="text"
             value={id}
+            placeholder="아이디를 입력하세요"
             onChange={(e) => setId(e.target.value)}
             className={styles.input}
           />
@@ -141,9 +142,13 @@ const [lastNumber, setLastNumber] = useState(''); // 마지막 번호
         </div>
 
         <label className={styles.inputLabel}>비밀번호 <span style={{ color: 'red' }}>*</span></label>
+        <small style={{ display: 'block', fontSize: '0.9em', color: '#828282', marginTop: '-2%', marginBottom: '10px' }}>
+          영문, 숫자를 포함한 8자 이상의 비밀번호를 입력해주세요
+        </small>
         <input
           type="password"
           value={pwd}
+          placeholder="비밀번호를 입력하세요"
           onChange={(e) => setPwd(e.target.value)}
           className={`${styles.input} ${styles.shortInput}`}
         />
@@ -151,6 +156,7 @@ const [lastNumber, setLastNumber] = useState(''); // 마지막 번호
         <label className={styles.inputLabel}>이름 <span style={{ color: 'red' }}>*</span></label>
         <input
           type="text"
+          placeholder="이름을 입력히세요"
           value={name}
           onChange={(e) => setName(e.target.value)}
           className={`${styles.input} ${styles.shortInput}`}
@@ -178,34 +184,32 @@ const [lastNumber, setLastNumber] = useState(''); // 마지막 번호
         </div>
         
         <label className={styles.inputLabel}>전화번호 <span style={{ color: 'red' }}>*</span></label>
-<div className={styles.inputGroup}>
-  <select
-    className={`${styles.phoneInput}`}
-    value={areaCode}
-    onChange={(e) => setAreaCode(e.target.value)}
-  >
-    <option value="">-선택-</option>
-    <option value="010">010</option>
-    <option value="02">02</option>
-    <option value="011">011</option>
-  </select>
-  <input
-    type="text"
-    value={middleNumber}
-    onChange={(e) => setMiddleNumber(e.target.value)}
-    className={`${styles.middleInput}`}
-    placeholder="가운데 번호"
-  />
-  <input
-    type="text"
-    value={lastNumber}
-    onChange={(e) => setLastNumber(e.target.value)}
-    className={`${styles.lastInput}`}
-    placeholder="마지막 번호"
-  />
-</div>
-
-
+        <div className={styles.inputGroup}>
+          <select
+            className={`${styles.phoneInput}`}
+            value={areaCode}
+            onChange={(e) => setAreaCode(e.target.value)}
+          >
+            <option value="">-선택-</option>
+            <option value="010">010</option>
+            <option value="02">02</option>
+            <option value="011">011</option>
+          </select>
+          <input
+            type="text"
+            value={middleNumber}
+            onChange={(e) => setMiddleNumber(e.target.value)}
+            className={`${styles.middleInput}`}
+            placeholder="가운데 번호"
+          />
+          <input
+            type="text"
+            value={lastNumber}
+            onChange={(e) => setLastNumber(e.target.value)}
+            className={`${styles.lastInput}`}
+            placeholder="마지막 번호"
+          />
+        </div>
 
         <label className={styles.inputLabel}>성별</label>
         <div className={styles.genderGroup}>
