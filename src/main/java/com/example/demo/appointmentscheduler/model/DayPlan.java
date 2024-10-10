@@ -1,88 +1,100 @@
 package com.example.demo.appointmentscheduler.model;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// DayPlan 클래스는 하루의 근무 시간을 나타내며, 휴식 시간을 관리함.
+@Embeddable
+@AttributeOverrides({
+    @AttributeOverride(name = "start", column = @Column(name = "working_hours_start")),
+    @AttributeOverride(name = "end", column = @Column(name = "working_hours_end"))
+})
 public class DayPlan {
 
-    private TimePeriod workingHours; // 근무 시간을 저장하는 필드
-    private List<TimePeriod> breaks; // 휴식 시간을 저장하는 리스트
+    @Embedded
+    private TimePeriod workingHours;
 
-    // 기본 생성자
+    @ElementCollection
+    @CollectionTable(name = "break_times", joinColumns = @JoinColumn(name = "day_plan_id"))
+    @AttributeOverrides({
+        @AttributeOverride(name = "start", column = @Column(name = "break_start")),
+        @AttributeOverride(name = "end", column = @Column(name = "break_end"))
+    })
+    private List<TimePeriod> breaks;
+
     public DayPlan() {
-        breaks = new ArrayList<>(); // 휴식 시간 리스트 초기화
+        breaks = new ArrayList<>();
     }
 
-    // 휴식 시간을 제외한 시간대를 반환하는 메소드
-    public List<TimePeriod> timePeroidsWithBreaksExcluded() {
-        ArrayList<TimePeriod> timePeroidsWithBreaksExcluded = new ArrayList<>();
-        timePeroidsWithBreaksExcluded.add(getWorkingHours()); // 근무 시간을 추가
-
-        List<TimePeriod> breaks = getBreaks(); // 휴식 시간 리스트 가져오기
+    public List<TimePeriod> timePeriodsWithBreaksExcluded() {
+        List<TimePeriod> periodsWithBreaksExcluded = new ArrayList<>();
+        periodsWithBreaksExcluded.add(getWorkingHours());
 
         if (!breaks.isEmpty()) {
-            ArrayList<TimePeriod> toAdd = new ArrayList<>(); // 추가할 시간대 리스트
+            List<TimePeriod> toAdd = new ArrayList<>();
 
-            // 각 휴식 시간에 대해 처리
-            for (TimePeriod break1 : breaks) {
-                // 휴식 시작 시간이 근무 시작 시간보다 이전인 경우 조정
-                if (break1.getStart().isBefore(workingHours.getStart())) {
-                    break1.setStart(workingHours.getStart());
-                }
-                // 휴식 종료 시간이 근무 종료 시간보다 이후인 경우 조정
-                if (break1.getEnd().isAfter(workingHours.getEnd())) {
-                    break1.setEnd(workingHours.getEnd());
-                }
-
-                // 각 시간대에 대해 휴식 시간 조정
-                for (TimePeriod peroid : timePeroidsWithBreaksExcluded) {
-                    if (break1.getStart().equals(peroid.getStart()) && break1.getEnd().isAfter(peroid.getStart()) && break1.getEnd().isBefore(peroid.getEnd())) {
-                        peroid.setStart(break1.getEnd()); // 휴식 후 시작 시간 조정
-                    }
-                    if (break1.getStart().isAfter(peroid.getStart()) && break1.getStart().isBefore(peroid.getEnd()) && break1.getEnd().equals(peroid.getEnd())) {
-                        peroid.setEnd(break1.getStart()); // 휴식 전 종료 시간 조정
-                    }
-                    if (break1.getStart().isAfter(peroid.getStart()) && break1.getEnd().isBefore(peroid.getEnd())) {
-                        toAdd.add(new TimePeriod(peroid.getStart(), break1.getStart())); // 새로운 시간대 추가
-                        peroid.setStart(break1.getEnd()); // 기존 시간대 조정
-                    }
-                }
+            for (TimePeriod breakPeriod : breaks) {
+                adjustBreakPeriod(breakPeriod);
+                adjustWorkingPeriods(periodsWithBreaksExcluded, breakPeriod, toAdd);
             }
-            timePeroidsWithBreaksExcluded.addAll(toAdd); // 새로운 시간대 리스트 추가
-            Collections.sort(timePeroidsWithBreaksExcluded); // 정렬
+            periodsWithBreaksExcluded.addAll(toAdd);
+            Collections.sort(periodsWithBreaksExcluded);
         }
 
-        return timePeroidsWithBreaksExcluded; // 결과 반환
+        return periodsWithBreaksExcluded;
     }
 
-    // 근무 시간을 반환하는 메소드
+    private void adjustBreakPeriod(TimePeriod breakPeriod) {
+        if (breakPeriod.getStart().isBefore(workingHours.getStart())) {
+            breakPeriod.setStart(workingHours.getStart());
+        }
+        if (breakPeriod.getEnd().isAfter(workingHours.getEnd())) {
+            breakPeriod.setEnd(workingHours.getEnd());
+        }
+    }
+
+    private void adjustWorkingPeriods(List<TimePeriod> periods, TimePeriod breakPeriod, List<TimePeriod> toAdd) {
+        for (TimePeriod period : periods) {
+            if (breakPeriod.getStart().equals(period.getStart()) && 
+                breakPeriod.getEnd().isAfter(period.getStart()) && 
+                breakPeriod.getEnd().isBefore(period.getEnd())) {
+                period.setStart(breakPeriod.getEnd());
+            }
+            if (breakPeriod.getStart().isAfter(period.getStart()) && 
+                breakPeriod.getStart().isBefore(period.getEnd()) && 
+                breakPeriod.getEnd().equals(period.getEnd())) {
+                period.setEnd(breakPeriod.getStart());
+            }
+            if (breakPeriod.getStart().isAfter(period.getStart()) && 
+                breakPeriod.getEnd().isBefore(period.getEnd())) {
+                toAdd.add(new TimePeriod(period.getStart(), breakPeriod.getStart()));
+                period.setStart(breakPeriod.getEnd());
+            }
+        }
+    }
+
+    @Embedded
     public TimePeriod getWorkingHours() {
         return workingHours;
     }
 
-    // 근무 시간을 설정하는 메소드
     public void setWorkingHours(TimePeriod workingHours) {
         this.workingHours = workingHours;
     }
 
-    // 휴식 시간 리스트를 반환하는 메소드
     public List<TimePeriod> getBreaks() {
         return breaks;
     }
 
-    // 휴식 시간 리스트를 설정하는 메소드
     public void setBreaks(List<TimePeriod> breaks) {
         this.breaks = breaks;
     }
 
-    // 특정 휴식 시간을 제거하는 메소드
     public void removeBreak(TimePeriod breakToRemove) {
         breaks.remove(breakToRemove);
     }
 
-    // 새로운 휴식 시간을 추가하는 메소드
     public void addBreak(TimePeriod breakToAdd) {
         breaks.add(breakToAdd);
     }

@@ -1,7 +1,6 @@
 package com.example.demo.appointmentscheduler.repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,6 +14,6 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
     // 예: 고객 이름으로 검색하는 메서드
     List<Customer> findByNameContaining(String name);
     
-    // 예: 이메일로 고객 찾기
-    Optional<Customer> findByEmail(String email);
+    // 예: 이메일로 고객 찾기 (id로찾기로 수정)
+    // Optional<Customer> findByEmail(String email);
 }

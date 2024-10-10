@@ -1,6 +1,5 @@
 package com.example.demo.appointmentscheduler.service.impl;
 
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -123,7 +122,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         List<Appointment> customerAppointments = getAppointmentsByCustomerAtDay(customerId, date);
 
         // 사용 가능한 시간대 계산
-        List<TimePeriod> availablePeriods = selectedDay.timePeroidsWithBreaksExcluded();
+        List<TimePeriod> availablePeriods = selectedDay.timePeriodsWithBreaksExcluded();
         availablePeriods = excludeAppointmentsFromTimePeriods(availablePeriods, trainerAppointments);
         availablePeriods = excludeAppointmentsFromTimePeriods(availablePeriods, customerAppointments);
         return calculateAvailableHours(availablePeriods, workService.getWorkById(workId)); // 최종 사용 가능한 시간대 반환

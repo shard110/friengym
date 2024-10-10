@@ -2,16 +2,11 @@ package com.example.demo.appointmentscheduler.entity;
 
 
 import java.util.List;
-
 import com.example.demo.entity.User;
 import jakarta.persistence.Entity; 
-import jakarta.persistence.OneToMany; 
-import jakarta.persistence.PrimaryKeyJoinColumn; 
-import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany;
 
 @Entity
-@Table(name = "customers") // 'customers' 테이블과 매핑
-@PrimaryKeyJoinColumn(name = "id_customer") // 상위 클래스 User와 조인할 기본 키 열 설정
 public class Customer extends User {
 
     @OneToMany(mappedBy = "customer") // Customer가 소유한 여러 Appointment와의 관계를 설정

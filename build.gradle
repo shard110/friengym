@@ -1,74 +1,71 @@
-plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.3.2'
-    id 'io.spring.dependency-management' version '1.1.6'
-    id 'com.github.node-gradle.node' version '3.5.0'
-}
+            plugins {
+                id 'java'
+                id 'org.springframework.boot' version '3.3.2'
+                id 'io.spring.dependency-management' version '1.1.6'
+                id 'com.github.node-gradle.node' version '3.5.0'
+            }
 
-group = 'org.example'
-version = '0.0.1-SNAPSHOT'
+            group = 'org.example'
+            version = '0.0.1-SNAPSHOT'
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
+            java {
+                toolchain {
+                    languageVersion = JavaLanguageVersion.of(17)
+                }
+            }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
+            configurations {
+                compileOnly {
+                    extendsFrom annotationProcessor
+                }
+            }
 
-repositories {
-    mavenCentral()
-}
+            repositories {
+                mavenCentral()
+            }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    testImplementation 'org.springframework.security:spring-security-test'
+            dependencies {
+                implementation 'org.springframework.boot:spring-boot-starter-security'
+                testImplementation 'org.springframework.security:spring-security-test'
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-web-services'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+                implementation 'org.springframework.boot:spring-boot-starter-web'
+                implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+                implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+                implementation 'org.springframework.boot:spring-boot-starter-web-services'
+                implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    //WebSocket
-    implementation 'org.springframework.boot:spring-boot-starter-websocket'
-    implementation group: 'org.webjars', name: 'sockjs-client', version: '1.5.1'
-	implementation group: 'org.webjars', name: 'stomp-websocket', version: '2.3.4'
-    //
+                //WebSocket
+                implementation 'org.springframework.boot:spring-boot-starter-websocket'
+                implementation group: 'org.webjars', name: 'sockjs-client', version: '1.5.1'
+                implementation group: 'org.webjars', name: 'stomp-websocket', version: '2.3.4'
+                //
 
-   implementation 'com.vladmihalcea:hibernate-types-60:2.20.0' // Hibernate 6.x에 맞춰 업데이트
-   
+                // Lombok (compile-time code generation)
 
-    // Lombok (compile-time code generation)
+                compileOnly 'org.projectlombok:lombok'
+                annotationProcessor 'org.projectlombok:lombok'
+                testImplementation 'org.projectlombok:lombok'
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.projectlombok:lombok'
+                runtimeOnly 'mysql:mysql-connector-java:8.0.32'
+                implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE'
+                developmentOnly 'org.springframework.boot:spring-boot-devtools'
+                testImplementation 'org.springframework.boot:spring-boot-starter-test'
+                testImplementation 'org.assertj:assertj-core:3.23.1'
+                testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
+                testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.3'
+                
+                implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+                runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+                runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+                
+                implementation 'org.springframework.boot:spring-boot-starter-actuator'
+                implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+            }
 
-    runtimeOnly 'mysql:mysql-connector-java:8.0.32'
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.assertj:assertj-core:3.23.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.3'
-    
-    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
-    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
-    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
-    
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
-}
+            tasks.named('test') {
+                useJUnitPlatform()
+            }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
-tasks.withType(JavaCompile) {
-    options.compilerArgs << '-parameters'
-}
+            tasks.withType(JavaCompile) {
+                options.compilerArgs << '-parameters'
+            }

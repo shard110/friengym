@@ -1,27 +1,22 @@
 package com.example.demo.appointmentscheduler.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "trainer") // 테이블 이름을 trainer로 변경
+@Table(name = "trainer")
 @Data
-public class Trainer { // 클래스 이름 변경
+public class Trainer {
 
     @Id
-    private String trainerId;  // 트레이너 아이디 (mid에서 tid로 변경)
+    private String trainerId;
 
-    private String tpwd; // 트레이너 패스워드 (mpwd에서 tpwd로 변경)
+    private String tpwd;
 
-    private WorkingPlan workingPlan; // WorkingPlan 필드 추가
-
-    public WorkingPlan getWorkingPlan() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public String getTrainerId() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    @OneToOne(mappedBy = "trainer", cascade = CascadeType.ALL)
+    private WorkingPlan workingPlan; // WorkingPlan과의 관계 설정
 }
