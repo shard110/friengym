@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useAuth } from './AuthContext';
 import styles from './LoginPage.module.css';
 
+import logo from '../img/logo.png';
+
 function LoginPage() {
   const [id, setId] = useState('');
   const [pwd, setPwd] = useState('');
@@ -25,24 +27,32 @@ function LoginPage() {
 
   return (
     <div className={styles.LoginPage}>
-      <h2 className={styles.heading}>로그인</h2>
+      <img src={logo} alt="Logo" className={styles.logo} />
       {error && <p className={styles.error}>{error}</p>}
-      <input
-        type="text"
-        value={id}
-        onChange={(e) => setId(e.target.value)}
-        placeholder="User ID"
-        className={styles.input}
-      />
-      <input
-        type="password"
-        value={pwd}
-        onChange={(e) => setPwd(e.target.value)}
-        placeholder="Password"
-        className={styles.input}
-      />
-      <button onClick={handleLogin} className={styles.button}>Login</button>
-      <button onClick={() => navigate('/find-id')} className={styles.button}>아이디 찾기</button> {/* 수정된 버튼 경로 */}
+      <div className={styles.inputContainer}>
+        <input
+          type="text"
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+          placeholder="아이디를 입력하세요"
+          className={styles.input}
+        />
+      </div>
+      <div className={styles.inputContainer}>
+        <input
+          type="password"
+          value={pwd}
+          onChange={(e) => setPwd(e.target.value)}
+          placeholder="비밀번호를 입력하세요"
+          className={styles.input}
+        />
+      </div>
+      <div className={styles.linksContainer}>
+        <span onClick={() => navigate('/find-id')} className={styles.link}>아이디 찾기</span>
+        <span className={styles.link}>|</span>
+        <span onClick={() => navigate('/find-password')} className={styles.link}>비밀번호 찾기</span>
+      </div>
+      <button onClick={handleLogin} className={styles.loginButton}>Login</button>
     </div>
   );
 }
