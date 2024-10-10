@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import java.util.Date;
+
 import com.example.demo.entity.User;
 
 import lombok.Getter;
@@ -16,7 +18,7 @@ public class UserResponse {
     private Integer height;
     private Integer weight;
     private String birth;
-    private Integer firstday;
+    private Date firstday;
     private Integer restday;
 
     // 생성자: User 엔터티를 받아서 필요한 필드를 초기화
