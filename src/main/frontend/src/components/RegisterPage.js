@@ -3,20 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './RegisterPage.module.css'; // CSS 모듈 임포트
 
-
 function RegisterPage() {
   const [id, setId] = useState('');
   const [pwd, setPwd] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [sex, setSex] = useState('');
+  const [email, setEmail] = useState(''); // 이메일 상태 추가
   const [error, setError] = useState('');
   const [idError, setIdError] = useState('');
   const [idSuccess, setIdSuccess] = useState('');
   const [isIdAvailable, setIsIdAvailable] = useState(true);
   const navigate = useNavigate();
 
-  // ID 중복 확인 함수
   const checkIdAvailability = async () => {
     if (id.length > 0) {
       try {
@@ -54,7 +53,8 @@ function RegisterPage() {
         pwd,
         name,
         phone,
-        sex
+        sex,
+        email // 이메일 추가
       });
       console.log('회원가입 성공:', response.data);
       navigate('/login');
@@ -90,6 +90,13 @@ function RegisterPage() {
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="이름"
+        className={styles.input}
+      />
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="이메일"
         className={styles.input}
       />
       <input

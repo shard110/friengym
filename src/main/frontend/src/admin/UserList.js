@@ -26,7 +26,6 @@ const UserList = () => {
   }, []);
 
   const handleDelete = async (id) => {
-    // 확인창 추가
     const confirm = window.confirm("정말로 이 사용자를 삭제하시겠습니까?");
     if (!confirm) {
       return; // 사용자가 취소하면 함수 종료
@@ -48,19 +47,17 @@ const UserList = () => {
   const handleAddMonths = async (id) => {
     const months = selectedMonths[id];
     if (months) {
-      // 확인창 추가
       const confirm = window.confirm(`${months}개월을 추가하시겠습니까?`);
       if (!confirm) {
         return; // 사용자가 취소하면 함수 종료
       }
-  
+
       try {
         await axios.patch(`http://localhost:8080/api/admin/users/${id}/addMonths`, { months }, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
           },
         });
-        // 사용자 목록 갱신
         const response = await axios.get('http://localhost:8080/api/admin/users', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -86,10 +83,11 @@ const UserList = () => {
             <th>ID</th>
             <th>이름</th>
             <th>전화번호</th>
+            <th>이메일</th> {/* 이메일 열 추가 */}
             <th>성별</th>
             <th>생일</th>
             <th>등록일자</th>
-            <th>남은 일수</th>
+            <th>남은 일수</th>            
             <th>개월 추가</th>
             <th>작업</th>
           </tr>
@@ -100,10 +98,11 @@ const UserList = () => {
               <td>{user.id}</td>
               <td>{user.name}</td>
               <td>{user.phone}</td>
+              <td>{user.email}</td> {/* 이메일 값 표시 */}
               <td>{user.sex}</td>
               <td>{user.birth}</td>
-              <td>{user.firstday}</td> {/* 등록일자 추가 */}
-              <td>{user.restday}</td>   {/* 남은 일수 추가 */}
+              <td>{user.firstday}</td>
+              <td>{user.restday}</td>
               <td>
                 <select
                   onChange={(e) => setSelectedMonths({ ...selectedMonths, [user.id]: e.target.value })}

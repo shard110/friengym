@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import java.sql.Date;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -29,6 +28,9 @@ public class User {
 
     @NotNull
     private String sex;
+
+    @NotNull
+    private String email; // 이메일 필드 추가
 
     private Integer height;
     private Integer weight;
@@ -66,6 +68,14 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+    //이메일
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPhone() {

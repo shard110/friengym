@@ -10,6 +10,7 @@ const ManagerBar = ({ onLogout }) => {
         <li><Link to="/adminHome/user">User</Link></li>
         <li><Link to="/adminHome/post">Post</Link></li>
         <li><Link to="/adminHome/shop">Shop</Link></li>
+        <li><Link to="/adminHome/order">Order</Link></li>
         <li><Link to="/adminHome/ask">Ask</Link></li>
         <li><Link to="/adminHome/master">Master</Link></li>
         <li><button onClick={onLogout}>로그아웃</button></li> {/* 로그아웃 버튼 추가 */}
