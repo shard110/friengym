@@ -37,7 +37,7 @@ import Recommendations from './page/Recommendations'; // 새로운 추천 페이
 import ReviewPage from './page/ReviewPage';
 
 //관리자용 import
-
+import AdminHome from './admin/AdminHome';
 //아이디 찾기
 import FindIdPage from './components/FindIdPage';
 

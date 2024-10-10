@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -68,9 +67,6 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "post_id")
     )
     private Set<Post> likedPosts = new HashSet<>(); // 좋아요를 누른 게시글 목록
-
-    @Column(unique=true, nullable=false)
-    private String email;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
