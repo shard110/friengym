@@ -1,22 +1,21 @@
 package com.example.demo.appointmentscheduler.service.impl;
 
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import com.example.demo.appointmentscheduler.ExchangeRequest;
-import com.example.demo.appointmentscheduler.ExchangeStatus;
-
-import com.example.demo.appointmentscheduler.entity.AppointmentStatus;
-import com.example.demo.appointmentscheduler.entity.Customer;
-import com.example.demo.appointmentscheduler.entity.Appointment; // Appointment import
-import com.example.demo.appointmentscheduler.exception.AppointmentNotFoundException; // Exception import
-
+import com.example.demo.appointmentscheduler.entity.Appointment;
+import com.example.demo.appointmentscheduler.entity.AppointmentStatus; // Appointment import
+import com.example.demo.appointmentscheduler.entity.Customer; // Exception import
+import com.example.demo.appointmentscheduler.entity.ExchangeRequest;
+import com.example.demo.appointmentscheduler.entity.ExchangeStatus;
+import com.example.demo.appointmentscheduler.exception.AppointmentNotFoundException;
+import com.example.demo.appointmentscheduler.exception.ExchangeRequestNotFoundException;
 import com.example.demo.appointmentscheduler.repository.AppointmentRepository;
 import com.example.demo.appointmentscheduler.repository.ExchangeRequestRepository;
 import com.example.demo.appointmentscheduler.service.ExchangeService;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class ExchangeServiceImpl implements ExchangeService {
@@ -63,7 +62,7 @@ public boolean checkIfEligibleForExchange(String userId, int appointmentId) {
     // 교환 요청을 수락하는 메소드
     public boolean acceptExchange(int exchangeId, String userId) {
         ExchangeRequest exchangeRequest = exchangeRequestRepository.findById(exchangeId)
-                .orElseThrow(() -> new AppointmentNotFoundException("Exchange Request not found"));
+        .orElseThrow(() -> new ExchangeRequestNotFoundException("Exchange Request not found")); // 예외 클래스 수정
         Appointment requestor = exchangeRequest.getRequestor();
         Appointment requested = exchangeRequest.getRequested();
         Customer tempCustomer = requestor.getCustomer();
@@ -84,9 +83,9 @@ public boolean checkIfEligibleForExchange(String userId, int appointmentId) {
     // 교환 요청을 거부하는 메소드
     public boolean rejectExchange(int exchangeId, String userId) {
         ExchangeRequest exchangeRequest = exchangeRequestRepository.findById(exchangeId)
-                .orElseThrow(() -> new AppointmentNotFoundException("Exchange Request not found"));
+                .orElseThrow(() -> new ExchangeRequestNotFoundException("Exchange Request not found")); // 예외 메시지 수정
         Appointment requestor = exchangeRequest.getRequestor();
-
+    
         exchangeRequest.setStatus(ExchangeStatus.REJECTED);
         requestor.setStatus(AppointmentStatus.SCHEDULED);
         

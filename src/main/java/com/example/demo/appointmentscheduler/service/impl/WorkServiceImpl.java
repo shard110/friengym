@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.appointmentscheduler.entity.Customer;
 import com.example.demo.appointmentscheduler.entity.Work;
 import com.example.demo.appointmentscheduler.exception.WorkNotFoundException;
 import com.example.demo.appointmentscheduler.repository.WorkRepository;

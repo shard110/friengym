@@ -1,4 +1,4 @@
-package com.example.demo.appointmentscheduler;
+package com.example.demo.appointmentscheduler.entity;
 
 public enum ExchangeStatus {
     PENDING,
