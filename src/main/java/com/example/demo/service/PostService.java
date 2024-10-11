@@ -63,6 +63,9 @@ public class PostService {
     @Autowired
     private WarningRepository warningRepository;
 
+    @Autowired
+    private BlockService blockService;
+
     //유저 게시물 가져오기
     public List<Post> getPostsByUser(User user) {
         return postRepository.findByUser(user);
@@ -248,29 +251,32 @@ public class PostService {
     private ConcurrentHashMap<String, AtomicInteger> searchKeywordFrequency = new ConcurrentHashMap<>();
 
     // 검색 메서드
-    public List<Post> searchPosts(String userId, String content, String hashtag) {
-        Specification<Post> spec = Specification.where(null);
+public List<Post> searchPosts(String userId, String content, String hashtag) {
+    Specification<Post> spec = Specification.where(null);
 
-        if (userId != null && !userId.isEmpty()) {
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("user").get("id"), userId));
-            incrementKeywordFrequency(userId);
-        }
-
-        if (content != null && !content.isEmpty()) {
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.like(root.get("poContents"), "%" + content + "%"));
-            incrementKeywordFrequency(content);
-        }
-
-        if (hashtag != null && !hashtag.isEmpty()) {
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.join("hashtags").get("tag"), hashtag));
-            incrementKeywordFrequency(hashtag);
-        }
-
-        return postRepository.findAll(spec);
+    // 사용자 아이디 부분 검색 (LIKE 연산자 사용)
+    if (userId != null && !userId.isEmpty()) {
+        spec = spec.and((root, query, criteriaBuilder) ->
+                criteriaBuilder.like(root.get("user").get("id"), "%" + userId + "%"));
+        incrementKeywordFrequency(userId);
     }
+
+    // 포스트 내용 부분 검색 (LIKE 연산자 사용)
+    if (content != null && !content.isEmpty()) {
+        spec = spec.and((root, query, criteriaBuilder) ->
+                criteriaBuilder.like(root.get("poContents"), "%" + content + "%"));
+        incrementKeywordFrequency(content);
+    }
+
+    // 해시태그 검색 (정확한 일치, 필요시 부분 검색으로 변경 가능)
+    if (hashtag != null && !hashtag.isEmpty()) {
+        spec = spec.and((root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.join("hashtags").get("tag"), hashtag));
+        incrementKeywordFrequency(hashtag);
+    }
+
+    return postRepository.findAll(spec);
+}
 
     // 인기 검색 키워드 가져오기 (상위 5개)
     public List<String> getPopularSearchKeywords() {
@@ -326,5 +332,13 @@ public class PostService {
         return warnings.stream()
             .anyMatch(warning -> warning.getUser().getId().equals(userId));
     }
+
+    public List<Post> getPostsExcludingBlocked(User user) {
+        List<Post> allPosts = postRepository.findAllWithUserOrderedByDateDesc();
+        return allPosts.stream()
+                .filter(post -> !blockService.isBlocked(post.getUser(), user)) // 차단한 사용자의 게시글 제외
+                .collect(Collectors.toList());
+    }
+    
 
 }

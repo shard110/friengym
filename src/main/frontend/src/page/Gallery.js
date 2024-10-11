@@ -174,7 +174,17 @@ const Gallery = () => {
                       src={post.user.photo || "default-photo-url"}
                       alt={post.user.id}
                       className="user-photo"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/users/${post.user.id}`);
+                      }}
                     />
+                    <span
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/users/${post.user.id}`);
+                    }}
+                    ></span>
                     <span>{post.user.id}</span>
                        {/* 신고 버튼 */}
                        <button

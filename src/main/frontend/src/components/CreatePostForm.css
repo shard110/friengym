@@ -20,7 +20,7 @@ input[type="file"] {
   margin-bottom: 10px;
 }
 
-button {
+.create-post-form button {
   background-color: #1da1f2;
   color: white;
   padding: 10px 20px;

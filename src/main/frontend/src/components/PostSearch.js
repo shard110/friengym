@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../components/AuthContext";
 import "./PostSearch.css"; // 스타일 파일 (추후 생성)
 
 const PostSearch = () => {
@@ -9,14 +10,18 @@ const PostSearch = () => {
   const [popularKeywords, setPopularKeywords] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  const { token } = useAuth(); // AuthContext에서 토큰을 가져옴
   const navigate = useNavigate();
 
-  // 인기 검색 키워드 가져오기
-  useEffect(() => {
+   // 인기 검색 키워드 가져오기
+   useEffect(() => {
     const fetchPopularKeywords = async () => {
       try {
-        const response = await fetch("/posts/popular-search");
+        const response = await fetch("/api/posts/popular-search", {
+          headers: {
+            Authorization: `Bearer ${token}`, // 토큰을 헤더에 포함
+          },
+        });
         if (response.ok) {
           const data = await response.json();
           setPopularKeywords(data);
@@ -28,8 +33,10 @@ const PostSearch = () => {
       }
     };
 
-    fetchPopularKeywords();
-  }, []);
+    if (token) {
+      fetchPopularKeywords(); // 토큰이 존재할 때만 실행
+    }
+  }, [token]);
 
   // 검색 폼 제출 핸들러
   const handleSearch = async (e) => {
@@ -49,19 +56,25 @@ const PostSearch = () => {
         params.append("hashtag", searchTerm);
       }
 
-      const response = await fetch(`/posts/search?${params.toString()}`);
-      if (response.ok) {
-        const data = await response.json();
-        setSearchResults(data);
-      } else {
-        setError("검색 결과를 가져오는 데 실패했습니다.");
-      }
-    } catch (error) {
-      setError("네트워크 오류가 발생했습니다.");
-    }
+    // 검색 API 호출
+    const response = await fetch(`/api/posts/search?${params.toString()}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // 토큰을 헤더에 포함
+      },
+    });
 
-    setLoading(false);
-  };
+    if (response.ok) {
+      const data = await response.json();
+      setSearchResults(data);
+    } else {
+      setError("검색 결과를 가져오는 데 실패했습니다.");
+    }
+  } catch (error) {
+    setError("네트워크 오류가 발생했습니다.");
+  }
+
+  setLoading(false);
+};
 
   // 인기 키워드 클릭 핸들러
   const handleKeywordClick = (keyword) => {
@@ -77,7 +90,11 @@ const PostSearch = () => {
         const params = new URLSearchParams();
         params.append("hashtag", keyword);
 
-        const response = await fetch(`/posts/search?${params.toString()}`);
+        const response = await fetch(`/api/posts/search?${params.toString()}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // 토큰을 헤더에 포함
+          },
+        });
         if (response.ok) {
           const data = await response.json();
           setSearchResults(data);
@@ -111,7 +128,7 @@ const PostSearch = () => {
         </select>
         <input
           type="text"
-          value={searchTerm}
+          value={searchTerm || ""}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="검색어를 입력하세요"
           className="search-input"
@@ -165,11 +182,11 @@ const PostSearch = () => {
                 <div className="post-hashtags">
                   {post.hashtags.map((tag) => (
                     <span
-                      key={tag.tag}
+                      key={tag}
                       className="hashtag"
-                      onClick={() => handleKeywordClick(tag.tag)}
+                      onClick={() => handleKeywordClick(tag)}
                     >
-                      #{tag.tag}
+                      #{tag}
                     </span>
                   ))}
                 </div>

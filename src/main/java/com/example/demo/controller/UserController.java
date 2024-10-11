@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +44,7 @@ import com.example.demo.dto.UserResponse;
 import com.example.demo.entity.Follow;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.User;
+import com.example.demo.service.BlockService;
 import com.example.demo.service.FollowService;
 import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
@@ -58,6 +60,10 @@ public class UserController {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private BlockService blockService;
+
 
 
 
@@ -132,21 +138,21 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String authHeader) {
-    String token = authHeader.replace("Bearer ", "");
-    if (!jwtTokenProvider.validateToken(token)) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
-    }
+    public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        if (!jwtTokenProvider.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+        }
 
-    String username = jwtTokenProvider.getClaims(token).getSubject();
-    Optional<User> user = userService.findById(username);
-    if (user.isPresent()) {
-        UserResponse userResponse = new UserResponse(user.get());
-        return ResponseEntity.ok(userResponse);
-    } else {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        String username = jwtTokenProvider.getClaims(token).getSubject();
+        Optional<User> user = userService.findById(username);
+        if (user.isPresent()) {
+            UserResponse userResponse = new UserResponse(user.get());
+            return ResponseEntity.ok(userResponse);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
     }
-}
 
 
     @PutMapping("/user/update")
@@ -295,18 +301,116 @@ public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String auth
     }
 }
 
+// 소개 편집을 위한 API
+@PutMapping("/update-postpage")
+public ResponseEntity<?> updateUserProfile(@RequestHeader("Authorization") String authHeader,@RequestBody Map<String, String> request) {
+    String token = authHeader.replace("Bearer ", "");
 
+    if (!jwtTokenProvider.validateToken(token)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+    }
+
+    String username = jwtTokenProvider.getClaims(token).getSubject();
+    Optional<User> userOpt = userService.findById(username);
+
+    if (userOpt.isPresent()) {
+        User user = userOpt.get();
+        String introduction = request.get("introduction");
+
+        // 사용자의 소개를 업데이트
+        user.setIntroduction(introduction);
+        userService.save(user); // 데이터베이스에 업데이트된 사용자 정보 저장
+
+        // 업데이트된 소개 정보를 반환
+        return ResponseEntity.ok(new UserResponse(user));
+    } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+}
 
 
     //아이디 찾기
     @PostMapping("/find-id")
-public ResponseEntity<?> findId(@RequestBody FindIdRequest request) {
-    Optional<User> user = userService.findByNameAndEmail(request.getName(), request.getEmail());
-    if (user.isPresent()) {
-        return ResponseEntity.ok(Collections.singletonMap("id", user.get().getId()));
+    public ResponseEntity<?> findId(@RequestBody FindIdRequest request) {
+        Optional<User> user = userService.findByNameAndEmail(request.getName(), request.getEmail());
+        if (user.isPresent()) {
+            return ResponseEntity.ok(Collections.singletonMap("id", user.get().getId()));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("일치하는 사용자를 찾을 수 없습니다.");
+        }
+    }
+
+@GetMapping("/user/{id}/posts")
+public ResponseEntity<?> getUserPostPage(@PathVariable String id, @RequestHeader("Authorization") String authHeader) {
+    String token = authHeader.replace("Bearer ", "");
+    if (!jwtTokenProvider.validateToken(token)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+    }
+
+    String currentUserId = jwtTokenProvider.getClaims(token).getSubject();
+    Optional<User> currentUserOpt = userService.findById(currentUserId);
+    Optional<User> userOpt = userService.findById(id);
+
+    if (userOpt.isPresent() && currentUserOpt.isPresent()) {
+        User user = userOpt.get();
+        User currentUser = currentUserOpt.get();
+
+        // 게시글 가져오기
+        List<Post> posts = postService.getPostsByUser(user);
+        List<PostResponse> postResponses = posts.stream()
+                .map(PostResponse::new)
+                .collect(Collectors.toList());
+
+        // 팔로우 여부 확인
+        boolean isFollowing = followService.findFollow(currentUser, user).isPresent();
+
+        // 차단 여부 확인
+        boolean isBlocked = blockService.isBlocked(currentUser, user);
+
+        // 응답 데이터 생성
+        Map<String, Object> response = new HashMap<>();
+        response.put("user", new UserResponse(user));
+        response.put("posts", postResponses);
+        response.put("isFollowing", isFollowing);
+        response.put("isBlocked", isBlocked); // 차단 여부 추가
+
+        return ResponseEntity.ok(response);
     } else {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("일치하는 사용자를 찾을 수 없습니다.");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
     }
 }
+
+    // 차단하기
+    @PostMapping("/{blockedId}")
+    public ResponseEntity<?> blockUser(@RequestHeader("Authorization") String authHeader, @PathVariable String blockedId) {
+        String token = authHeader.replace("Bearer ", "");
+        String blockerId = jwtTokenProvider.getClaims(token).getSubject();
+        Optional<User> blockerOpt = userService.findById(blockerId);
+        Optional<User> blockedOpt = userService.findById(blockedId);
+
+        if (blockerOpt.isPresent() && blockedOpt.isPresent()) {
+            blockService.blockUser(blockerOpt.get(), blockedOpt.get());
+            return ResponseEntity.ok("User blocked successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
+
+    // 차단 해제
+    @DeleteMapping("/{blockedId}")
+    public ResponseEntity<?> unblockUser(@RequestHeader("Authorization") String authHeader, @PathVariable String blockedId) {
+        String token = authHeader.replace("Bearer ", "");
+        String blockerId = jwtTokenProvider.getClaims(token).getSubject();
+        Optional<User> blockerOpt = userService.findById(blockerId);
+        Optional<User> blockedOpt = userService.findById(blockedId);
+
+        if (blockerOpt.isPresent() && blockedOpt.isPresent()) {
+            blockService.unblockUser(blockerOpt.get(), blockedOpt.get());
+            return ResponseEntity.ok("User unblocked successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
+
 
 }
