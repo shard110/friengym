@@ -59,8 +59,12 @@ function LoginPage() {
         <span className={styles.orText}>또는</span>
         <hr className={styles.orLine} />
       </div>
+
+      <div>
+        <span className={styles.signUpText}>아직 계정이 없으신가요?</span>
+        <span onClick={() => navigate('/register')} className={styles.signUpLink}>회원가입</span>
+      </div>
     </div>
   );
 }
-
 export default LoginPage;

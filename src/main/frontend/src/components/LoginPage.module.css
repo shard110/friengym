@@ -4,12 +4,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 50vh;
+  height: 55vh;
   padding: 20px;
 }
 
 .logo {
-  width: 200px;
+  width: 250px;
+  margin-left:10% ;
   margin-bottom: 30px;
 }
 
@@ -66,7 +67,7 @@
 }
 
 .loginButton:hover {
-  background-color: #029b8d; /* 마우스 오버 시 색상 변경 */
+  background-color: #27AE60; /* 마우스 오버 시 색상 변경 */
   transform: translateY(-2px); /* 마우스 오버 시 약간 위로 이동 */
 }
 
@@ -74,22 +75,79 @@
   transform: translateY(1px); /* 클릭 시 살짝 아래로 이동 */
 }
 
+
 .orContainer {
   display: flex;
-  align-items: center;
-  width: 100%;
-  max-width: 1200px;
-  margin: 20px 0;
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: center; /* 수평 중앙 정렬 */
+  width: 200%; /* 전체 너비 사용 */
+  margin: 15px 0; /* 위아래 여백 추가 */
 }
 
 .orLine {
-  flex-grow: 3;
-  background-color: #ccc;
-  margin: 0 10px;
+  display: flex;
+  align-items: center;
+  flex: 1; /* flex-grow로 가로로 늘어나게 함 */
+  background-color: #828282;
+  margin: 0 10px; /* 양쪽 여백을 설정 */
 }
 
 .orText {
-  font-size: 18px;
+  font-size: 12px;
   color: #828282;
-  padding: 0 10px;
+  margin-left: 4%;
 }
+
+.signUpText{
+  font-size: 14px;
+  color: #828282; /* 링크 색상 */
+}
+
+.signUpLink {
+  font-size: 14px;
+  font-weight: bold;
+  color: 4F4F4F; /* 링크 색상 */
+  cursor: pointer; /* 포인터 커서 */
+  text-decoration: underline; /* 밑줄 추가 */
+  margin-left: 5px; /* 여백 추가 */
+}
+
+/* 미디어 쿼리 */
+@media (max-width: 375px) {
+  .LoginPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 55vh;
+    padding: 20px;
+    margin-left: 10%;
+  }
+
+  .orContainer {
+    display: flex;
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    width: 200%; /* 전체 너비 사용 */
+  }
+  .orLine {
+    width: 100%; /* 전체 너비 사용 */
+  }
+
+  .orText {
+    font-size: 12px;
+    color: #828282;
+    margin-left: 2.5%;
+  }
+}
+
+@media (max-width: 425px) {
+  .orText {
+    font-size: 12px;
+    color: #828282;
+    margin-left: 2%;
+  }
+
+}
+
+
+
