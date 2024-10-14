@@ -1,9 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Ask; // Ask 엔티티 임포트
-import com.example.demo.repository.AskRepository; // AskRepository 임포트
-import com.example.demo.entity.User; // User 엔티티 임포트
-import com.example.demo.repository.UserRepository; // UserRepository 임포트
+import com.example.demo.entity.Ask;
+import com.example.demo.repository.AskRepository;
+import com.example.demo.entity.User;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.dto.UserDTO; // UserDTO 임포트
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.time.LocalDate;
+import java.util.stream.Collectors; // 추가된 임포트
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -36,7 +38,6 @@ public class AdminController {
         this.userRepository = userRepository;
         this.askRepository = askRepository;
     }
-
 
     // 관리자 로그인
     @PostMapping("/login")
@@ -70,12 +71,24 @@ public class AdminController {
 
     // 사용자 목록
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getUsers() {
+    public ResponseEntity<List<UserDTO>> getUsers() {
         try {
-            List<User> users = userRepository.findAll(); // UserRepository를 사용하여 모든 사용자 가져오기
-            return ResponseEntity.ok(users);
+            List<User> users = userRepository.findAll();
+            List<UserDTO> userDTOs = users.stream()
+                .map(user -> new UserDTO(
+                    user.getId(),
+                    user.getName(),
+                    user.getPhone(),
+                    user.getEmail(),
+                    user.getSex(),
+                    user.getBirth(),
+                    user.getFirstday(),
+                    user.getRestday()
+                ))
+                .collect(Collectors.toList());
+
+            return ResponseEntity.ok(userDTOs);
         } catch (Exception e) {
-            // 로그에 오류 기록
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
@@ -85,10 +98,10 @@ public class AdminController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable String id) {
         try {
-            userRepository.deleteById(id); // 여기서 오류 발생
+            userRepository.deleteById(id);
             return ResponseEntity.ok("User deleted successfully.");
         } catch (Exception e) {
-            e.printStackTrace(); // 오류 내용 확인
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting user.");
         }
     }
@@ -97,8 +110,7 @@ public class AdminController {
     @GetMapping("/asks")
     public ResponseEntity<List<Ask>> getAsks() {
         try {
-            List<Ask> asks = askRepository.findAll(); // 모든 문의글 가져오기
-            System.out.println("Retrieved asks: " + asks);
+            List<Ask> asks = askRepository.findAll();
             return ResponseEntity.ok(asks);
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,8 +136,8 @@ public class AdminController {
     public ResponseEntity<String> replyToAsk(@PathVariable int id, @RequestBody String reply) {
         try {
             Ask ask = askRepository.findById(id).orElseThrow(() -> new RuntimeException("문의글이 존재하지 않습니다."));
-            ask.setReply(reply); // 엔티티의 reply 필드에 값 설정
-            askRepository.save(ask); // 업데이트
+            ask.setReply(reply);
+            askRepository.save(ask);
             return ResponseEntity.ok("답변이 등록되었습니다.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,8 +150,8 @@ public class AdminController {
     public ResponseEntity<String> deleteReply(@PathVariable int id) {
         try {
             Ask ask = askRepository.findById(id).orElseThrow(() -> new RuntimeException("문의글이 존재하지 않습니다."));
-            ask.setReply(null); // 답변을 삭제하기 위해 reply 필드를 null로 설정
-            askRepository.save(ask); // 업데이트
+            ask.setReply(null);
+            askRepository.save(ask);
             return ResponseEntity.ok("답변이 삭제되었습니다.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -147,7 +159,7 @@ public class AdminController {
         }
     }
 
-    private Map<String, Integer> userRestdayMap = new HashMap<>(); // 사용자의 남은 일수를 저장하는 맵
+    private Map<String, Integer> userRestdayMap = new HashMap<>();
 
     // 유저 개월 수 선택
     @PatchMapping("/users/{id}/addMonths")
@@ -175,17 +187,13 @@ public class AdminController {
         try {
             User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
 
-            // firstday가 null인 경우에만 현재 날짜로 설정
             if (user.getFirstday() == null) {
                 LocalDate currentDate = LocalDate.now();
-                user.setFirstday(java.sql.Date.valueOf(currentDate)); // firstday에 현재 날짜 저장
+                user.setFirstday(java.sql.Date.valueOf(currentDate));
             }
 
-            // 기존 남은 일수에 추가된 일수 더하기
             int newRestday = (user.getRestday() != null ? user.getRestday() : 0) + daysToAdd;
-            user.setRestday(newRestday); // 업데이트된 남은 일수 설정
-
-            // 사용자의 남은 일수를 userRestdayMap에 추가
+            user.setRestday(newRestday);
             userRestdayMap.put(id, newRestday);
 
             userRepository.save(user);
@@ -197,13 +205,12 @@ public class AdminController {
     }
 
     // 남은 일수 10초마다 1씩 빼기
-    @Scheduled(fixedRate = 10000) // 10초마다 실행
+    @Scheduled(fixedRate = 10000)
     public void decreaseRestdays() {
         for (String userId : userRestdayMap.keySet()) {
             int currentRestday = userRestdayMap.get(userId);
             if (currentRestday > 0) {
-                userRestdayMap.put(userId, currentRestday - 1); // 10초마다 남은 일수 감소
-                // 데이터베이스 업데이트
+                userRestdayMap.put(userId, currentRestday - 1);
                 User user = userRepository.findById(userId).orElse(null);
                 if (user != null) {
                     user.setRestday(currentRestday - 1);
@@ -212,5 +219,4 @@ public class AdminController {
             }
         }
     }
-
 }
