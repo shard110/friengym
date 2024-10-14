@@ -13,6 +13,7 @@ const UserPostPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [blocked, setBlocked] = useState(false); // 초기값을 false로 설정
+  const [isFollowingMe, setIsFollowingMe] = useState(false); // 다른 사용자가 나를 팔로우 중인지 여부
 
   const navigate = useNavigate();
 
@@ -51,11 +52,31 @@ const UserPostPage = () => {
     }
   }, [id]);
 
+  const checkIfFollowingMe = async () => {
+    const token = localStorage.getItem("jwtToken");
+    try {
+      const response = await axios.get(
+        `/follow/is-following-me/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setIsFollowingMe(response.data); // 서버로부터 맞팔로우 상태 업데이트
+    } catch (error) {
+      console.error("Error checking if user is following me:", error);
+    }
+  };
+
   useEffect(() => {
     if (!authLoading) {
       fetchUserPostInfo();
+      checkIfFollowingMe(); // 맞팔로우 상태 확인
     }
   }, [authLoading, fetchUserPostInfo]);
+
+  
 
   // 팔로우/언팔로우 함수
   const handleFollowToggle = async () => {
@@ -108,7 +129,7 @@ const handleBlockUser = async () => {
 
     if (response.status === 200) {
       alert("차단 완료");
-      navigate("/users/:id"); // 차단 후 내 페이지로 이동
+      navigate("/totalmypage"); // 차단 후 내 페이지로 이동
     }
   } catch (error) {
     console.error("차단 처리 중 오류:", error);
@@ -174,10 +195,11 @@ const handleUnblockUser = async () => {
         <div className="profile-actions">
           {user?.id !== userInfo.id && (
             <>
-              {/* 팔로우/언팔로우 버튼 */}
               <button onClick={handleFollowToggle} className="follow-btn">
-                {following ? "언팔로우" : "팔로우"}
+                {following ? "언팔로우" : isFollowingMe ? "맞팔로우" : "팔로우"}
               </button>
+
+
               {/* 차단하기 버튼 */}
               {blocked ? (
                 <button onClick={handleUnblockUser} className="unblock-btn">차단 해제</button>

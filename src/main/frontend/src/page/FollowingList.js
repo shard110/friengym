@@ -77,7 +77,7 @@ const FollowingList = () => {
               <div className="following-info">
                 <span className="following-name">{follow.followingName}</span>
                 <span className="following-id">@{follow.followingId}</span>
-                <p className="following-introduction">{follow.followingIntroduction || " "}</p>
+                <p className="following-introduction">{follow.Introduction || " "}</p>
               </div>
               <Link to={`/users/${follow.followingId}`} className="view-profile-btn">
                 프로필 보기

@@ -17,6 +17,14 @@ const Gallery = () => {
   const [likedPosts, setLikedPosts] = useState({}); // 좋아요 상태를 관리하는 상태
 
   useEffect(() => {
+
+    const likedPostsKey = `likedPosts_${user?.id}`;
+    const storedLikedPosts = JSON.parse(localStorage.getItem(likedPostsKey)) || {};
+    setLikedPosts(storedLikedPosts);
+  }, [user?.id]);
+
+   // 게시글 불러오기
+   useEffect(() => {
     fetch("api/posts") // Spring Boot 백엔드의 엔드포인트에 맞게 수정 필요
       .then((response) => response.json())
       .then((data) => {
@@ -102,8 +110,7 @@ const Gallery = () => {
     }
   
     const likedPostsKey = `likedPosts_${user?.id}`; // 유저별로 좋아요 누른 게시글을 관리
-    const likedPosts = JSON.parse(localStorage.getItem(likedPostsKey)) || {};
-  
+    
     // 이미 좋아요를 누른 경우 처리 (서버에 요청 보내기 전에 체크)
     if (likedPosts[post.poNum]) {
       alert("이미 이 게시글에 좋아요를 눌렀습니다."); // 알림 띄우기

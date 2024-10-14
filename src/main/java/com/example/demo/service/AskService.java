@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,13 +33,16 @@ public class AskService {
             ask.getAContents(),
             ask.getAfile(),
             ask.getADate(),
-            ask.getUser().getId()  // User의 id만 가져옴
+            ask.getUser().getId(),  // User의 id만 가져옴
+            ask.getPasswordHash(),
+            ask.getReply()
         );
     }
 
     // 모든 문의글 조회 (페이징 처리)
     public Page<AskDTO> getAllAsks(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        // aDate를 기준으로 내림차순 정렬
+    Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "aDate"));
         Page<Ask> asks = askRepository.findAll(pageable);
         return asks.map(this::convertToDto);  // 엔터티를 DTO로 변환
     }
@@ -69,8 +73,8 @@ public class AskService {
         .orElseThrow(() -> new IllegalArgumentException("해당 문의글을 찾을 수 없습니다."));
 
         // 기존 정보 수정
-        existingAsk.setATitle(ask.getaTitle());
-        existingAsk.setAContents(ask.getaContents());
+        existingAsk.setATitle(ask.getATitle());
+        existingAsk.setAContents(ask.getAContents());
         existingAsk.setAfile(ask.getAfile());
 
         // 수정한 날짜로 작성일 업데이트

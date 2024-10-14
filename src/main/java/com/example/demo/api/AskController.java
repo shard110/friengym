@@ -133,8 +133,8 @@ public class AskController {
                                             @RequestParam("aContents") String contents,
                                             @RequestParam(value = "afile", required = false) MultipartFile file) {
         AskDTO ask = askService.getAskById(anum);  // 기존 문의글 가져오기
-        ask.setaTitle(title);
-        ask.setaContents(contents);
+        ask.setATitle(title);
+        ask.setAContents(contents);
 
         // 파일 업데이트 처리
         if (file != null && !file.isEmpty()) {

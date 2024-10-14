@@ -20,6 +20,7 @@ import com.example.demo.dto.FollowResponse;
 import com.example.demo.entity.Follow;
 import com.example.demo.entity.User;
 import com.example.demo.service.FollowService;
+import com.example.demo.service.NotificationService;
 import com.example.demo.service.UserService;
 
 @RestController
@@ -32,6 +33,9 @@ public class FollowController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -119,5 +123,17 @@ public class FollowController {
         } else {
             return ResponseEntity.status(404).body("User not found");
         }
+    }
+
+    @GetMapping("/is-following-me/{otherUserId}")
+    public ResponseEntity<Boolean> isFollowingMe(
+        @RequestHeader("Authorization") String authHeader,
+        @PathVariable String otherUserId
+    ) {
+        String token = authHeader.replace("Bearer ", "");
+        String currentUserId = jwtTokenProvider.getClaims(token).getSubject();
+
+        boolean isFollowing = followService.isFollowingMe(otherUserId, currentUserId);
+        return ResponseEntity.ok(isFollowing);
     }
 }

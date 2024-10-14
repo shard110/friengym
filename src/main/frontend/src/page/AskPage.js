@@ -111,9 +111,21 @@ const AskPage = () => {
     setPage(totalPages);  // 마지막 페이지로 이동
   };
 
-  const formatDate = (timestamp) => {
-    return new Date(timestamp).toLocaleString();  // 날짜와 시간을 함께 표시
+  const formatDate = (dateString) => {
+    if (!dateString) return "날짜 정보 없음"; // 날짜가 없을 때 처리
+  
+    // 문자열을 Date 객체로 변환
+    const date = new Date(dateString);
+  
+    if (isNaN(date.getTime())) {
+      return "Invalid Date"; // 유효하지 않은 날짜 처리
+    }
+  
+    // 한국 시간대로 날짜 및 시간 표시
+    return date.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
   };
+  
+  
 
   return (
     <div>
@@ -135,7 +147,7 @@ const AskPage = () => {
       <li key={ask.anum} onClick={() => handleSelectAsk(ask)} style={{ cursor: "pointer" }}>
         <h3>{ask.aTitle}</h3>
         작성자: {ask.userId ? ask.userId : "Unknown"} {/* 수정된 부분 */}
-        작성일: {formatDate(ask.aDate)}  {/* Timestamp를 형식화하여 표시 */}
+        작성일: {formatDate(ask.adate)}  {/* Timestamp를 형식화하여 표시 */}
       </li>
     ))
   ) : (

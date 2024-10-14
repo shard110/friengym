@@ -21,7 +21,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -380,37 +379,7 @@ public ResponseEntity<?> getUserPostPage(@PathVariable String id, @RequestHeader
     }
 }
 
-    // 차단하기
-    @PostMapping("/{blockedId}")
-    public ResponseEntity<?> blockUser(@RequestHeader("Authorization") String authHeader, @PathVariable String blockedId) {
-        String token = authHeader.replace("Bearer ", "");
-        String blockerId = jwtTokenProvider.getClaims(token).getSubject();
-        Optional<User> blockerOpt = userService.findById(blockerId);
-        Optional<User> blockedOpt = userService.findById(blockedId);
-
-        if (blockerOpt.isPresent() && blockedOpt.isPresent()) {
-            blockService.blockUser(blockerOpt.get(), blockedOpt.get());
-            return ResponseEntity.ok("User blocked successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
-    }
-
-    // 차단 해제
-    @DeleteMapping("/{blockedId}")
-    public ResponseEntity<?> unblockUser(@RequestHeader("Authorization") String authHeader, @PathVariable String blockedId) {
-        String token = authHeader.replace("Bearer ", "");
-        String blockerId = jwtTokenProvider.getClaims(token).getSubject();
-        Optional<User> blockerOpt = userService.findById(blockerId);
-        Optional<User> blockedOpt = userService.findById(blockedId);
-
-        if (blockerOpt.isPresent() && blockedOpt.isPresent()) {
-            blockService.unblockUser(blockerOpt.get(), blockedOpt.get());
-            return ResponseEntity.ok("User unblocked successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
-    }
+    
 
 
 }

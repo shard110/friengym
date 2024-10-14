@@ -15,6 +15,7 @@ public class FollowResponse {
     private String followingPhoto;
     private String followingName;
     private String createdAt;
+   
 
     public FollowResponse(Follow follow) {
         this.followerId = follow.getFollower().getId();

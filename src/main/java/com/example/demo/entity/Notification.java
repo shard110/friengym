@@ -58,6 +58,7 @@ public class Notification {
     // NotificationType 열거형 정의
     public enum NotificationType {
         LIKE,
-        COMMENT
+        COMMENT,
+        FOLLOW  // 팔로우 알림 타입 추가
     }
 }
