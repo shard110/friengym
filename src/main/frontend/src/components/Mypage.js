@@ -128,7 +128,7 @@ const Mypage = () => {
                             <p><span>몸무게:</span> {userInfo.weight} kg</p>
                             {bmi !== null && <p><span>BMI:</span> {bmi} ({bmiCategory})</p>}  {/* BMI와 범주 표시 */}
                             <p><span>생년월일:</span> {userInfo.birth}</p>
-                            <hr /> {/* 가로 줄 추가 */}
+                            <hr className='Mypage_hr' /> {/* 가로 줄 추가 */}
                             <p><span>회원권 등록수:</span> {userInfo.firstday}</p>
                             <p><span>회원권 잔여일수:</span> {userInfo.restday}</p>
                         </div>
