@@ -10,7 +10,6 @@ const AskDetail = () => {
   const [error, setError] = useState(null);
   const [reply, setReply] = useState('');
 
-  // useCallback을 사용하여 fetchAsk 메모이제이션
   const fetchAsk = useCallback(async () => {
     try {
       const response = await axios.get(`http://localhost:8080/api/admin/asks/${id}`, {
@@ -25,17 +24,24 @@ const AskDetail = () => {
   }, [id]);
 
   useEffect(() => {
-    fetchAsk(); // 컴포넌트가 마운트될 때 질문 정보 fetch
-  }, [fetchAsk]); // fetchAsk를 의존성 배열에 추가
+    fetchAsk();
+  }, [fetchAsk]);
 
   const handleReplySubmit = async () => {
+    if (!reply.trim()) {
+      alert('답변을 입력하세요.');
+      return;
+    }
     try {
-      await axios.post(`http://localhost:8080/api/admin/asks/${id}/reply`, { reply }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` },
+      await axios.post(`http://localhost:8080/api/admin/asks/${id}/reply`, reply, {
+        headers: { 
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+          'Content-Type': 'text/plain' // Content-Type을 text/plain으로 설정
+        },
       });
       alert('답변이 등록되었습니다.');
-      setReply(''); // 입력란 초기화
-      fetchAsk(); // 새로 등록된 답변을 포함하여 질문 정보를 다시 fetch
+      setReply('');
+      fetchAsk();
     } catch (error) {
       alert('답변 등록에 실패했습니다.');
     }
@@ -47,7 +53,7 @@ const AskDetail = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` },
       });
       alert('답변이 삭제되었습니다.');
-      fetchAsk(); // 삭제 후 새로고침
+      fetchAsk();
     } catch (error) {
       alert('답변 삭제에 실패했습니다.');
     }
@@ -60,7 +66,7 @@ const AskDetail = () => {
   return (
     <div className="ask-detail-container">
       <h2>{ask.atitle}</h2>
-      <p><strong>작성자:</strong> {ask.user ? ask.user.name : '정보 없음'}</p>
+      <p><strong>작성자:</strong> {ask.userId || '정보 없음'}</p> {/* 아이디로 변경 */}
       <p><strong>내용:</strong> {ask.acontents}</p>
       <p><strong>작성일:</strong> {new Date(ask.aDate).toLocaleString()}</p>
       <p><strong>첨부파일:</strong> {ask.afile || '없음'}</p>
@@ -77,12 +83,12 @@ const AskDetail = () => {
         <button onClick={handleReplySubmit}>답변 등록</button>
       </div>
 
-      {ask.reply && ( // 등록된 답변이 있을 때만 표시
+      {ask.reply && ask.reply.trim() !== "" && (
         <div className="submitted-reply">
           <h3>등록된 답변</h3>
           <p>{ask.reply}</p>
           <p><strong>답변 작성일:</strong> {new Date().toLocaleString()}</p>
-          <button onClick={handleDeleteReply}>삭제</button> {/* 삭제 버튼 추가 */}
+          <button onClick={handleDeleteReply}>삭제</button>
         </div>
       )}
     </div>

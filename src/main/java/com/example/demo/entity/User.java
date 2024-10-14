@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -32,8 +33,9 @@ public class User {
     @NotNull
     private String id;
 
+    @JsonIgnore
     @NotNull
-    private String pwd;
+    private String pwd; // 비밀번호 해시값
 
     @NotNull
     private String name;
