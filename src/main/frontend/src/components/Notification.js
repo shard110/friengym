@@ -77,7 +77,6 @@ const Notifications = () => {
               <p>{notification.message}</p>
               <span>{new Date(notification.createdAt).toLocaleString()}</span>
             </li>
-            
           ))}
         </ul>
       ) : (

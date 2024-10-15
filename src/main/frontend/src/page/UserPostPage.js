@@ -206,6 +206,8 @@ const handleUnblockUser = async () => {
               ) : (
                 <button onClick={handleBlockUser} className="block-btn">차단하기</button>
               )}
+
+                <button className="DM-btn"> DM </button>
             </>
           )}
         </div>

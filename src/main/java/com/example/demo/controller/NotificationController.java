@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.NotificationResponse;
 import com.example.demo.entity.Notification;
-import com.example.demo.entity.User;
-import com.example.demo.repository.NotificationRepository;
 import com.example.demo.service.NotificationService;
 import com.example.demo.service.PostService;
 
@@ -32,21 +30,7 @@ public class NotificationController {
     private NotificationService notificationService;
 
     @Autowired
-    private NotificationRepository notificationRepository;
-
-
-    @Autowired
     private PostService postService;
-
-
-    // 팔로우 알림 생성
-    public void createFollowNotification(User sender, User recipient) {
-        Notification notification = new Notification();
-        notification.setSender(sender);
-        notification.setRecipient(recipient);
-        notification.setType(Notification.NotificationType.FOLLOW);  // FOLLOW 타입 설정
-        notificationRepository.save(notification);
-    }
 
     // 알림 목록 가져오기
     @GetMapping
