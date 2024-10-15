@@ -1,7 +1,9 @@
 package com.example.demo.message;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -49,4 +51,16 @@ public class ChatRoomService {
 	private String generateRoomId() {
 		return UUID.randomUUID().toString(); // ☆UUID를 사용한 방 ID 생성
 	}
+
+	    // 특정 사용자가 대화 중인 사용자 목록 가져오기
+		public List<String> getUsersInChat(String userId) {
+			// 사용자가 발신자나 수신자인 모든 채팅방을 찾음
+			List<ChatRoom> chatRooms = chatRoomRepository.findBySenderIdOrRecipientId(userId, userId);
+	
+			// 대화 중인 상대방 목록을 추출
+			return chatRooms.stream()
+					.map(chatRoom -> chatRoom.getSenderId().equals(userId) ? chatRoom.getRecipientId() : chatRoom.getSenderId())
+					.distinct() // 중복 사용자 제거
+					.collect(Collectors.toList());
+		}
 }

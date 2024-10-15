@@ -10,6 +10,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.entity.User;
 
@@ -22,6 +23,7 @@ public class MessagingController {
     private final UserStatusService userStatusService; // 사용자 관리 서비스
     private final ChatMessageService chatMessageService; // 채팅 메시지 처리 서비스
     private final SimpMessagingTemplate messagingTemplate; // WebSocket 메시지 전송 템플릿
+    private final ChatRoomService chatRoomService;
 
     // WebSocket 메시지를 처리하여 사용자를 추가하는 메서드
     @MessageMapping("/user.addUser")
@@ -50,17 +52,15 @@ public class MessagingController {
     public void processMessage(@Payload ChatMessage chatMessage) {
         ChatMessage saveMsg = chatMessageService.save(chatMessage);
         ChatNotification notification = new ChatNotification(
-            saveMsg.getId(), 
-            saveMsg.getSenderId(), 
-            saveMsg.getRecipientId(), 
-            saveMsg.getContent()
-        );
+                saveMsg.getId(),
+                saveMsg.getSenderId(),
+                saveMsg.getRecipientId(),
+                saveMsg.getContent());
 
         messagingTemplate.convertAndSendToUser(
-            chatMessage.getRecipientId(), 
-            "/queue/messages",
-            notification
-        );
+                chatMessage.getRecipientId(),
+                "/queue/messages",
+                notification);
     }
 
     // 특정 송신자와 수신자의 메시지 조회
@@ -69,5 +69,12 @@ public class MessagingController {
             @PathVariable("senderId") String senderId,
             @PathVariable("recipientId") String recipientId) {
         return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, recipientId));
+    }
+
+    // 대화 중인 사용자 목록 가져오기
+    @GetMapping("/in-chat")
+    public ResponseEntity<List<String>> getUsersInChat(@RequestParam String userId) {
+        List<String> usersInChat = chatRoomService.getUsersInChat(userId);
+        return ResponseEntity.ok(usersInChat); // JSON 응답으로 반환
     }
 }
