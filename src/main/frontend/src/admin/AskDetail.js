@@ -66,10 +66,23 @@ const AskDetail = () => {
   return (
     <div className="ask-detail-container">
       <h2>{ask.atitle}</h2>
-      <p><strong>작성자:</strong> {ask.userId || '정보 없음'}</p> {/* 아이디로 변경 */}
+      <p><strong>작성자:</strong> {ask.userId || '정보 없음'}</p>
       <p><strong>내용:</strong> {ask.acontents}</p>
       <p><strong>작성일:</strong> {new Date(ask.aDate).toLocaleString()}</p>
-      <p><strong>첨부파일:</strong> {ask.afile || '없음'}</p>
+      <p>
+        <strong>첨부파일:</strong> 
+        {ask.afile ? (
+          <div>
+            <p>첨부파일 경로:{ask.afile}</p> 
+            <p>
+              파일 보기:
+              <a href={`http://localhost:8080${ask.afile}`} target="_blank" rel="noopener noreferrer">
+                확인하기
+              </a>
+            </p>
+          </div>
+        ) : '없음'}
+      </p>
 
       <div className="reply-container">
         <h3>답변하기</h3>

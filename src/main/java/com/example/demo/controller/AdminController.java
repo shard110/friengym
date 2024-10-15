@@ -111,8 +111,9 @@ public class AdminController {
                     ask.getADate(),
                     ask.getATitle(),
                     ask.getAContents(),
-                    (ask.getUser() != null) ? ask.getUser().getId() : "정보 없음", // User ID를 가져옴
-                    ask.getReply() // reply 필드 추가
+                    (ask.getUser() != null) ? ask.getUser().getId() : "정보 없음",
+                    ask.getReply(),
+                    ask.getAfile() // afile 필드 추가
                 ))
                 .collect(Collectors.toList());
 
@@ -130,14 +131,15 @@ public class AdminController {
             Ask ask = askRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("문의글을 찾을 수 없습니다."));
             
-            // AskDTO로 변환하여 사용자 ID 포함
+            // AskDTO로 변환하여 사용자 ID와 afile 포함
             AskDTO askDTO = new AskDTO(
                 ask.getAnum(),
                 ask.getADate(),
                 ask.getATitle(),
                 ask.getAContents(),
-                (ask.getUser() != null) ? ask.getUser().getId() : "정보 없음", // User ID를 가져옴
-                ask.getReply() // reply 필드 추가
+                (ask.getUser() != null) ? ask.getUser().getId() : "정보 없음",
+                ask.getReply(),
+                ask.getAfile() // afile 필드 추가
             );
             
             return ResponseEntity.ok(askDTO);

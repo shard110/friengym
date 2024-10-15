@@ -9,15 +9,17 @@ public class AskDTO {
     private String acontents;
     private String userId; // User ID를 추가
     private String reply; // 답변 내용을 추가
+    private String afile; // 첨부파일 추가
 
     // Constructor
-    public AskDTO(int anum, Timestamp aDate, String atitle, String acontents, String userId, String reply) {
+    public AskDTO(int anum, Timestamp aDate, String atitle, String acontents, String userId, String reply, String afile) {
         this.anum = anum;
         this.aDate = aDate;
         this.atitle = atitle;
         this.acontents = acontents;
         this.userId = userId; // User ID 할당
         this.reply = reply; // 답변 내용 할당
+        this.afile = afile; // 첨부파일 할당
     }
 
     // Getter와 Setter
@@ -61,11 +63,19 @@ public class AskDTO {
         this.userId = userId;
     }
 
-    public String getReply() { // reply에 대한 Getter 추가
+    public String getReply() {
         return reply;
     }
 
-    public void setReply(String reply) { // reply에 대한 Setter 추가
+    public void setReply(String reply) {
         this.reply = reply;
+    }
+
+    public String getAfile() { // afile에 대한 Getter 추가
+        return afile;
+    }
+
+    public void setAfile(String afile) { // afile에 대한 Setter 추가
+        this.afile = afile;
     }
 }
