@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
 import { Link } from 'react-router-dom';
-import './ListStyles.css'; // CSS 파일 import
+import styles from './ListStyles.module.css'; // CSS 모듈 import
 
 const OrderHistoryPage = () => {
     const { user } = useAuth();
@@ -33,18 +33,18 @@ const OrderHistoryPage = () => {
     }, [user]);
 
     return (
-        <div className="order-history">
-            <h2>결제 내역</h2>
-            <table>
+        <div className={styles.orderHistory}>
+            <h2 className={styles.h2}>결제 내역</h2>
+            <table className={styles.table}>
                 <thead>
                     <tr>
-                        <th>주문 번호</th>
-                        <th>상품 이미지</th>
-                        <th>상품명</th>
-                        <th>수량</th>
-                        <th>상태</th>
-                        <th>결제 날짜</th>
-                        <th>결제 아이디</th>
+                        <th className={styles.th}>주문 번호</th>
+                        <th className={styles.th}>상품 이미지</th>
+                        <th className={styles.th}>상품명</th>
+                        <th className={styles.th}>수량</th>
+                        <th className={styles.th}>상태</th>
+                        <th className={styles.th}>결제 날짜</th>
+                        <th className={styles.th}>결제 아이디</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,22 +53,22 @@ const OrderHistoryPage = () => {
                             {order.dorders.map((dorder, index) => (
                                 <tr key={dorder.doNum}>
                                     {index === 0 && (
-                                        <td rowSpan={order.dorders.length}>{order.onum}</td>
+                                        <td rowSpan={order.dorders.length} className={styles.td}>{order.onum}</td>
                                     )}
-                                    <td>
+                                    <td className={styles.td}>
                                         <Link to={`/productslist/${dorder.product.pNum}`}>
-                                            <img src={dorder.product.pImgUrl} alt={dorder.product.pName} className="cart-img" />
+                                            <img src={dorder.product.pImgUrl} alt={dorder.product.pName} className={styles.cartImg} />
                                         </Link>
                                     </td>
-                                    <td>{dorder.product.pName}</td>
-                                    <td>{dorder.doCount}개</td>
+                                    <td className={styles.td}>{dorder.product.pName}</td>
+                                    <td className={styles.td}>{dorder.doCount}개</td>
                                     {index === 0 && (
                                         <>
-                                            <td rowSpan={order.dorders.length}>{order.status}</td>
-                                            <td rowSpan={order.dorders.length}>{new Date(order.odate).toLocaleString()}</td>
+                                            <td rowSpan={order.dorders.length} className={styles.td}>{order.status}</td>
+                                            <td rowSpan={order.dorders.length} className={styles.td}>{new Date(order.odate).toLocaleString()}</td>
                                         </>
                                     )}
-                                    <td>{order.id}</td>
+                                    <td className={styles.td}>{order.id}</td>
                                 </tr>
                             ))}
                         </React.Fragment>

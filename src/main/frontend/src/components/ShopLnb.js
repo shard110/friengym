@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import './ShopLnb.css';
+import { Search } from 'react-feather';
 
 function ShopLnb() {
     const [categories, setCategories] = useState([]);
@@ -24,33 +25,35 @@ function ShopLnb() {
 
     return (
         <nav className="navbar">
-            <ul>
-                <li><Link to="/posts">쇼핑홈</Link></li>
-                <li className="category-menu"
-                    onMouseEnter={() => setShowCategories(true)}
-                    onMouseLeave={() => setShowCategories(false)}>
-                    <div className="category-toggle">카테고리</div>
-                    <ul className={`category-list ${showCategories ? 'show' : ''}`}>
-                        {categories.map(category => (
-                            <li key={category.catenum}>
-                                <Link to={`/categories/${category.catenum}`}
-                                    onClick={() => setShowCategories(false)}>{category.catename}</Link>
-                            </li>
-                        ))}
-                    </ul>
-                </li>
-                <li><Link to="/products/new">신상품</Link></li>
-                <li><Link to="/products/popular">베스트</Link></li>
-                <li><Link to="/order-history">주문내역</Link></li>
-            </ul>
-            <div className="search-bar">
-                <input
-                    type="text"
-                    placeholder="쇼핑몰 상품 검색"
-                    value={searchKeyword}
-                    onChange={(e) => setSearchKeyword(e.target.value)}
-                />
-                <button onClick={handleSearch}>🔍︎</button>
+            <div className='wrap'>
+                <ul>
+                    <li><NavLink to="/products" activeclassname='active'>쇼핑홈</NavLink></li>
+                    <li><NavLink to="/productslist" activeclassname='active'>전체상품</NavLink></li>
+                    <li className="category-menu"
+                        onMouseEnter={() => setShowCategories(true)}
+                        onMouseLeave={() => setShowCategories(false)}>
+                        <NavLink to="/categories/1" activeclassname='active'>카테고리</NavLink>
+                        <ul className={`category-list ${showCategories ? 'show' : ''}`}>
+                            {categories.map(category => (
+                                <li key={category.catenum}>
+                                    <Link to={`/categories/${category.catenum}`}
+                                        onClick={() => setShowCategories(false)}>{category.catename}</Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </li>
+                    <li><NavLink to="/products/new" activeclassname='active'>신상품</NavLink></li>
+                    <li><NavLink to="/products/popular" activeclassname='active'>베스트</NavLink></li>
+                </ul>
+                <div className="search-bar">
+                    <input
+                        type="text"
+                        placeholder="쇼핑몰 상품 검색"
+                        value={searchKeyword}
+                        onChange={(e) => setSearchKeyword(e.target.value)}
+                    />
+                    <button onClick={handleSearch}><Search /></button>
+                </div>
             </div>
         </nav>
     );

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import PopularProducts from './PopularProducts';
 import './ProductHome.css';
 import ShopLnb from './ShopLnb';
+import FloatingMenu from './FloatingMenu';
 
 function ProductHome() {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -58,6 +59,7 @@ function ProductHome() {
     return (
         <div className="product-home">
             <ShopLnb />
+            <FloatingMenu />
             <div className="banner">
                 <img
                     src={images[currentImageIndex]}
@@ -99,7 +101,9 @@ function ProductHome() {
                         {recentProducts.length > 0 ? (
                             recentProducts.slice(0, 3).map(product => (  // 3개만 표시
                                 <div key={product.pNum} className="product-item">
-                                    <img src={product.pImg} alt={`상품명: ${product.pName}`} />
+                                    <Link to={`/productslist/${product.pNum}`}>
+                                        <img src={product.pImg} alt={`상품명: ${product.pName}`} />
+                                    </Link>
                                     <p className='prod_name'>{product.pName}</p>
                                     <p className='prod_price'> ₩ {product.pPrice.toLocaleString()}</p>
                                     <p className='prod_count'>재고 : {product.pCount}개</p>

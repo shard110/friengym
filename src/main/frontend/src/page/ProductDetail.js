@@ -6,6 +6,7 @@ import { addToCart } from '../utils/cartUtils.js'; // addToCart 함수 임포트
 
 import './ProductDetail.css';
 import Gnb from '../components/Gnb';
+import ShopLnb from '../components/ShopLnb.js';
 
 const ProductDetail = () => {
     const { pNum } = useParams();
@@ -42,7 +43,7 @@ const ProductDetail = () => {
     return (
         <div className="product-detail">
             <div className="product-detail-header">
-                <Gnb />
+                <ShopLnb />
             </div>
             <div className='sec'>
                 <img src={product.pImgUrl} alt={product.pName} className='prodImg'/>

@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../components/AuthContext';
 import './Cart.css';
+import ShopLnb from '../components/ShopLnb';
+import FloatingMenu from '../components/FloatingMenu';
 
 const Cart = () => {
     const { user, loading:authLoading } = useAuth();
@@ -91,6 +93,8 @@ const Cart = () => {
 
     return (
         <div className="cart">
+            <ShopLnb />
+            <FloatingMenu />
             <h2>장바구니</h2>
             {Array.isArray(cartItems) && cartItems.length === 0 ? (
                 <p>장바구니가 비어 있습니다.</p>

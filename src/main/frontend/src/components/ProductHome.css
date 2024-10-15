@@ -1,116 +1,15 @@
-.product-home{
-  width: 360px;
-}
-
-.product-home nav{
-  width: 360px;
-  overflow: hidden;
-}
-
 .product-home .banner img{
-  width: auto;
-  height: 200px;
+  width: 100vw;
+  max-width: 100%;
+  height: auto;
   
 }
 
+.product-home .popular-products .navbar{
+  display: none;
+}
 
 @media (min-width: 1200px) {
-
-    /* lnb */
-  .product-home .navbar {
-    position: relative;
-    width: 1200px;
-    height: 48px;
-    margin: 0 auto;
-    top: -1px;
-    z-index: 1000;
-    color: #333;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .product-home .navbar ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-  }
-
-  .product-home .navbar>ul>li {
-    margin-right:8px;
-    padding: 24px;
-  }
-
-  .product-home .navbar .category-list li {
-    padding: 32px;
-  }
-
-  .product-home .category-toggle{
-    cursor: pointer;
-  }
-
-  .product-home .category-toggle:hover{
-    color: #03C7A6;;
-  }
-
-  .product-home .navbar ul li a {
-    font-weight: bold;
-    color: #333;
-  }
-
-  .product-home .navbar ul li a:hover {
-    color: #03C7A6;
-  }
-
-  .product-home .interaction-area {
-    position: sticky;
-    top: 0;
-    background-color: white;
-    z-index: 999;
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-  }
-
-  .product-home .category-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: white;
-    list-style-type: none;
-    padding: 0;
-    height: 0;
-    overflow: hidden;
-    transition: height 0.2s ease;
-    z-index: 998;
-    min-width: 400px;
-  }
-
-  .product-home .category-list.show {
-    height: 88px;
-    border: 1px solid #ccc;
-  }
-
-  .product-home .search-bar {
-    display: flex;
-    align-items: center;
-  }
-
-  .product-home .search-bar input {
-    padding: 8px;
-    margin-right: 8px;
-    font-size: 16px;
-  }
-
-  .product-home .search-bar button {
-    width: 80px;
-    padding: 8px 16px;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
 
   /* 배너 */
   .product-home .banner {

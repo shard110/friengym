@@ -5,7 +5,7 @@
     color: #444444;
 }
 
-.footer-wrap {
+.footer .footer-wrap {
     height: 200px; /* 원하는 높이로 조정 */
     padding: 0px 32px; /* 높이에 맞게 패딩 조정 */
     display: flex;
@@ -16,20 +16,20 @@
     gap: 20px; /* 항목들 사이에 여백 추가 */
 }
 
-span {
+.footer span {
     font-size: 14px; /* 일관된 폰트 크기 설정 */
     margin-right: 20px; /* 오른쪽 여백 조정 */
     text-align: center;
 }
 
-.footer-wrap > p {
+.footer .footer-wrap > p {
     width: 1px;
     height: 16px;
     background-color: #888;
     margin-right: 20px; /* 구분선의 오른쪽 여백 조정 */
 }
 
-.footer-policy {
+.footer .footer-policy {
     font-weight: bold;
     text-decoration: underline; /* 정책 텍스트에 강조를 주기 위해 밑줄 추가 */
 }

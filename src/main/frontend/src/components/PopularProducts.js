@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './PopularProducts.css';
+import { Link } from 'react-router-dom';
+import ShopLnb from './ShopLnb';
 
 function PopularProducts({ limit }) {
     const [popularProducts, setPopularProducts] = useState([]);
@@ -24,11 +26,14 @@ function PopularProducts({ limit }) {
     }, [limit]);
 
     return (
-        <div>
+        <div className='popular-products'>
+            <ShopLnb />
             <div className="product-list">
                 {popularProducts.map(product => (
                     <div key={product.pNum} className="product-item">
-                        <img src={product.pImg} alt={`상품명: ${product.pName}`} />
+                        <Link to={`/productslist/${product.pNum}`}>
+                            <img src={product.pImg} alt={`상품명: ${product.pName}`} />
+                        </Link>
                         <p className='prod_name'>{product.pName}</p>
                         <p className='prod_price'> ₩ {product.pPrice.toLocaleString()}</p>
                         <p className='prod_count'>재고 : {product.pCount}개</p>

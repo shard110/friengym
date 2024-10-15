@@ -1,3 +1,9 @@
+
+.popular-products .navbar .wrap ul li:first-child .active{
+    color: #333;
+    border-bottom: none;
+  }
+
 /* 전체 상품 목록 컨테이너 */
 .product-list {
   display: grid;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import './ListStyles.css'; // CSS 파일 import
+import styles from './ListStyles.module.css';
 
 const AskList = () => {
   const [asks, setAsks] = useState([]);
@@ -38,33 +38,33 @@ const AskList = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="container">
-      <h2>문의글 목록</h2>
-      <table>
+    <div className={styles.container}>
+      <h2 className={styles.h2}>문의글 목록</h2>
+      <table className={styles.table}>
         <thead>
           <tr>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>작성일</th>
-            <th>상태</th> {/* 상태 열 추가 */}
+            <th className={styles.th}>제목</th>
+            <th className={styles.th}>작성자</th>
+            <th className={styles.th}>작성일</th>
+            <th className={styles.th}>상태</th> {/* 상태 열 추가 */}
           </tr>
         </thead>
         <tbody>
           {asks.length === 0 ? (
             <tr>
-              <td colSpan="4">등록된 문의글이 없습니다.</td>
+              <td colSpan="4" className={styles.td}>등록된 문의글이 없습니다.</td>
             </tr>
           ) : (
             asks.map((ask) => (
               <tr key={ask.anum}>
-                <td>
+                <td className={styles.td}>
                   <Link to={`/adminHome/ask/${ask.anum}`}>
                     {ask.atitle || '제목 없음'}
                   </Link>
                 </td>
-                <td>{ask.user ? ask.user.id : 'Unknown'}</td>
-                <td>{new Date(ask.aDate).toLocaleString()}</td>
-                <td>
+                <td className={styles.td}>{ask.user ? ask.user.id : 'Unknown'}</td>
+                <td className={styles.td}>{new Date(ask.aDate).toLocaleString()}</td>
+                <td className={styles.td}>
                   {ask.reply ? (
                     <span style={{ color: 'green' }}>답변 완료</span> // 답변이 있을 경우
                   ) : (

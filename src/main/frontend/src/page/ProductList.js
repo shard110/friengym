@@ -5,6 +5,7 @@ import { addToCart } from '../utils/cartUtils'; // addToCart 함수 임포트
 import './ProductList.css';
 import Footer from '../components/Footer';
 import icon_cart from '../img/icon_cart.png';
+import ShopLnb from '../components/ShopLnb';
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
@@ -44,6 +45,7 @@ const ProductList = () => {
 
     return (
         <div>
+            <ShopLnb />
             <div id='grand-wrap'>
                 <div className="product-section">
                     <div className="sort-container">

@@ -1,13 +1,23 @@
 .navbar {
-    position: relative;
-    width: 1200px;
+  width: 100vw;
+  max-width: 100%;
+  height: 56px;
+  position: relative;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  border-bottom: 1px solid #eee;
+}
+
+  .navbar .wrap{
+    max-width: 1152px;
     margin: 0 auto;
-    top: -1px;
-    z-index: 1000;
-    color: #333;
-    font-weight: bold;
     display: flex;
+    flex: 1;
+    align-items: center;
     justify-content: space-between;
+    padding: 0 24px;
   }
   
   .navbar ul {
@@ -15,31 +25,28 @@
     padding: 0;
     margin: 0;
     display: flex;
-  }
-  
-  .navbar>ul>li {
-    margin-right:8px;
-    padding: 24px;
+    gap: 24px;
+    white-space: nowrap;
   }
   
   .category-list li {
     padding: 32px;
+    flex-shrink: 0;
   }
   
   .category-toggle{
     cursor: pointer;
   }
-  
-  .category-toggle:hover{
-    color: #03C7A6;;
-  }
-  
-  .navbar ul li a {
-    font-weight: bold;
+
+  .navbar ul li a{
+    display: block;
     color: #333;
+    padding: 16px 0 14px 0;
+    transition: 0.2s ease;
   }
-  
+
   .navbar ul li a:hover {
+    text-decoration: none;
     color: #03C7A6;
   }
   
@@ -79,16 +86,38 @@
   }
   
   .search-bar input {
-    padding: 8px;
-    margin-right: 8px;
+    padding: 8px 8px 8px 0;
     font-size: 16px;
+    border: none;
+    border-bottom: 1px solid #dbdbdb;
+    transition: 1s ease;
+  }
+
+  .search-bar input:focus{
+    outline: 0;
+    border-bottom: 0.5px solid #03C7A6;
   }
   
   .search-bar button {
-    width: 80px;
-    padding: 8px 16px;
-    color: white;
+    width: 48px;
+    height: 48px;
     border: none;
     cursor: pointer;
+    background: none;
+    color: #333;
+  }
+
+  .search-bar button:hover {
+    color: #03C7A6;
   }
   
+  .navbar .active{
+    color : #03C7A6;
+    border-bottom: 2px solid #03C7A6;
+  }
+
+@media (max-width: 1280px){
+  .navbar .search-bar input{
+    display: none;
+  }
+}

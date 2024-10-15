@@ -1,84 +1,114 @@
 /* Navbar.css */
 
 .navbarH {
-    width: 100%;
-    background-color: #333; /* 원하는 배경색으로 변경 */
-    color: #fff; /* 글자색 */
-    padding: 10px 0; /* 상하 여백 */
+    width: 100vw;
+    max-width: 100%;
+    background-color: #fff;
+    box-shadow: 0 0 4px #575f6434;
+    margin: 0 auto;
+    position: fixed;
+    z-index: 9999;
   }
   
-  .navbar-container {
-    max-width: 1200px;
-    margin: 0 auto; /* 중앙 정렬 */
+.navbarH .navbar-container {
+    max-width: 1152px;
+    height: 64px;
+    margin: 0 auto;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 0 20px; /* 좌우 여백 */
+    padding: 0 24px;
   }
   
-  .navbar-logo-container {
-    flex: 1;
+  .navbarH .menu-mobile{
+    display: none;
   }
+
+  .navbarH .navbar-logo-container{
+    margin-right: 56px;
+    }
+
+  .navbarH .navbar-logo-container a{
+    display: block;
+    height: 18px;
+    }
+
+.navbarH .navbar-logo-container .navbar-logo {
+    height: 18px;
+}
   
-  .navbar-logo {
-    height: 55px; /* 로고 높이 조정 */
-  }
-  
-  .navbar-main-menu {
-    flex: 2;
-    display: flex; /* Flexbox 사용 */
+.navbarH .navbar-main-menu {
+    display: flex;
     align-items: center;
-    margin-right: 50px; /* 오른쪽 여백 조정, 필요에 따라 조정 */
   }
   
-  .navbar-nav {
+.navbarH .navbar-nav {
     list-style: none;
     display: flex;
-    padding: 0;
-    margin: 0;
+    gap: 32px;
   }
   
-  .nav-item {
-    margin: 0 15px; /* 메뉴 항목 간 여백 */
-  }
-  
-  .nav-link {
-    color: #fff;
+.navbarH .nav-link {
+    color: #333;
     text-decoration: none;
     font-size: 16px; /* 글자 크기 조정 */
+    font-weight: bold;
+    transition: 0.2s ease;
   }
   
-  .nav-link:hover {
-    text-decoration: underline;
+.navbarH .nav-link:hover {
+    color: #03C7A6;
   }
   
-  .navbar-user-menu {
+.navbarH .navbar-user-menu {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 10px; /* 항목 사이의 간격 조정 */
+    gap: 10px;
     flex: 1;
   }
   
-  .user-menu-logged-in, .user-menu-logged-out {
+.navbarH .user-menu-logged-in, .user-menu-logged-out {
     display: flex;
     align-items: center;
-    gap: 10px; /* 항목 간 간격 조정 */
+    gap: 24px;
   }
   
-  .user-menu-logged-in .nav-link, .user-menu-logged-out .nav-link {
-    margin: 0; /* 기본 여백 제거 */
-  }
-  
-  button.nav-link {
+.navbarH button.nav-link {
     background: none;
     border: none;
-    color: #fff;
-    font-size: 15px;
     cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif !important;
   }
+
+@media (max-width: 1280px) {
   
-  button.nav-link:hover {
-    text-decoration: underline;
+  .navbarH .navbar-main-menu{
+    display: none;
   }
+
+  .navbarH .navbar-container {
+    justify-content: space-between;
+  }
+
+  .navbarH .navbar-logo-container a{
+    display: block;
+    height: 50px;
+    }
+
+  .navbarH .navbar-logo-container .navbar-logo {
+    height: 18px;
+    width: 42px;
+    object-fit: cover;
+    object-position: left;
+    padding: 16px 8px 16px 0;
+  }
+
+  .navbarH .navbar-user-menu {
+    display: none;
+  }
+
+  .navbarH .menu-mobile{
+    display: block;
+  }
+}  
   

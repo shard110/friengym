@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'; // Link 컴포넌트 추가
 import './CategoryProductsPage.css';
+import ShopLnb from './ShopLnb';
 
 function CategoryProductsPage() {
     const { catenum } = useParams();
@@ -19,6 +20,7 @@ function CategoryProductsPage() {
 
     return (
       <div className="category-products">
+        <ShopLnb />
         <h2>카테고리별 상품 목록</h2>
         {products.length === 0 ? (
           <p>해당 카테고리에 상품이 없습니다.</p>

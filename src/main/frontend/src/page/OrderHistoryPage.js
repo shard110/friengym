@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
 import { Link } from 'react-router-dom';
 import './OrderHistoryPage.css'; // CSS 파일을 import 합니다.
+import ShopLnb from '../components/ShopLnb';
+import FloatingMenu from '../components/FloatingMenu';
 
 const OrderHistoryPage = () => {
     const { user } = useAuth();
@@ -36,6 +38,8 @@ const OrderHistoryPage = () => {
 
     return (
         <div className="order-history">
+            <ShopLnb />
+            <FloatingMenu />
             <h2>결제 내역</h2>
             <table>
                 <thead>
