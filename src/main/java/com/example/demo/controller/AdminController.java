@@ -4,8 +4,11 @@ import com.example.demo.entity.Ask;
 import com.example.demo.entity.User;
 import com.example.demo.dto.AskDTO; // AskDTO 임포트
 import com.example.demo.dto.UserDTO; // UserDTO 임포트
+import com.example.demo.dto.WarningDTO;
 import com.example.demo.repository.AskRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.entity.Warning; // Warning 엔티티 임포트
+import com.example.demo.repository.WarningRepository; // WarningRepository 임포트
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +33,13 @@ public class AdminController {
 
     private final UserRepository userRepository;
     private final AskRepository askRepository;
+    private final WarningRepository warningRepository;
 
     @Autowired
-    public AdminController(UserRepository userRepository, AskRepository askRepository) {
+    public AdminController(UserRepository userRepository, AskRepository askRepository, WarningRepository warningRepository) {
         this.userRepository = userRepository;
         this.askRepository = askRepository;
+        this.warningRepository = warningRepository;
     }
 
     // 관리자 로그인
@@ -214,6 +219,27 @@ public class AdminController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding months.");
+        }
+    }
+
+    // 신고글 모아보기
+    @GetMapping("/warnings")
+    public ResponseEntity<List<WarningDTO>> getWarnings() {
+        try {
+            List<Warning> warnings = warningRepository.findAll();
+            List<WarningDTO> warningDTOs = warnings.stream()
+                .map(warning -> new WarningDTO(
+                    warning.getId(),
+                    warning.getPost() != null ? warning.getPost().getPoNum() : 0, // int형으로 반환
+                    warning.getUser() != null ? warning.getUser().getId() : null, // null 체크
+                    warning.getReason()
+                ))
+                .collect(Collectors.toList());
+
+            return ResponseEntity.ok(warningDTOs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }

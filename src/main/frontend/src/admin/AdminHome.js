@@ -7,6 +7,7 @@ import AskList from './AskList'; // AskList 컴포넌트 임포트
 import AskDetail from './AskDetail'; // AskDetail 컴포넌트 임포트
 import Shop from './Shop';
 import OrderList from './OrderList';
+import WarningList from './WarningList'; // WarningList 컴포넌트 임포트
 
 const AdminHome = () => {
   const [aid, setAid] = useState('');
@@ -100,6 +101,7 @@ const AdminHome = () => {
             <Route path="/ask/:id" element={<AskDetail />} /> {/* 문의글 상세 내용 경로 추가 */}
             <Route path="/shop" element={<Shop />} />
             <Route path="/order" element={<OrderList />} />
+            <Route path="/warnings" element={<WarningList />} />
           </Routes>
         </>
       )}
