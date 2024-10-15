@@ -31,6 +31,7 @@ public class Ask {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private Timestamp aDate;
+    
     private String afile;
     private String passwordHash; // 비밀번호 해시값
 

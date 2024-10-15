@@ -55,6 +55,7 @@ public class User {
     private String photo;
     private String sessionkey;
     private Date sessionlimit;
+    private String introduction;
 
         // Status enum 추가 (선택적)
     @Enumerated(EnumType.STRING) // ENUM을 문자열로 저장

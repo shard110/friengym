@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.config.JwtTokenProvider;
+import com.example.demo.dto.FollowResponse;
 import com.example.demo.entity.Follow;
 import com.example.demo.entity.User;
 import com.example.demo.service.FollowService;
+import com.example.demo.service.NotificationService;
 import com.example.demo.service.UserService;
 
 @RestController
@@ -32,6 +35,9 @@ public class FollowController {
     private UserService userService;
 
     @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
     // 팔로잉 목록 조회
@@ -40,13 +46,15 @@ public class FollowController {
         String token = authHeader.replace("Bearer ", "");
         String userId = jwtTokenProvider.getClaims(token).getSubject();
         Optional<User> userOpt = userService.findById(userId);
-        
-        if (userOpt.isPresent()) {
-            List<Follow> following = followService.getFollowing(userOpt.get());
-            return ResponseEntity.ok(following);
-        } else {
-            return ResponseEntity.status(404).body("User not found");
-        }
+       if (userOpt.isPresent()) {
+        List<Follow> following = followService.getFollowing(userOpt.get());
+        List<FollowResponse> followingResponses = following.stream()
+            .map(FollowResponse::new)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(followingResponses);
+    } else {
+        return ResponseEntity.status(404).body("User not found");
+    }
     }
 
     // 팔로워 목록 조회
@@ -58,12 +66,14 @@ public class FollowController {
         
         if (userOpt.isPresent()) {
             List<Follow> followers = followService.getFollowers(userOpt.get());
-            return ResponseEntity.ok(followers);
+            List<FollowResponse> followerResponses = followers.stream()
+                .map(FollowResponse::new)
+                .collect(Collectors.toList());
+            return ResponseEntity.ok(followerResponses);
         } else {
             return ResponseEntity.status(404).body("User not found");
         }
     }
-
     // 팔로우 하기
     @PostMapping("/follow/{followingId}")
     public ResponseEntity<?> followUser(@RequestHeader("Authorization") String authHeader, @PathVariable String followingId) {
@@ -113,5 +123,17 @@ public class FollowController {
         } else {
             return ResponseEntity.status(404).body("User not found");
         }
+    }
+
+    @GetMapping("/is-following-me/{otherUserId}")
+    public ResponseEntity<Boolean> isFollowingMe(
+        @RequestHeader("Authorization") String authHeader,
+        @PathVariable String otherUserId
+    ) {
+        String token = authHeader.replace("Bearer ", "");
+        String currentUserId = jwtTokenProvider.getClaims(token).getSubject();
+
+        boolean isFollowing = followService.isFollowingMe(otherUserId, currentUserId);
+        return ResponseEntity.ok(isFollowing);
     }
 }

@@ -42,12 +42,12 @@ const  PostSideBar = () => {
     <Link to="/posts">게시글</Link>
     <Link to="/post-search">검색</Link>
     <Link to="/recommendations">추천</Link>
-    <Link to="/messages">메시지</Link>
+    <Link to="/chat">메시지</Link>
     <Link to="/notifications">알림
     {unreadCount > 0 && <span style={{ color: 'red' }}> ({unreadCount})</span>}
     </Link>
     <Link to="/create-post">만들기</Link>
-    <Link to="/mypage">프로필</Link>
+    <Link to="/totalmypage">프로필</Link>
     </div>
     </nav>
   );

@@ -8,6 +8,11 @@ import com.example.demo.entity.Ask;
 
 public interface AskRepository extends JpaRepository<Ask, Integer> {
 
-     // 특정 작성자의 모든 문의글을 페이징 처리하여 조회
-     Page<Ask> findByUserId(String userId, Pageable pageable);
+     // 특정 작성자의 글을 최신 순으로 조회
+    Page<Ask> findByUserIdOrderByADateDesc(String userId, Pageable pageable);
+    
+    // 모든 글을 최신 순으로 조회
+    Page<Ask> findAllByOrderByADateDesc(Pageable pageable);
+
+    Page<Ask> findByUserId(String id, Pageable pageable);
 }
