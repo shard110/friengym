@@ -7,7 +7,7 @@
     box-shadow: 0 0 4px #575f6434;
     margin: 0 auto;
     position: fixed;
-    z-index: 9999;
+    z-index: 2000;
   }
   
 .navbarH .navbar-container {
@@ -34,6 +34,10 @@
 
 .navbarH .navbar-logo-container .navbar-logo {
     height: 18px;
+    width: 100%;
+    object-fit: cover;
+    object-position: left;
+    transition: width 0.5s ease;
 }
   
 .navbarH .navbar-main-menu {
@@ -86,6 +90,10 @@
     display: none;
   }
 
+  .navbarH .navbar-user-menu{
+    display: none;
+  }
+
   .navbarH .navbar-container {
     justify-content: space-between;
   }
@@ -103,12 +111,123 @@
     padding: 16px 8px 16px 0;
   }
 
-  .navbarH .navbar-user-menu {
-    display: none;
+  .navbarH .sliding-navbar{
+    position: absolute;
+    top: 0;
+    right: -70%;
+    height: 100vh;
+    width: 70%;
+    background-color: #fff;
+    transition: 0.5s ease;
+    z-index: 3000;
   }
 
-  .navbarH .menu-mobile{
+  .navbarH .sliding-navbar--open {
+    right: 0px;
+  }
+
+  .navbarH .mask {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 100%;
+    background: #444c50;
+    opacity: 0.8;
+    display: none;
+    
+  }
+
+  .navbarH .show {
     display: block;
   }
+  
+  .navbarH .navbar--items {
+    list-style-type: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .navbarH .navbar--item {
+    margin: 20px;
+    letter-spacing: 1px;
+    color: white;
+    font-family: sans-serif;
+    text-transform: uppercase;
+  }
+  
+  .navbarH .hamburger-menu {
+    z-index: 3999;
+    position: absolute;
+    top: 8px;
+    right: 4%;
+    margin: auto;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+  }
+  
+  .navbarH .hamburger {
+    position: relative;
+    transform: translate3d(14px, 23px, 0);
+    background: #333;
+    transition: 0.2s ease-in-out;
+  }
+  
+  .navbarH .hamburger,
+  .navbarH .hamburger:after,
+  .navbarH .hamburger:before {
+    width: 20px;
+    height: 2px;
+  }
+
+  .navbarH .hamburger:hover,
+  .navbarH .hamburger:after:hover,
+  .navbarH .hamburger:before:hover {
+    width: 20px;
+    height: 2px;
+  }
+  
+  .navbarH .hamburger:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 6px;
+    background: #333;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .navbarH .hamburger:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 6px;
+    background: #333;
+    transition: 0.3s ease-in-out;
+  }
+
+  .navbarH .menu-opened{
+    background-color: #fff;
+    transition: 0.3s ease-in-out;
+  }
+
+  .navbarH .menu-opened:before {
+    bottom: 0;
+    transition: 0.3s ease-in-out;
+    transform: rotate(-45deg);
+  }
+  
+  .navbarH .menu-opened:after {
+    top: 0;
+    transition: 0.3s ease-in-out;
+    transform: rotate(45deg);
+  }
+  
+  .navbarH .hamburger-menu:hover .hamburger:before,
+  .navbarH .hamburger-menu:hover .hamburger:after {
+    background: #03C7A6;
+}
 }  
   

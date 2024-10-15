@@ -62,16 +62,35 @@ export default function Navbar() {
         </div>
         <div className="hamburger-menu" onClick={toggleMenu}>
           <div className={`hamburger ${isOpen ? 'menu-opened':''}`}>
-            <Menu />
           </div>
         </div>
-        <Navbar className={`sliding-navbar ${isOpen ? 'sliding-navbar--open':''}`}>
-          <ul>
-            <li>메뉴메뉴</li>
-            <li>메뉴메뉴</li>
-            <li>메뉴메뉴</li>
+        <nav className={`sliding-navbar ${isOpen ? 'sliding-navbar--open':''}`}>
+          <div className="navbar-user-menu">
+            {user ? (
+              <div className="user-menu-logged-in">
+                {/* <span className="nav-link">환영합니다! {user.name}님</span> */}
+                <button onClick={handleLogout} className="nav-link">로그아웃</button>
+                <button onClick={() => navigate('/mypage')} className="nav-link">마이페이지</button>
+              </div>
+            ) : (
+              <div className="user-menu-logged-out">
+                <Link className="nav-link" to="/login">로그인</Link>
+                <Link className="nav-link" to="/register">회원가입</Link>
+              </div>
+            )}
+          </div>
+          <ul className="navbar--items">
+            <li className="navbar--item">
+              <Link className="nav-link" to="/posts">커뮤니티</Link>
+            </li>
+            <li className="navbar--item">
+              <Link className="nav-link" to="/products">쇼핑</Link>
+            </li>
+            <li className="navbar--item">
+              <Link className="nav-link" to="/qna">고객센터</Link>
+            </li>
           </ul>
-        </Navbar>
+        </nav>
         <div className={`mask ${isOpen ? 'show':''}`} onClick={closeMenu}></div>
       </div>
     </nav>
