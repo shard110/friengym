@@ -20,6 +20,7 @@ public class UserResponse {
     private String birth;
     private Date firstday;
     private Integer restday;
+    private String introduction; // 소개 필드 추가
 
     // 생성자: User 엔터티를 받아서 필요한 필드를 초기화
     public UserResponse(User user) {
@@ -33,6 +34,7 @@ public class UserResponse {
         this.birth = user.getBirth() != null ? user.getBirth().toString() : null;
         this.firstday = user.getFirstday();
         this.restday = user.getRestday();
+        this.introduction = user.getIntroduction();  // 소개 정보 추가
     }
     
 }

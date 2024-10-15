@@ -12,11 +12,22 @@ const Gallery = () => {
   const [error, setError] = useState(null); // 에러 상태
   const [isReportOpen, setReportOpen] = useState(false); // 신고 팝업 상태
   const [selectedPost, setSelectedPost] = useState(null); // 선택된 게시글
-  const { user } = useAuth(); // 인증된 사용자 정보 가져오기
+  const { user } = useAuth(); // 현재 로그인한 유저 정보
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
   const [likedPosts, setLikedPosts] = useState({}); // 좋아요 상태를 관리하는 상태
+  
 
+  // 유저가 로드된 후에만 좋아요 상태를 초기화
   useEffect(() => {
+    if (!user?.id) return; // 유저 정보가 없으면 실행하지 않음
+
+    const likedPostsKey = `likedPosts_${user.id}`;
+    const storedLikedPosts = JSON.parse(localStorage.getItem(likedPostsKey)) || {};
+    setLikedPosts(storedLikedPosts);
+  }, [user?.id]);
+
+   // 게시글 불러오기
+   useEffect(() => {
     fetch("api/posts") // Spring Boot 백엔드의 엔드포인트에 맞게 수정 필요
       .then((response) => response.json())
       .then((data) => {
@@ -93,7 +104,7 @@ const Gallery = () => {
   
   
 
-  const handleLike = (post) => {
+  const handleLike = async (post) => {
     const token = localStorage.getItem("jwtToken");
   
     if (!token) {
@@ -101,52 +112,52 @@ const Gallery = () => {
       return;
     }
   
-    const likedPostsKey = `likedPosts_${user?.id}`; // 유저별로 좋아요 누른 게시글을 관리
+    const likedPostsKey = `likedPosts_${user?.id}`; // 유저별로 좋아요 누른 게시글 관리
     const likedPosts = JSON.parse(localStorage.getItem(likedPostsKey)) || {};
   
-    // 이미 좋아요를 누른 경우 처리 (서버에 요청 보내기 전에 체크)
+    // 이미 좋아요를 누른 경우 처리
     if (likedPosts[post.poNum]) {
-      alert("이미 이 게시글에 좋아요를 눌렀습니다."); // 알림 띄우기
+      alert("이미 이 게시글에 좋아요를 눌렀습니다.");
       return;
     }
   
-    // 좋아요 처리
-    fetch(`/api/posts/${post.poNum}/like`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          return response.text().then((text) => {
-            throw new Error(`Server Error: ${text}`);
-          });
-        }
-        return response.json(); // PostResponse 받음
-      })
-      .then((updatedPost) => {
-        // 게시글 목록을 업데이트
-        setPosts((prevPosts) =>
-          prevPosts.map((p) => (p.poNum === updatedPost.poNum ? updatedPost : p))
-        );
-  
-        // 로컬 스토리지에 유저가 좋아요를 누른 기록을 업데이트
-        const updatedLikedPosts = { ...likedPosts, [post.poNum]: true };
-        localStorage.setItem(likedPostsKey, JSON.stringify(updatedLikedPosts));
-  
-        alert("좋아요를 눌렀습니다.");
-      })
-      .catch((error) => {
-        console.error("좋아요 처리 중 오류:", error);
-        alert("좋아요 처리에 실패했습니다.");
+    try {
+      const response = await fetch(`/api/posts/${post.poNum}/like`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
+  
+      if (!response.ok) {
+        const errorText = await response.text(); // 서버에서 반환된 오류 메시지 추출
+        if (errorText.includes("이미 이 게시글에 좋아요를 눌렀습니다")) {
+          alert("이미 이 게시글에 좋아요를 눌렀습니다.");
+        } else {
+          throw new Error(errorText); // 기타 오류는 그대로 처리
+        }
+        return;
+      }
+  
+      const updatedPost = await response.json(); // 성공 시 업데이트된 게시글 데이터
+      setPosts((prevPosts) =>
+        prevPosts.map((p) => (p.poNum === updatedPost.poNum ? updatedPost : p))
+      );
+  
+      // 로컬 스토리지에 유저의 좋아요 기록 업데이트
+      const updatedLikedPosts = { ...likedPosts, [post.poNum]: true };
+      localStorage.setItem(likedPostsKey, JSON.stringify(updatedLikedPosts));
+  
+      alert("좋아요를 눌렀습니다.");
+    } catch (error) {
+      console.error("좋아요 처리 중 오류:", error);
+      alert("좋아요 처리에 실패했습니다.");
+    }
   };
   
 
-
-  if (loading) return <div>로딩 중...</div>;
+if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
 
   return (
@@ -171,10 +182,20 @@ const Gallery = () => {
                 {post.user ? (
                   <>
                     <img
-                      src={post.user.photo || "default-photo-url"}
+                      src={post.user.photo || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                       alt={post.user.id}
                       className="user-photo"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/users/${post.user.id}`);
+                      }}
                     />
+                    <span
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/users/${post.user.id}`);
+                    }}
+                    ></span>
                     <span>{post.user.id}</span>
                        {/* 신고 버튼 */}
                        <button

@@ -23,6 +23,8 @@ import UpdateAsk from './components/UpdateAsk';
 import ViewAsk from './components/ViewAsk';
 import AskPage from './page/AskPage';
 import Cart from './page/Cart';
+import FollowerList from './page/FollowerList';
+import FollowingList from './page/FollowingList';
 import Gallery from './page/Gallery'; // 게시물 갤러리 컴포넌트 임포트
 import MastersList from './page/MastersList';
 import Mypostpage from './page/Mypostpage';
@@ -35,11 +37,13 @@ import ProductList from './page/ProductList';
 import QnaPage from './page/QnaPage';
 import Recommendations from './page/Recommendations'; // 새로운 추천 페이지 임포트
 import ReviewPage from './page/ReviewPage';
+import UserPostPage from './page/UserPostPage';
 
 //관리자용 import
 import AdminHome from './admin/AdminHome';
 //아이디 찾기
 import FindIdPage from './components/FindIdPage';
+
 
 export default function App() {
   return (
@@ -58,6 +62,7 @@ export default function App() {
             <Route path="/hashtag/:tag" element={<HashtagPosts />} />
             <Route path="/post-search" element={<PostSearch />} />
             <Route path="/notifications" element={<Notifications />} />
+            <Route path="/users/:id" element={<UserPostPage />} />
 
 
             <Route path="/products" element={<ProductHome />} />
@@ -79,7 +84,9 @@ export default function App() {
             <Route path="/mypage" element={<Mypage />} />
             <Route path="/totalmypage" element={<Mypostpage />} />
             <Route path="/edit-profile" element={<EditProfilePage />} />
-      
+            <Route path="/following" element={<FollowingList />} />
+            <Route path="/followers" element={<FollowerList />} />
+
             <Route path="/qna" element={<QnaPage />} />
             <Route path="/asks" element={<AskPage />} />
             <Route path="/asks/view/:anum" element={<ViewAsk />} />

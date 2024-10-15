@@ -26,6 +26,15 @@ public class NotificationService {
         return notificationRepository.findByRecipientOrderByCreatedAtDesc(user);
     }
 
+    // 팔로우 알림 생성
+    public void createFollowNotification(User sender, User recipient) {
+        Notification notification = new Notification();
+        notification.setSender(sender);
+        notification.setRecipient(recipient);
+        notification.setType(Notification.NotificationType.FOLLOW);  // FOLLOW 타입 설정
+        notificationRepository.save(notification);
+    }
+
     // 알림 읽음 처리
     public void markAsRead(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)

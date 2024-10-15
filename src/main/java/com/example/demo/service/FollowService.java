@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.entity.Follow;
 import com.example.demo.entity.User;
@@ -15,6 +16,10 @@ public class FollowService {
     
     @Autowired
     private FollowRepository followRepository;
+
+    @Autowired
+    private NotificationService notificationService;
+
     
     public List<Follow> getFollowers(User user) {
         return followRepository.findByFollowing(user);
@@ -28,12 +33,23 @@ public class FollowService {
         return followRepository.findByFollowerAndFollowing(follower, following);
     }
     
+    @Transactional
     public Follow saveFollow(Follow follow) {
-        return followRepository.save(follow);
+        Follow savedFollow = followRepository.save(follow);
+
+        // 팔로우 성공 시 알림 생성
+        notificationService.createFollowNotification(follow.getFollower(), follow.getFollowing());
+
+        return savedFollow;
     }
     
+    @Transactional
     public void deleteFollow(Follow follow) {
         followRepository.delete(follow);
+    }
+
+    public boolean isFollowingMe(String otherUserId, String currentUserId) {
+        return followRepository.isFollowingMe(otherUserId, currentUserId);
     }
     
     

@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import "./Mypostpage.css";
 
@@ -33,7 +33,9 @@ const Mypostpage = () => {
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
   const fileInput = useRef(null); // 파일 입력 참조
+  const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 훅
 
+  
   // 유저의 게시물, 팔로잉, 팔로워 정보를 가져오는 함수
   const fetchUserPostInfo = useCallback(async () => {
     const token = localStorage.getItem("jwtToken");
@@ -126,7 +128,7 @@ const Mypostpage = () => {
       }
 
       const response = await axios.put(
-        "/api/user/update-profile",
+        "/api/update-postpage",
         { introduction },
         {
           headers: {
@@ -180,8 +182,12 @@ const Mypostpage = () => {
           <h2>{userInfo.name}</h2>
             <div className="stats">
               <span>게시물 {posts.length}</span>
-              <span>팔로워 {followers.length}</span>
-              <span>팔로잉 {following.length}</span>
+              <button onClick={() => navigate("/followers")} className="follower-list-btn">
+              팔로워 {followers.length}
+              </button>
+              <button onClick={() => navigate("/following")} className="following-list-btn">
+              팔로잉 {following.length}
+              </button>
             </div>
           </div>
         </div>
@@ -201,21 +207,47 @@ const Mypostpage = () => {
           ) : (
             <button className="edit-profile-btn" onClick={() => setIsEditing(true)}>프로필 편집</button>
           )}
-          <button className="contact-btn">프로필공유</button>
+          <button className="contact-btn">DM</button>
         </div>
       </div>
 
       <div className="posts-section">
-        <div className="posts-grid">
-          {posts.map((post) => (
-            <div key={post.poNum} className="post-item">
-              <img src={post.fileUrl || "/default-post.jpg"} alt="Post" />
-            </div>
-          ))}
+  {/* 미디어 게시글 */}
+  <h2>Media</h2>
+  <div className="posts-grid">
+    {posts
+      .filter((post) => post.fileUrl)
+      .map((post) => (
+        <div key={post.poNum}
+        className="post-item"
+        onClick={() => navigate(`/posts/${post.poNum}`)}
+        >
+          <img src={post.fileUrl} alt="Post" />
+          <div className="post-info">
+          </div>
         </div>
-      </div>
-    </div>
-  );
-};
+      ))}
+  </div>
 
+  {/* 텍스트 게시글 */}
+  <h2>Text</h2>
+  <div className="posts-grid">
+    {posts
+      .filter((post) => !post.fileUrl)
+      .map((post) => (
+        <div key={post.poNum}
+        className="post-item"
+        onClick={() => navigate(`/posts/${post.poNum}`)}
+        >
+          <div className="post-info">
+            <h4>{post.poContents || "내용 없음"}</h4>
+          </div>
+        </div>
+      ))}
+  </div>
+</div>
+
+</div>
+);
+};
 export default Mypostpage;
