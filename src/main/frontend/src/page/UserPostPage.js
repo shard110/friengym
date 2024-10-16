@@ -8,14 +8,23 @@ const UserPostPage = () => {
   const { id } = useParams(); // URL의 유저 ID 파라미터
   const { user, loading: authLoading } = useAuth(); // 현재 로그인한 유저 정보
   const [userInfo, setUserInfo] = useState(null); // 조회할 사용자 정보
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]); // 게시물 상태 관리
   const [following, setFollowing] = useState(false); // 팔로잉 상태
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [blocked, setBlocked] = useState(false); // 초기값을 false로 설정
-  const [isFollowingMe, setIsFollowingMe] = useState(false); // 다른 사용자가 나를 팔로우 중인지 여부
+  const [error, setError] = useState(null); // 에러 상태 관리
+  const [blocked, setBlocked] = useState(false); // 차단 상태
+  const [isFollowingMe, setIsFollowingMe] = useState(false); // 맞팔로우 상태 관리
 
   const navigate = useNavigate();
+
+  // DM 버튼 클릭 시 채팅 페이지로 리다이렉트
+  const handleChatRedirect = () => {
+    if (userInfo && userInfo.id) {
+      navigate(`/chat/${user.user.id}/${userInfo.id}`); // DM 페이지로 이동
+    } else {
+      console.error("User information not available for chat redirect.");
+    }
+  };
 
   // 유저의 게시물과 팔로우 상태를 가져오는 함수
   const fetchUserPostInfo = useCallback(async () => {
@@ -52,17 +61,15 @@ const UserPostPage = () => {
     }
   }, [id]);
 
+  // 맞팔로우 상태 확인
   const checkIfFollowingMe = async () => {
     const token = localStorage.getItem("jwtToken");
     try {
-      const response = await axios.get(
-        `/follow/is-following-me/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`/follow/is-following-me/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setIsFollowingMe(response.data); // 서버로부터 맞팔로우 상태 업데이트
     } catch (error) {
       console.error("Error checking if user is following me:", error);
@@ -76,9 +83,7 @@ const UserPostPage = () => {
     }
   }, [authLoading, fetchUserPostInfo]);
 
-  
-
-  // 팔로우/언팔로우 함수
+  // 팔로우/언팔로우 처리
   const handleFollowToggle = async () => {
     const token = localStorage.getItem("jwtToken");
     if (!token) {
@@ -111,58 +116,61 @@ const UserPostPage = () => {
     }
   };
 
-  // 차단하기 기능
-const handleBlockUser = async () => {
-  const token = localStorage.getItem("jwtToken");
+  // 차단하기 처리
+  const handleBlockUser = async () => {
+    const token = localStorage.getItem("jwtToken");
 
-  if (!token) {
-    alert("로그인이 필요합니다.");
-    return;
-  }
-
-  try {
-    const response = await axios.post(`/api/block/${userInfo.id}`, {}, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (response.status === 200) {
-      alert("차단 완료");
-      navigate("/totalmypage"); // 차단 후 내 페이지로 이동
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      return;
     }
-  } catch (error) {
-    console.error("차단 처리 중 오류:", error);
-    alert("차단 처리에 실패했습니다.");
-  }
-};
 
-//차단해제
-const handleUnblockUser = async () => {
-  const token = localStorage.getItem("jwtToken");
+    try {
+      const response = await axios.post(
+        `/api/block/${userInfo.id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-  if (!token) {
-    alert("로그인이 필요합니다.");
-    return;
-  }
-
-  try {
-    const response = await axios.delete(`/api/block/${userInfo.id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (response.status === 200) {
-      alert("차단 해제 완료");
-      setBlocked(false); // 차단 상태 업데이트
+      if (response.status === 200) {
+        alert("차단 완료");
+        navigate("/totalmypage"); // 차단 후 내 페이지로 이동
+      }
+    } catch (error) {
+      console.error("차단 처리 중 오류:", error);
+      alert("차단 처리에 실패했습니다.");
     }
-  } catch (error) {
-    console.error("차단 해제 처리 중 오류:", error);
-    alert("차단 해제에 실패했습니다.");
-  }
-};
+  };
 
+  // 차단 해제 처리
+  const handleUnblockUser = async () => {
+    const token = localStorage.getItem("jwtToken");
+
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
+    try {
+      const response = await axios.delete(`/api/block/${userInfo.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        alert("차단 해제 완료");
+        setBlocked(false); // 차단 상태 업데이트
+      }
+    } catch (error) {
+      console.error("차단 해제 처리 중 오류:", error);
+      alert("차단 해제에 실패했습니다.");
+    }
+  };
 
   if (loading || authLoading) {
     return <div>Loading...</div>;
@@ -199,15 +207,22 @@ const handleUnblockUser = async () => {
                 {following ? "언팔로우" : isFollowingMe ? "맞팔로우" : "팔로우"}
               </button>
 
-
-              {/* 차단하기 버튼 */}
               {blocked ? (
-                <button onClick={handleUnblockUser} className="unblock-btn">차단 해제</button>
+                <button onClick={handleUnblockUser} className="unblock-btn">
+                  차단 해제
+                </button>
               ) : (
-                <button onClick={handleBlockUser} className="block-btn">차단하기</button>
+                <button onClick={handleBlockUser} className="block-btn">
+                  차단하기
+                </button>
               )}
 
-                <button className="DM-btn"> DM </button>
+              <button
+                className="DM-btn"
+                onClick={handleChatRedirect} // 클릭 시 채팅 페이지로 이동
+              >
+                DM
+              </button>
             </>
           )}
         </div>
@@ -221,7 +236,9 @@ const handleUnblockUser = async () => {
               {post.fileUrl ? (
                 <img src={post.fileUrl} alt="Post" />
               ) : (
-                <div className="post-text">{post.poContents || "내용 없음"}</div>
+                <div className="post-text">
+                  {post.poContents || "내용 없음"}
+                </div>
               )}
             </div>
           ))}

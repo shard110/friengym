@@ -56,7 +56,7 @@ public class MessagingController {
                 saveMsg.getSenderId(),
                 saveMsg.getRecipientId(),
                 saveMsg.getContent());
-
+        // WebSocket을 통해 수신자에게 메시지 전송
         messagingTemplate.convertAndSendToUser(
                 chatMessage.getRecipientId(),
                 "/queue/messages",

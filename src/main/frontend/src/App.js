@@ -39,6 +39,9 @@ import Recommendations from './page/Recommendations'; // 새로운 추천 페이
 import ReviewPage from './page/ReviewPage';
 import UserPostPage from './page/UserPostPage';
 
+//ChatPage추가
+import ChatPage from "./page/ChatPage"; 
+
 //관리자용 import
 import AdminHome from './admin/AdminHome';
 //아이디 찾기
@@ -99,6 +102,8 @@ export default function App() {
 
           {/*아이디 찾기 */}
           <Route path="/find-id" element={<FindIdPage />} />
+          {/*ChatPage 추가 */}
+          <Route path="/chat/:senderId/:recipientId" element={<ChatPage />} /> {/* 새로 추가된 라우트 */}
           </Routes>
         </div>
       </Router>
