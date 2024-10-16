@@ -1,9 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import './ViewAsk.css'; // CSS 파일 import
 
 const ViewAsk = () => {
-  const { anum } = useParams(); // 경로 매개변수 가져오기
+  const { anum } = useParams();
   const [ask, setAsk] = useState(null);
   const navigate = useNavigate();
 
@@ -57,37 +58,60 @@ const ViewAsk = () => {
     }
   };
 
+  const handleBackToList = () => {
+    navigate("/asks"); // 게시글 목록 페이지로 이동
+  };
+
   const formatDate = (timestamp) => {
     return new Date(timestamp).toLocaleString();
   };
 
   return (
-    <div>
+    <div className="view-ask-container">
       <h1>문의글 조회</h1>
       {ask ? (
-        <div>
-          <h3>{ask.atitle}</h3>
-          <p>내용: {ask.acontents}</p>
-          <p>작성자: {ask.user ? ask.user.id : "Unknown"}</p>
-          <p>작성일: {formatDate(ask.aDate)}</p>
-          {ask.afile && (
-            <div>
-              <p>첨부파일 경로: {ask.afile}</p>
-              <p>첨부파일: <a href={`http://localhost:8080${ask.afile}`} target="_blank" rel="noopener noreferrer">파일 보기</a></p>
-            </div>
-          )}
-          {ask.reply && (
-            <div>
-              <h4>답변 내용</h4>
-              <p>{ask.reply}</p>
-            </div>
-          )}
-          <button onClick={handleUpdate}>수정하기</button>
-          <button onClick={handleDelete}>삭제하기</button>
-        </div>
+        <table className="view-ask-table">
+          <tbody>
+            <tr>
+              <th colSpan="2" className="view-ask-title">게시글 제목</th>
+              <td colSpan="2" className="view-ask-title-content">{ask.atitle}</td>
+            </tr>
+            <tr>
+              <th>작성자</th>
+              <td>{ask.user ? ask.user.id : "Unknown"}</td>
+              <th>작성일</th>
+              <td>{formatDate(ask.aDate)}</td>
+            </tr>
+            <tr>
+              <th colSpan="4">내용</th>
+            </tr>
+            <tr>
+              <td colSpan="4" className="view-ask-content">{ask.acontents}</td>
+            </tr>
+            {ask.afile && (
+              <tr>
+                <th>첨부파일</th>
+                <td colSpan="3">
+                  <a href={`http://localhost:8080${ask.afile}`} target="_blank" rel="noopener noreferrer">파일 보기</a>
+                </td>
+              </tr>
+            )}
+            {ask.reply && (
+              <tr>
+                <th>답변 내용</th>
+                <td colSpan="3">{ask.reply}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       ) : (
         <p>문의글을 불러오는 중입니다...</p>
       )}
+      <div className="view-ask-buttons">
+        <button onClick={handleBackToList}>목록으로 돌아가기</button>
+        <button onClick={handleUpdate}>수정하기</button>
+        <button onClick={handleDelete}>삭제하기</button>
+      </div>
     </div>
   );
 };
