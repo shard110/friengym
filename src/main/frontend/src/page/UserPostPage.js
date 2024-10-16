@@ -20,11 +20,12 @@ const UserPostPage = () => {
   // DM 버튼 클릭 시 채팅 페이지로 리다이렉트
   const handleChatRedirect = () => {
     if (userInfo && userInfo.id) {
+      console.log("Navigating to chat with:", user.user.id, userInfo.id);
       navigate(`/chat/${user.user.id}/${userInfo.id}`); // DM 페이지로 이동
-    } else {
+  } else {
       console.error("User information not available for chat redirect.");
-    }
-  };
+  }
+};
 
   // 유저의 게시물과 팔로우 상태를 가져오는 함수
   const fetchUserPostInfo = useCallback(async () => {

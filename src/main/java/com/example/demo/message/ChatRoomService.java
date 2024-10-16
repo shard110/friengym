@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.entity.User;
+import com.example.demo.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -15,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class ChatRoomService {
 
 	private final ChatRoomRepository chatRoomRepository;
+	 private final UserRepository userRepository; // 사용자 정보를 가져오기 위한 리포지토리 추가
 
 	// 채팅방 ID 가져오기
 	public Optional<String> getChatRoomId(
@@ -62,5 +66,12 @@ public class ChatRoomService {
 					.map(chatRoom -> chatRoom.getSenderId().equals(userId) ? chatRoom.getRecipientId() : chatRoom.getSenderId())
 					.distinct() // 중복 사용자 제거
 					.collect(Collectors.toList());
+		}
+
+	    // 대화 중인 사용자 ID 목록을 받아 이름 목록을 반환하는 메서드
+		public List<String> getUserNamesInChat(String userId) {
+			List<String> userIdsInChat = getUsersInChat(userId); // 대화 중인 사용자 ID 목록 가져오기
+			List<User> users = userRepository.findAllById(userIdsInChat); // 사용자 ID로 사용자 목록 가져오기
+			return users.stream().map(User::getName).collect(Collectors.toList()); // 이름 목록으로 변환
 		}
 }

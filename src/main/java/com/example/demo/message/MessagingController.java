@@ -61,7 +61,7 @@ public class MessagingController {
                 chatMessage.getRecipientId(),
                 "/queue/messages",
                 notification);
-    }
+    } 
 
     // 특정 송신자와 수신자의 메시지 조회
     @GetMapping("/messages/{senderId}/{recipientId}")
@@ -77,4 +77,9 @@ public class MessagingController {
         List<String> usersInChat = chatRoomService.getUsersInChat(userId);
         return ResponseEntity.ok(usersInChat); // JSON 응답으로 반환
     }
+    @GetMapping("/in-chat-names")
+public ResponseEntity<List<String>> getUserNamesInChat(@RequestParam String userId) {
+    List<String> userNamesInChat = chatRoomService.getUserNamesInChat(userId);
+    return ResponseEntity.ok(userNamesInChat); // JSON 응답으로 반환
+}
 }
