@@ -1,11 +1,12 @@
+/* 기본 스타일 */
 #create-ask {
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
-    border: 1px solid #e0e0e0; /* 경계 색상을 부드럽게 */
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
-    background-color: #ffffff; /* 배경색을 하얀색으로 */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* 그림자를 좀 더 강조 */
+    background-color: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 #create-ask h1 {
@@ -13,26 +14,26 @@
     color: #333333;
     font-size: 24px;
     font-weight: bold;
-    margin-top: 5%;  
+    margin-top: 5%;
 }
 
 #create-ask input[type="text"],
 #create-ask textarea,
 #create-ask input[type="file"] {
     width: 90%;
-    padding: 12px; /* 패딩을 늘려서 클릭하기 쉽게 */
+    padding: 12px;
     margin: 10px 0;
     margin-left: 3%;
-    border: 1px solid #03c7a6; /* 경계 색상 조정 */
+    border: 1px solid #03c7a6;
     border-radius: 2px;
     font-size: 16px;
-    transition: border-color 0.3s; /* 경계 색상 변화 부드럽게 */
+    transition: border-color 0.3s;
 }
 
 #create-ask input[type="text"]:focus,
 #create-ask textarea:focus {
-    border-color: #03c7a6; /* 포커스 시 경계 색상 변경 */
-    outline: none; /* 기본 아웃라인 제거 */
+    border-color: #03c7a6;
+    outline: none;
 }
 
 #create-ask textarea {
@@ -41,13 +42,13 @@
 }
 
 #create-ask .button-container {
-    display: flex; /* 버튼을 나란히 배치 */
-    justify-content: center; /* 버튼을 가운데 정렬 */
+    display: flex;
+    justify-content: center;
     margin-top: 25px;
 }
 
 #create-ask button {
-    padding: 12px; /* 패딩을 늘려서 클릭하기 쉽게 */
+    padding: 12px;
     background-color: #03c7a6;
     color: white;
     font-weight: bold;
@@ -55,16 +56,15 @@
     border-radius: 20px;
     font-size: 18px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s; /* 버튼 호버 효과 부드럽게 */
-    margin: 0 5px; /* 버튼 간의 간격 추가 */
-    min-width: 150px; /* 버튼의 최소 너비 설정 */
+    transition: background-color 0.3s, transform 0.2s;
+    margin: 0 5px;
+    min-width: 150px;
 }
 
 #create-ask button:hover {
     background-color: #03c7a6; 
-    transform: translateY(-2px); /* 버튼 호버 시 살짝 위로 올라가게 */
+    transform: translateY(-2px);
 }
-
 
 #create-ask input[type="file"] {
     border: none; 
@@ -77,5 +77,56 @@
 }
 
 #create-ask input[type="file"] {
-    margin: 10px 0; /* 파일 입력 필드에 마진 추가 */
+    margin: 10px 0;
+}
+
+/* 미디어 쿼리 */
+@media (max-width: 375px) {
+    #create-ask h1 {
+        font-size: 20px;
+    }
+    #create-ask input[type="text"],
+    #create-ask textarea {
+        font-size: 14px;
+    }
+    #create-ask button {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 425px) {
+    #create-ask h1 {
+        font-size: 22px;
+    }
+    #create-ask input[type="text"],
+    #create-ask textarea {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 770px) {
+    #create-ask {
+        padding: 15px;
+    }
+    #create-ask h1 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 1024px) {
+    #create-ask {
+        max-width: 90%;
+    }
+    #create-ask button {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 1200px) {
+    #create-ask {
+        max-width: 80%;
+    }
+    #create-ask button {
+        font-size: 18px;
+    }
 }
