@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
+import './UpdateAsk.css'; // CSS 파일 import
 
 const UpdateAsk = () => {
   const { anum } = useParams();
@@ -15,7 +15,6 @@ const UpdateAsk = () => {
   const navigate = useNavigate();
 
   // 기존 데이터를 불러오기
-
   useEffect(() => {
     const fetchAsk = async () => {
       try {
@@ -44,10 +43,10 @@ const UpdateAsk = () => {
 
     try {
       const token = localStorage.getItem('jwtToken');
-      await axios.put(`/api/asks/${anum}`,formData, {
+      await axios.put(`/api/asks/${anum}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-           "Content-Type": "multipart/form-data"
+          "Content-Type": "multipart/form-data"
         }
       });
       alert("문의글이 성공적으로 수정되었습니다.");
@@ -67,21 +66,21 @@ const UpdateAsk = () => {
   };
 
   return (
-    <div>
-    <h1>문의글 수정</h1>
-    <input
-      type="text"
-      name="aTitle"
-      value={ask.aTitle}
-      onChange={handleChange}
-      placeholder="제목"
-    />
-    <textarea
-      name="aContents"
-      value={ask.aContents}
-      onChange={handleChange}
-      placeholder="내용"
-    />
+    <div className="update-ask-container">
+      <h1>문의글 수정</h1>
+      <input
+        type="text"
+        name="aTitle"
+        value={ask.aTitle}
+        onChange={handleChange}
+        placeholder="제목"
+      />
+      <textarea
+        name="aContents"
+        value={ask.aContents}
+        onChange={handleChange}
+        placeholder="내용"
+      />
       {ask.afile && (
         <div>
           <p>현재 파일: <a href={ask.afile} target="_blank" rel="noopener noreferrer">파일 보기</a></p>
@@ -92,8 +91,8 @@ const UpdateAsk = () => {
         name="afile"
         onChange={handleFileChange}  // 파일 변경 처리
       />
-    <button onClick={handleUpdate}>수정 완료</button>
-  </div>
+      <button onClick={handleUpdate}>수정 완료</button>
+    </div>
   );
 };
 
