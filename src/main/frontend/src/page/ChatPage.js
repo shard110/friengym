@@ -20,21 +20,26 @@ const ChatPage = () => {
     console.log("메시지 리스트 업데이트:", messages);
   }, [messages]);
 
+  // WebSocket 연결
   useEffect(() => {
-    if (connected) {
-      console.log("WebSocket 이미 연결됨");
-      return;
+    if (!user || connected) {
+      console.log("WebSocket 연결이 이미 되어 있거나 user 상태가 없음");
+      return; // user가 없거나 WebSocket이 이미 연결되어 있으면 return
     }
+
+    console.log("WebSocket 연결 시도");
 
     const socket = new SockJS("http://localhost:8080/ws");
     const client = Stomp.over(socket);
 
     client.connect(
-      { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      { Authorization: `Bearer ${localStorage.getItem("token")}` }, // 토큰 헤더 설정
       (frame) => {
         console.log("WebSocket 연결 성공", frame);
         setConnected(true); // 연결 상태 업데이트
+        setStompClient(client); // STOMP 클라이언트를 상태에 저장
 
+        // 구독 확인: 이미 구독한 상태라면 다시 구독하지 않음
         client.subscribe(
           `/user/${user.user.id}/queue/messages`,
           (messageOutput) => {
@@ -59,8 +64,6 @@ const ChatPage = () => {
       }
     );
 
-    setStompClient(client);
-
     return () => {
       if (client && connected) {
         client.disconnect(() => {
@@ -69,8 +72,9 @@ const ChatPage = () => {
         });
       }
     };
-  }, [connected, senderId, recipientId, user.user.id]);
+  }, [connected, user, senderId, recipientId]); // user와 연결 상태가 변경될 때만 실행
 
+  // 메시지 전송 함수
   const sendMessage = () => {
     if (stompClient && connected && message) {
       // 메시지 전송
@@ -96,6 +100,7 @@ const ChatPage = () => {
     }
   };
 
+  // 연결 해제 및 페이지 이동
   const disconnectAndGoBack = () => {
     if (stompClient && connected) {
       stompClient.disconnect(() => {

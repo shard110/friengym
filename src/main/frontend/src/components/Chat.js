@@ -114,8 +114,17 @@ function Chat() {
     // 메시지를 수신할 때 호출되는 함수입니다.
     const onMessageReceived = (payload) => {
         const message = JSON.parse(payload.body);
-        setMessages((prevMessages) => [...prevMessages, message]);
-
+    
+        // 메시지 상태 업데이트 전에 중복된 메시지가 아닌지 확인
+        setMessages((prevMessages) => {
+            // 중복된 메시지가 있는지 확인
+            if (!prevMessages.some((msg) => msg.timestamp === message.timestamp)) {
+                return [...prevMessages, message];
+            }
+            return prevMessages;  // 중복된 메시지라면 상태를 변경하지 않음
+        });
+    
+        // 수신한 메시지가 발신자가 아니면 알림 처리
         if (message.senderId !== user.user.id) {
             setNotifications((prev) => ({
                 ...prev,
