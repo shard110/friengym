@@ -20,8 +20,6 @@ import PostDetail from './components/PostDetail';
 import PostsList from './components/PostsList';
 import ProductHome from './components/ProductHome';
 import RegisterPage from './components/RegisterPage';
-import UpdateAsk from './components/UpdateAsk';
-import ViewAsk from './components/ViewAsk';
 import Chat from './components/Chat'; //Chat 컴포넌트 임포트
 import AskPage from './page/AskPage';
 import Board from './page/Board';
@@ -43,6 +41,8 @@ import FindIdPage from './components/FindIdPage';
 
 //고객
 import CreateAsk from './components/CreateAsk'; // 경로에 맞게 수정
+import UpdateAsk from './components/UpdateAsk';
+import ViewAsk from './components/ViewAsk';
 
 export default function App() {
   return (
@@ -77,13 +77,13 @@ export default function App() {
             <Route path="/post/:poNum/comments/create" element={<CommentCreate />} />
             <Route path="/post/:poNum/comments/:commentNo/edit" element={<CommentEdit />} />
             <Route path="/qna" element={<QnaPage />} />
-            <Route path="/asks" element={<AskPage />} />
-            <Route path="/asks/view/:anum" element={<ViewAsk />} />
             <Route path="/asks/update/:anum" element={<UpdateAsk />} />
             <Route path="/reviews" element={<ReviewPage />} />
             <Route path="/customer" element={<Customer />} />
 
             <Route path="/createa" element={<CreateAsk onAskCreated={() => {/* Refresh Logic */}} />} />
+            <Route path="/asks" element={<AskPage />} />
+            <Route path="/asks/view/:anum" element={<ViewAsk />} /> 
 
             {/* 관리자용 */}
             <Route path="/adminHome/*" element={<AdminHome />} />

@@ -1,10 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // useNavigate 추가
-import CreateAsk from '../components/CreateAsk';
-import DeleteAsk from '../components/DeleteAsk';
-import UpdateAsk from '../components/UpdateAsk';
-import ViewAsk from '../components/ViewAsk';
+import { useNavigate } from "react-router-dom";
+import './AskPage.css'; // CSS 파일 import
 
 const AskPage = () => {
   const [asks, setAsks] = useState([]);
@@ -12,11 +9,10 @@ const AskPage = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize] = useState(10);
   const [selectedAsk, setSelectedAsk] = useState(null);
-  const [mode, setMode] = useState("view");
   const [password, setPassword] = useState("");
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
   
-  const navigate = useNavigate(); // useNavigate 훅 추가
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchAsks(page);
@@ -40,10 +36,9 @@ const AskPage = () => {
     }
   };
 
-  const handleSelectAsk = async (ask) => {
+  const handleSelectAsk = (ask) => {
     setSelectedAsk(ask);
-    setIsPasswordVerified(false);
-    setMode("view");
+    setIsPasswordVerified(false); // 비밀번호 확인 상태 초기화
   };
 
   const handleVerifyPassword = async () => {
@@ -64,13 +59,12 @@ const AskPage = () => {
 
       if (response.status === 200) {
         setIsPasswordVerified(true);
+        navigate(`/asks/view/${selectedAsk.anum}`); // 비밀번호 확인 후 ViewAsk 페이지로 이동
       } else {
         alert("비밀번호가 일치하지 않습니다.");
       }
     } catch (error) {
-      if (error.response) {
-        alert("비밀번호가 일치하지 않습니다.");
-      }
+      alert("비밀번호가 일치하지 않습니다.");
     }
   };
 
@@ -84,7 +78,7 @@ const AskPage = () => {
         <button
           key={i}
           onClick={() => setPage(i)}
-          style={{ margin: "0 5px", backgroundColor: page === i ? "#007bff" : "#ffffff" }}
+          className={`page-button ${page === i ? "active" : ""}`}
         >
           {i}
         </button>
@@ -106,69 +100,69 @@ const AskPage = () => {
   };
 
   return (
-    <div>
-      {mode !== "create" && <h1>문의글 목록</h1>}
+    <div className="ask-page">
+      <h1>문의글 목록</h1>
 
-      {mode === "create" ? (
-        <CreateAsk onAskCreated={() => fetchAsks(page)} />
-      ) : (
-        <>
-          {mode === "update" && selectedAsk && isPasswordVerified && (
-            <UpdateAsk anum={selectedAsk.anum} onAskUpdated={() => fetchAsks(page)} />
+      <table>
+        <thead>
+          <tr>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+          </tr>
+        </thead>
+        <tbody>
+          {asks && asks.length > 0 ? (
+            asks.map((ask) => (
+              <tr key={ask.anum} onClick={() => handleSelectAsk(ask)}>
+                <td>{ask.atitle}</td>
+                <td>{ask.user ? ask.user.id : "Unknown"}</td>
+                <td>{formatDate(ask.aDate)}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="3">문의글이 없습니다.</td>
+            </tr>
           )}
-          {mode === "delete" && selectedAsk && isPasswordVerified && (
-            <DeleteAsk anum={selectedAsk.anum} onAskDeleted={() => fetchAsks(page)} />
-          )}
-          {mode === "view" && selectedAsk && isPasswordVerified && <ViewAsk anum={selectedAsk.anum} />}
+        </tbody>
+      </table>
 
-          <ul>
-            {asks && asks.length > 0 ? (
-              asks.map((ask) => (
-                <li key={ask.anum} onClick={() => handleSelectAsk(ask)} style={{ cursor: "pointer" }}>
-                  <h3>{ask.atitle}</h3>
-                  작성자: {ask.user ? ask.user.id : "Unknown"}
-                  작성일: {formatDate(ask.aDate)}
-                </li>
-              ))
-            ) : (
-              <p>문의글이 없습니다.</p>
-            )}
-          </ul>
-
-          {selectedAsk && (
-            <div>
-              <h2>비밀번호를 입력하세요</h2>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <button onClick={handleVerifyPassword}>비밀번호 확인</button>
-            </div>
-          )}
-
-          <div>
-            <button onClick={handleFirstPage} disabled={page === 1}>
-              {"<<"} 첫 페이지
-            </button>
-            <button onClick={() => setPage(Math.max(page - 1, 1))} disabled={page === 1}>
-              이전
-            </button>
-            {renderPageButtons()}
-            <button onClick={() => setPage(Math.min(page + 1, totalPages))} disabled={page === totalPages}>
-              다음
-            </button>
-            <button onClick={handleLastPage} disabled={page === totalPages}>
-              마지막 페이지 {">>"}
-            </button>
+      {selectedAsk && !isPasswordVerified && (
+        <div className="password-section">
+          <h2>비밀번호를 입력하세요</h2>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <div className="passbutton">
+            <button onClick={handleVerifyPassword}>비밀번호 확인</button>
           </div>
-        </>
+        </div>
       )}
 
-      {/* 문의글 작성하기 버튼 추가, AskPage에서만 보이도록 설정 */}
-      {mode !== "create" && (
-        <button onClick={() => navigate('/createa')}>문의글 작성하기</button> // 수정된 부분
-      )}
+      <div className="pagination">
+        <button className="pagination-button" onClick={handleFirstPage} disabled={page === 1}>
+          {"<<"} 첫 페이지
+        </button>
+        <button className="pagination-button" onClick={() => setPage(Math.max(page - 1, 1))} disabled={page === 1}>
+          이전
+        </button>
+        {renderPageButtons()}
+        <button className="pagination-button" onClick={() => setPage(Math.min(page + 1, totalPages))} disabled={page === totalPages}>
+          다음
+        </button>
+        <button className="pagination-button" onClick={handleLastPage} disabled={page === totalPages}>
+          마지막 페이지 {">>"}
+        </button>
+      </div>
+
+      <div className="create-button-container">
+        <button className="create-button" onClick={() => navigate('/createa')}>
+          문의글 작성하기
+        </button>
+      </div>
     </div>
   );
 };
