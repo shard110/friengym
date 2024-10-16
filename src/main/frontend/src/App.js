@@ -41,6 +41,9 @@ import AdminHome from './admin/AdminHome';
 //아이디 찾기
 import FindIdPage from './components/FindIdPage'; 
 
+//고객
+import CreateAsk from './components/CreateAsk'; // 경로에 맞게 수정
+
 export default function App() {
   return (
     <AuthProvider>
@@ -79,6 +82,8 @@ export default function App() {
             <Route path="/asks/update/:anum" element={<UpdateAsk />} />
             <Route path="/reviews" element={<ReviewPage />} />
             <Route path="/customer" element={<Customer />} />
+
+            <Route path="/createa" element={<CreateAsk onAskCreated={() => {/* Refresh Logic */}} />} />
 
             {/* 관리자용 */}
             <Route path="/adminHome/*" element={<AdminHome />} />
