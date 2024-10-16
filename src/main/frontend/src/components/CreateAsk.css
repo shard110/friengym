@@ -19,7 +19,8 @@
 
 #create-ask input[type="text"],
 #create-ask textarea,
-#create-ask input[type="file"] {
+#create-ask input[type="file"],
+#create-ask input[type="password"] { /* 비밀번호 필드 추가 */
     width: 90%;
     padding: 12px;
     margin: 10px 0;
@@ -31,7 +32,8 @@
 }
 
 #create-ask input[type="text"]:focus,
-#create-ask textarea:focus {
+#create-ask textarea:focus,
+#create-ask input[type="password"]:focus { /* 비밀번호 포커스 스타일 추가 */
     border-color: #03c7a6;
     outline: none;
 }
@@ -80,14 +82,19 @@
     margin: 10px 0;
 }
 
+/* 비밀번호 입력 필드에 대한 스타일 추가 */
+#create-ask input[type="password"] {
+}
+
 /* 미디어 쿼리 */
 @media (max-width: 375px) {
     #create-ask h1 {
         font-size: 20px;
     }
     #create-ask input[type="text"],
-    #create-ask textarea {
-        font-size: 14px;
+    #create-ask textarea,
+    #create-ask input[type="password"] {
+        font-size: 14px; /* 비밀번호 필드의 폰트 크기 */
     }
     #create-ask button {
         font-size: 16px;
@@ -99,8 +106,9 @@
         font-size: 22px;
     }
     #create-ask input[type="text"],
-    #create-ask textarea {
-        font-size: 15px;
+    #create-ask textarea,
+    #create-ask input[type="password"] {
+        font-size: 15px; /* 비밀번호 필드의 폰트 크기 */
     }
 }
 
