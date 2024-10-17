@@ -23,9 +23,9 @@ const AskList = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setAsks(response.data);
-      } catch (error) {
-        console.error('Error fetching asks:', error);
-        setError('문의글을 불러오는 데 실패했습니다.');
+      } catch (err) {
+        console.error('Error fetching asks:', err);
+        setError('문의글을 불러오는 데 실패했습니다. 다시 시도해 주세요.');
       } finally {
         setLoading(false);
       }
@@ -36,6 +36,15 @@ const AskList = () => {
 
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
+  if (!Array.isArray(asks)) return <div>문제 발생: 데이터가 올바른 형식이 아닙니다.</div>;
+
+  const renderReplyStatus = (reply) => {
+    return reply && reply.trim() !== "" ? (
+      <span style={{ color: 'green' }}>답변 완료</span>
+    ) : (
+      <span style={{ color: 'red' }}>답변 미완료</span>
+    );
+  };
 
   return (
     <div className="container">
@@ -46,7 +55,7 @@ const AskList = () => {
             <th>제목</th>
             <th>작성자</th>
             <th>작성일</th>
-            <th>상태</th> {/* 상태 열 추가 */}
+            <th>상태</th>
           </tr>
         </thead>
         <tbody>
@@ -62,15 +71,9 @@ const AskList = () => {
                     {ask.atitle || '제목 없음'}
                   </Link>
                 </td>
-                <td>{ask.user ? ask.user.id : 'Unknown'}</td>
+                <td>{ask.userId || 'Unknown'}</td>
                 <td>{new Date(ask.aDate).toLocaleString()}</td>
-                <td>
-                  {ask.reply ? (
-                    <span style={{ color: 'green' }}>답변 완료</span> // 답변이 있을 경우
-                  ) : (
-                    <span style={{ color: 'red' }}>답변 미완료</span> // 답변이 없을 경우
-                  )}
-                </td>
+                <td>{renderReplyStatus(ask.reply)}</td>
               </tr>
             ))
           )}

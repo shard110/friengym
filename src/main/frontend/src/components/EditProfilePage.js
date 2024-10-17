@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './EditProfilePage.module.css'; // CSS 모듈 임포트
+import styles from './EditProfilePage.module.css';
 import { useAuth } from './AuthContext';
 
 const EditProfilePage = () => {
@@ -13,9 +13,7 @@ const EditProfilePage = () => {
         height: '',
         weight: '',
         birth: '',
-        firstday: '',
-        restday: '',
-        email: '' // 이메일 추가
+        email: ''
     });
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -26,21 +24,9 @@ const EditProfilePage = () => {
                 const token = user?.token || localStorage.getItem('jwtToken');
                 if (token) {
                     const response = await axios.get('/api/mypage', {
-                        headers: { 
-                            Authorization: `Bearer ${token}`
-                        }
+                        headers: { Authorization: `Bearer ${token}` }
                     });
-                    setFormData({
-                        name: response.data.name || '',
-                        phone: response.data.phone || '',
-                        sex: response.data.sex || '',
-                        height: response.data.height || '',
-                        weight: response.data.weight || '',
-                        birth: response.data.birth || '',
-                        firstday: response.data.firstday || '',
-                        restday: response.data.restday || '',
-                        email: response.data.email || '' // 이메일 설정
-                    });
+                    setFormData(response.data);
                 }
             } catch (error) {
                 setError('Failed to load user information');
@@ -77,88 +63,63 @@ const EditProfilePage = () => {
 
     return (
         <div className={styles.EditProfilePage}>
-            <h2>회원 정보 수정</h2>
-            {error && <p className={styles.error}>{error}</p>} {/* 오류 메시지 스타일 적용 */}
+            <h2 className={styles.EditProfilePage_h2}>회원 정보 수정</h2>
+            {error && <p className={styles.EditProfilePage_error}>{error}</p>}
             <form onSubmit={handleSubmit}>
-                <div className={styles.formGroup}>
-                    <label>
-                        Name:
-                        <input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className={styles.formGroup}>
-                    <label>
-                        Email:
-                        <input
-                            type="text"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className={styles.formGroup}>
-                    <label>
-                        Phone:
-                        <input
-                            type="text"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className={styles.formGroup}>
-                    <label>
-                        Sex:
-                        <input
-                            type="text"
+                {Object.entries({
+                    name: '이름',
+                    email: '이메일',
+                    phone: '전화번호',
+                    birth: '생년월일',
+                }).map(([key, label]) => (
+                    <div className={styles.EditProfilePage_formGroup} key={key}>
+                        <label className={styles.EditProfilePage_label}>
+                            {label}:
+                            <input
+                                className={styles.EditProfilePage_input}
+                                type={key === 'birth' ? 'date' : 'text'}
+                                name={key}
+                                value={formData[key]}
+                                onChange={handleChange}
+                            />
+                        </label>
+                    </div>
+                ))}
+                
+                <div className={styles.EditProfilePage_formGroup}>
+                    <label className={styles.EditProfilePage_label}>
+                        성별:
+                        <select
+                            className={styles.EditProfilePage_input}
                             name="sex"
                             value={formData.sex}
                             onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className={styles.formGroup}>
-                    <label>
-                        Height:
-                        <input
-                            type="number"
-                            name="height"
-                            value={formData.height}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className={styles.formGroup}>
-                    <label>
-                        Weight:
-                        <input
-                            type="number"
-                            name="weight"
-                            value={formData.weight}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className={styles.formGroup}>
-                    <label>
-                        Birth:
-                        <input
-                            type="date"
-                            name="birth"
-                            value={formData.birth}
-                            onChange={handleChange}
-                        />
+                        >
+                            <option value="">선택하세요</option>
+                            <option value="남">남</option>
+                            <option value="여">여</option>
+                        </select>
                     </label>
                 </div>
 
-                <button type="submit">회원정보 수정</button> {/* 버튼 스타일 추가 */}
+                <hr className={styles.Edit_hr} />
+
+                {['height', 'weight'].map((key) => (
+                    <div className={styles.EditProfilePage_formGroup} key={key}>
+                        <label className={styles.EditProfilePage_label}>
+                            {key === 'height' ? '키' : '몸무게'}:
+                            <input
+                                className={styles.EditProfilePage_input}
+                                type="number"
+                                name={key}
+                                value={formData[key]}
+                                onChange={handleChange}
+                            />
+                        </label>
+                    </div>
+                ))}
+
+                <button className={styles.EditProfilePage_button} type="submit">회원정보 수정</button>
             </form>
         </div>
     );

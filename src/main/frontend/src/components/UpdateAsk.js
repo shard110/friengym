@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import './UpdateAsk.css'; // CSS 파일 import
 
 const UpdateAsk = () => {
   const { anum } = useParams();
@@ -9,10 +10,10 @@ const UpdateAsk = () => {
     aContents: "",
     afile: "",
     aDate: "",
-    userId: ""  // DTO에 있는 필드로 수정
+    userId: ""
   });
 
-  const [newFile, setNewFile] = useState(null); // 새로운 파일을 저장할 상태 추가
+  const [newFile, setNewFile] = useState(null);
   const navigate = useNavigate();
 
   // 기존 데이터를 불러오기
@@ -25,7 +26,15 @@ const UpdateAsk = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        setAsk(response.data); // DTO 데이터를 ask 상태에 설정
+
+        // 받은 데이터가 DTO에 맞게 설정
+        setAsk({
+          aTitle: response.data.atitle,
+          aContents: response.data.acontents,
+          afile: response.data.afile,
+          aDate: response.data.adate,
+          userId: response.data.userId
+        });
       } catch (error) {
         console.error("문의글을 불러오는 중 오류 발생:", error);
       }
@@ -40,11 +49,11 @@ const UpdateAsk = () => {
     formData.append("aContents", ask.aContents);
 
     if (newFile) {
-      formData.append("afile", newFile); // 새로운 파일을 선택한 경우
+      formData.append("afile", newFile);
     }
 
     try {
-      const token = localStorage.getItem("jwtToken");
+      const token = localStorage.getItem('jwtToken');
       await axios.put(`/api/asks/${anum}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -66,11 +75,11 @@ const UpdateAsk = () => {
 
   // 파일 변경 처리
   const handleFileChange = (e) => {
-    setNewFile(e.target.files[0]); // 새로운 파일을 상태에 저장
+    setNewFile(e.target.files[0]);
   };
 
   return (
-    <div>
+    <div className="update-ask-container">
       <h1>문의글 수정</h1>
       <input
         type="text"
@@ -102,7 +111,7 @@ const UpdateAsk = () => {
       <input
         type="file"
         name="afile"
-        onChange={handleFileChange} // 파일 변경 처리
+        onChange={handleFileChange}
       />
       <button onClick={handleUpdate}>수정 완료</button>
     </div>

@@ -1,45 +1,48 @@
-.QnAheader {
-  background-color: #f8f9fa;
-  padding: 20px;
-}
-
-.QnAheader-content {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.faq-shortcuts  {
-  margin-top: 20px;
-}
-
-.faq-shortcuts h2 {
-  margin-bottom: 10px;
-}
-
-.contact-info {
-  margin-left: 600px;
-}
-
 .faq-list {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px;
 }
 
 .faq-item {
-  margin-bottom: 15px;
-}
-
-.faq-question h4 {
-  margin: 0;
-  cursor: pointer;
-  color: #007bff;
-}
-
-.faq-answer {
+  border-bottom: 1px solid #ccc;
   padding: 10px 0;
-  border-top: 1px solid #dee2e6;
 }
+
+.faq-question {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faq-toggle {
+  font-size: 18px;
+}
+
+.operating-hours {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+.operating-hours-details p {
+  margin: 5px 0;
+}
+
+.kakao-button {
+  background-color: #f7e03c; /* 카카오톡 색상 */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #000;
+  margin-top: 15px;
+  transition: background-color 0.3s;
+}
+
+.kakao-button:hover {
+  background-color: #f0c800; /* 호버 효과 */
+}
+
