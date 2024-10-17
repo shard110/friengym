@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'; // Link 추가
 import axios from 'axios';
 
 const WarningList = () => {
   const [warnings, setWarnings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [posts, setPosts] = useState({}); // 게시글 제목을 저장할 객체
+  const [posts, setPosts] = useState({});
 
   useEffect(() => {
     const fetchWarnings = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/admin/warnings');
         setWarnings(response.data);
-        
-        // 게시글 제목을 가져오는 추가 API 호출
+
         const postIds = response.data.map(warning => warning.postId);
-        const uniquePostIds = [...new Set(postIds)]; // 중복 제거
+        const uniquePostIds = [...new Set(postIds)];
 
         const postPromises = uniquePostIds.map(id => 
-          axios.get(`http://localhost:8080/api/posts/${id}`) // 게시글 제목을 가져오는 API
+          axios.get(`http://localhost:8080/api/posts/${id}`)
         );
 
         const postResponses = await Promise.all(postPromises);
         const postTitles = postResponses.reduce((acc, postResponse) => {
-          acc[postResponse.data.poNum] = postResponse.data.poContents; // poNum을 키로 사용
+          acc[postResponse.data.poNum] = postResponse.data.poContents;
           return acc;
         }, {});
 
@@ -46,7 +46,7 @@ const WarningList = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Post Title</th> {/* 변경된 부분 */}
+            <th>Post Title</th>
             <th>User ID</th>
             <th>Reason</th>
           </tr>
@@ -55,7 +55,11 @@ const WarningList = () => {
           {warnings.map(warning => (
             <tr key={warning.id}>
               <td>{warning.id}</td>
-              <td>{posts[warning.postId] || 'Unknown Post'}</td> {/* 게시글 제목 표시 */}
+              <td>
+                <Link to={`/posts/${warning.postId}`}>
+                  {posts[warning.postId] || 'Unknown Post'}
+                </Link>
+              </td>
               <td>{warning.userId}</td>
               <td>{warning.reason}</td>
             </tr>
