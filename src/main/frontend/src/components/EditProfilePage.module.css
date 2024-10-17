@@ -18,8 +18,9 @@
 .Edit_hr {
   border: none; /* 기본 테두리 제거 */
   height: 1px; /* 높이 설정 */
-  background-color: #828282; /* 색상 설정 */
-  margin-top: -20px;
+  background-color: #ccc; /* 색상 설정 */
+  margin-top: -30px;
+  margin-bottom: 10px;
   width: 100%; /* 너비 설정 */
 }
 

@@ -13,8 +13,6 @@ const EditProfilePage = () => {
         height: '',
         weight: '',
         birth: '',
-        firstday: '',
-        restday: '',
         email: ''
     });
     const [error, setError] = useState('');
@@ -106,10 +104,10 @@ const EditProfilePage = () => {
 
                 <hr className={styles.Edit_hr} />
 
-                {['height', 'weight', 'firstday', 'restday'].map((key) => (
+                {['height', 'weight'].map((key) => (
                     <div className={styles.EditProfilePage_formGroup} key={key}>
                         <label className={styles.EditProfilePage_label}>
-                            {key === 'height' ? '키' : key === 'weight' ? '몸무게' : key === 'firstday' ? '회원권 득록일' : '회원권 잔여수'}:
+                            {key === 'height' ? '키' : '몸무게'}:
                             <input
                                 className={styles.EditProfilePage_input}
                                 type="number"
