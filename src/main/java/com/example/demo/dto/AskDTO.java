@@ -1,81 +1,44 @@
 package com.example.demo.dto;
 
 import java.sql.Timestamp;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class AskDTO {
-    private int anum;
-    private Timestamp aDate;
-    private String atitle;
-    private String acontents;
-    private String userId; // User ID를 추가
-    private String reply; // 답변 내용을 추가
-    private String afile; // 첨부파일 추가
+  private int anum;
+  private String aTitle;
+  private String aContents;
+  private String afile;
+  private Timestamp aDate;
+  private String userId;  // User의 아이디만 반환
+  private String passwordHash;
+  private String reply;
 
-    // Constructor
-    public AskDTO(int anum, Timestamp aDate, String atitle, String acontents, String userId, String reply, String afile) {
-        this.anum = anum;
-        this.aDate = aDate;
-        this.atitle = atitle;
-        this.acontents = acontents;
-        this.userId = userId; // User ID 할당
-        this.reply = reply; // 답변 내용 할당
-        this.afile = afile; // 첨부파일 할당
-    }
+  // 기본 생성자
+  public AskDTO() {}
 
-    // Getter와 Setter
-    public int getAnum() {
-        return anum;
-    }
+  // 필요한 필드에 대한 생성자
+  public AskDTO(int anum, String aTitle, String aContents, String afile, Timestamp aDate, String userId, String passwordHash, String reply) {
+    this.anum = anum;
+    this.aTitle = aTitle;
+    this.aContents = aContents;
+    this.afile = afile;
+    this.aDate = aDate;
+    this.userId = userId;
+    this.passwordHash = passwordHash;
+    this.reply = reply;
+}
 
-    public void setAnum(int anum) {
-        this.anum = anum;
-    }
+public AskDTO(int anum, Timestamp aDate, String aTitle, String aContents, String userId, String reply, String afile) {
+    this.anum = anum;
+    this.aDate = aDate;
+    this.aTitle = aTitle;
+    this.aContents = aContents;
+    this.userId = userId; // User ID 할당
+    this.reply = reply; // 답변 내용 할당
+    this.afile = afile; // 첨부파일 할당
+}
 
-    public Timestamp getaDate() {
-        return aDate;
-    }
-
-    public void setaDate(Timestamp aDate) {
-        this.aDate = aDate;
-    }
-
-    public String getAtitle() {
-        return atitle;
-    }
-
-    public void setAtitle(String atitle) {
-        this.atitle = atitle;
-    }
-
-    public String getAcontents() {
-        return acontents;
-    }
-
-    public void setAcontents(String acontents) {
-        this.acontents = acontents;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getReply() {
-        return reply;
-    }
-
-    public void setReply(String reply) {
-        this.reply = reply;
-    }
-
-    public String getAfile() { // afile에 대한 Getter 추가
-        return afile;
-    }
-
-    public void setAfile(String afile) { // afile에 대한 Setter 추가
-        this.afile = afile;
-    }
 }

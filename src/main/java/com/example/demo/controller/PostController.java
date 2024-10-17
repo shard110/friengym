@@ -199,13 +199,19 @@ public ResponseEntity<?> searchPosts(
         @RequestParam(required = false) String content,
         @RequestParam(required = false) String hashtag) {
 
-    List<Post> posts = postService.searchPosts(userId, content, hashtag);
-    List<PostResponse> response = posts.stream()
-            .map(post -> new PostResponse(post, commentService.getTopLevelComments(post.getPoNum())))
-            .collect(Collectors.toList());
+    try {
+        List<Post> posts = postService.searchPosts(userId, content, hashtag);
+        List<PostResponse> response = posts.stream()
+                .map(post -> new PostResponse(post, commentService.getTopLevelComments(post.getPoNum())))
+                .collect(Collectors.toList());
 
-    return ResponseEntity.ok(response);
+        return ResponseEntity.ok(response);
+    } catch (Exception e) {
+        e.printStackTrace(); // 로그 출력
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+    }
 }
+
 
     // 인기 검색 키워드 API 추가
     @GetMapping("/popular-search")

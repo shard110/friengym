@@ -36,6 +36,10 @@ public class CommentService {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @Autowired
+    private BlockService blockService;
+
+
     @Transactional
     public Comment addComment(Integer poNum, CommentRequest commentRequest, String userId) {
         Post post = postRepository.findById(poNum)
@@ -117,5 +121,12 @@ public class CommentService {
     private CommentResponse convertToResponse(Comment comment) {
       return new CommentResponse(comment);
   }
+
+  public List<Comment> getCommentsExcludingBlocked(User user) {
+    List<Comment> allComments = commentRepository.findAll();
+    return allComments.stream()
+            .filter(comment -> !blockService.isBlocked(comment.getUser(), user)) // 차단한 사용자의 댓글 제외
+            .collect(Collectors.toList());
+}
 
 }
