@@ -1,106 +1,73 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Link 컴포넌트 임포트
+import React, { useState, useEffect } from 'react';
+import { FaBars, FaSearch } from 'react-icons/fa';
 import './HomePage.css';
-import Footer from './Footer';
+import logo from '../img/logo.png';
 
 // 슬라이드 데이터
-const slidesData = [
-  { id: 1, img: 'http://localhost:8080/images/banner2.jpg', title: '', description: '' },
-  { id: 2, img: 'http://localhost:8080/images/banner3.jpg', title: '', description: '' },
-  { id: 3, img: 'http://localhost:8080/images/banner4.jpg', title: '', description: '' },
+const slides = [
+  { id: 1, content: '슬라이드 1' },
+  { id: 2, content: '슬라이드 2' },
+  { id: 3, content: '슬라이드 3' },
 ];
-
-// 인기 상품 데이터
-const productsData = [
-  { id: 1, name: 'Product 1', price: '$10', img: 'http://localhost:8080/images/p7.jpg', link: '/productslist/1' },
-  { id: 2, name: 'Product 2', price: '$20', img: 'http://localhost:8080/images/banner2.jpg', link :'/productslist/2' },
-  { id: 3, name: 'Product 3', price: '$30', img: 'http://localhost:8080/images/banner2.jpg', link: '/productslist/3' },
-  { id: 4, name: 'Product 4', price: '$30', img: 'http://localhost:8080/images/banner2.jpg', link: '/productslist/4' },
-];
-
-// 인기 게시물 데이터
-const postsData = [
-  { id: 1, name: 'post 1', price: '$10', img: 'http://localhost:8080/images/p7.jpg', link: '/posts/1' },
-  { id: 2, name: 'post 2', price: '$20', img: 'http://localhost:8080/images/p8.jpg', link: '/posts/2' },
-  { id: 3, name: 'post 3', price: '$30', img: 'http://localhost:8080/images/p9.jpg', link: '/posts/3' },
-  { id: 4, name: 'post 4', price: '$30', img: 'http://localhost:8080/images/p4.jpg', link: '/posts/4' },
-];
-
-// 상품 카드 컴포넌트
-const ProductCard = ({ product }) => (
-  <Link to={product.link || '/'} className="product-card">
-    <img src={product.img} alt={product.name} />
-    <h3>{product.name}</h3>
-    <p>{product.price}</p>
-  </Link>
-);
 
 const HomePage = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   const nextSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % slidesData.length);
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide - 1 + slidesData.length) % slidesData.length);
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 3000); // 3초마다 슬라이드 변경
+    return () => clearInterval(interval); // 컴포넌트 언마운트 시 인터벌 정리
+  }, []);
+
   return (
-    <div className="homepage">
-      <div className="homepage-inner">
-        <section className="slide-container">
-          <div className="slides" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
-            {slidesData.map((slide) => (
-              <div className="slide" key={slide.id}>
-                <img src={slide.img} alt={`Slide ${slide.id}`} />
-                <h2>{slide.title}</h2>
-                <p>{slide.description}</p>
-              </div>
-            ))}
-          </div>
-          <button className="slide-button prev-button" onClick={prevSlide}>Previous</button>
-          <button className="slide-button next-button" onClick={nextSlide}>Next</button>
-        </section>
-
-        <div className="product-section2">
-          <div className="product-header">
-            <h2 className="product-title">Best 게시물</h2>
-            <Link to="/posts" className="more-products-link">게시물 더보기</Link>
-          </div>
-          <div className="product-list">
-            {postsData.map((post) => (
-              <ProductCard key={post.id} product={post} />
-            ))}
-          </div>
+    <>
+      <nav className="navbarH">
+        <div className="menu-icon" onClick={toggleMenu}>
+          <FaBars />
         </div>
-
-        <div className="product-section">
-          <div className="product-header">
-            <h2 className="product-title">인기 상품</h2>
-            <Link to="/products" className="more-products-link2">상품 더보기</Link>
-          </div>
-          <div className="product-list">
-            {productsData.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+        <div className="logo">
+          <img src={logo} alt="My Logo" />
         </div>
-
-        <div className="product-section2">
-          <div className="product-header">
-            <h2 className="product-title">새 상품</h2>
-            <Link to="/products" className="more-products-link">상품 더보기</Link>
-          </div>
-          <div className="product-list">
-            {productsData.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+        <div className="search-icon">
+          <FaSearch />
+        </div>
+      </nav>
+      <div className={`homepage-menu ${isMenuOpen ? 'open' : ''}`}>
+        <ul>
+          <li>Home</li>
+          <li>About</li>
+          <li>Services</li>
+          <li>Contact</li>
+        </ul>
+      </div>
+      
+      {/* 슬라이드 부분 */}
+      <div className="slider">
+        <div className="slides" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+          {slides.map(slide => (
+            <div key={slide.id} className="slide">
+              {slide.content}
+            </div>
+          ))}
+        </div>
+        <div className="controls">
+          <button onClick={prevSlide} className="control prev">◀</button>
+          <button onClick={nextSlide} className="control next">▶</button>
         </div>
       </div>
-      <Footer /> {/* Footer 컴포넌트 추가 */}
-    </div>
+    </>
   );
 };
 
