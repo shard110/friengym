@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.example.demo.entity.Comment;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,8 +20,14 @@ public class CommentResponse {
     private String createdDate; // LocalDateTime 대신 String으로 변경
     private String modifiedDate; // LocalDateTime 대신 String으로 변경
     private Integer poNum;
+
+    @JsonProperty("userName")
     private String name; // 작성자 이름
+
+    @JsonProperty("userId")
     private String id; // 댓글 작성자 ID
+
+    @JsonProperty("userPhoto")
     private String photo; // 댓글 작성자의 프로필 사진 추가
     private List<CommentResponse> replies; // 답글들
 

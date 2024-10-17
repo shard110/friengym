@@ -1,0 +1,119 @@
+/* 전체 페이지 레이아웃 */
+.liked-posts-page {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+}
+
+/* 페이지 제목 스타일 */
+.liked-posts-page h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #1da1f2; /* 트위터의 블루 색상 */
+}
+
+/* 게시물 목록을 Flexbox로 정렬 */
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* 개별 게시물 카드 스타일 */
+.post-likedcard {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  background-color: #f5f8fa;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.post-likedcard:hover {
+  background-color: #e8f5fe;
+}
+
+/* 사용자 정보 섹션 */
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.user-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.user-info span {
+  font-weight: bold;
+  color: #14171a;
+}
+
+/* 미디어 파일 스타일 */
+.post-media img,
+.post-media video {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* 게시물 내용 스타일 */
+.post-content {
+  font-size: 16px;
+  color: #14171a;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+/* 해시태그 스타일 */
+.hashtag {
+  color: #1da1f2;
+  cursor: pointer;
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.hashtag:hover {
+  text-decoration: underline;
+}
+
+/* 게시물 하단 액션 (좋아요, 조회수) */
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #657786;
+}
+
+.post-actions span {
+  display: flex;
+  align-items: center;
+}
+
+.post-actions .like-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #e0245e; /* 좋아요는 트위터처럼 붉은색 */
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.post-actions .like-btn:hover {
+  color: #ff3366;
+}
+
+.post-actions .view-count {
+  color: #657786;
+}
+

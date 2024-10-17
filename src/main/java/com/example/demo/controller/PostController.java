@@ -191,6 +191,43 @@ public class PostController {
     }
 }
 
+// 좋아요 취소 기능
+@DeleteMapping("/{poNum}/like")
+public ResponseEntity<Object> decrementLikes(
+    @PathVariable Integer poNum,
+    @RequestHeader("Authorization") String authHeader) {
+    
+    try {
+        String userId = postService.getUserIdFromToken(authHeader);
+        Post post = postService.decrementLikes(poNum, userId);  // 좋아요 취소 로직 호출
+        PostResponse postResponse = new PostResponse(post);  // PostResponse DTO 반환
+        return ResponseEntity.ok(postResponse);  // 성공 시 PostResponse 반환
+        
+    } catch (UnauthorizedException e) {
+        return ResponseEntity.status(401).body("Unauthorized");  // 실패 시 401 에러 반환
+    }
+}
+
+// 사용자가 좋아요를 누른 게시글 목록 조회
+@GetMapping("/liked-posts")
+public ResponseEntity<List<PostResponse>> getLikedPosts(@RequestHeader("Authorization") String authHeader) {
+    try {
+        // JWT 토큰에서 사용자 ID 추출
+        String userId = postService.getUserIdFromToken(authHeader);
+
+        List<Post> likedPosts = postService.getLikedPostsByUser(userId);
+        List<PostResponse> response = likedPosts.stream()
+                .map(post -> new PostResponse(post, commentService.getTopLevelComments(post.getPoNum())))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
+    } catch (UnauthorizedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+}
+
+
 
 // 검색 API
 @GetMapping("/search")

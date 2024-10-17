@@ -24,6 +24,7 @@ import Cart from './page/Cart';
 import FollowerList from './page/FollowerList';
 import FollowingList from './page/FollowingList';
 import Gallery from './page/Gallery'; // 게시물 갤러리 컴포넌트 임포트
+import LikedPostsPage from "./page/LikedPostsPage";
 import MastersList from './page/MastersList';
 import Mypostpage from './page/Mypostpage';
 import OrderHistoryPage from './page/OrderHistoryPage';
@@ -68,6 +69,7 @@ export default function App() {
             <Route path="/post-search" element={<PostSearch />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/users/:id" element={<UserPostPage />} />
+            <Route path="/liked-posts" element={<LikedPostsPage />} />
 
 
             <Route path="/products" element={<ProductHome />} />

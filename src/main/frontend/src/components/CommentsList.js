@@ -36,17 +36,19 @@ CommentsList.propTypes = {
   comments: PropTypes.arrayOf(
     PropTypes.shape({
       commentNo: PropTypes.number.isRequired,
-      id: PropTypes.string.isRequired,
+      userId: PropTypes.string.isRequired,
+      userName: PropTypes.string,
+      userPhoto: PropTypes.string,
       comment: PropTypes.string.isRequired,
-      photo: PropTypes.string,
-      replies: PropTypes.array, // replies 추가
+      replies: PropTypes.array,
     })
   ).isRequired,
   userId: PropTypes.string,
   onEditComment: PropTypes.func.isRequired,
   onDeleteComment: PropTypes.func.isRequired,
-  onAddComment: PropTypes.func.isRequired, // 추가
+  onAddComment: PropTypes.func.isRequired,
 };
+
 
 
 export default CommentsList;
