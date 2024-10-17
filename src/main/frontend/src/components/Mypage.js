@@ -1,5 +1,6 @@
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -86,7 +87,7 @@ const Mypage = () => {
     };
 
     if (authLoading || loading) {
-        return <p>Loading...</p>;  // 인증 상태 또는 페이지 로딩 중일 때 표시
+        return <CircularProgress />;  // 로딩 중 스피너 표시
     }
 
     if (error) {
@@ -118,18 +119,18 @@ const Mypage = () => {
                             />
                         </div>
                         <div className="user-info">
-                            <p><span>ID:</span> {userInfo.id}</p>
-                            <p><span>Name:</span> {userInfo.name}</p>
-                            <p><span>Email:</span> {userInfo.email}</p> {/* 이메일 추가 */}
-                            <p><span>Phone:</span> {userInfo.phone}</p>
-                            <p><span>Sex:</span> {userInfo.sex}</p>
-                            <p><span>Height:</span> {userInfo.height} cm</p>
-                            <p><span>Weight:</span> {userInfo.weight} kg</p>
+                            <p><span>아이디:</span> {userInfo.id}</p>
+                            <p><span>이름:</span> {userInfo.name}</p>
+                            <p><span>이메일:</span> {userInfo.email}</p> {/* 이메일 추가 */}
+                            <p><span>전화번호:</span> {userInfo.phone}</p>
+                            <p><span>성별:</span> {userInfo.sex}</p>
+                            <p><span>키:</span> {userInfo.height} cm</p>
+                            <p><span>몸무게:</span> {userInfo.weight} kg</p>
                             {bmi !== null && <p><span>BMI:</span> {bmi} ({bmiCategory})</p>}  {/* BMI와 범주 표시 */}
-                            <p><span>Birth:</span> {userInfo.birth}</p>
-                            <p><span>Firstday:</span> {userInfo.firstday}</p>
-                            <p><span>Restday:</span> {userInfo.restday}</p>
-
+                            <p><span>생년월일:</span> {userInfo.birth}</p>
+                            <hr className='Mypage_hr' /> {/* 가로 줄 추가 */}
+                            <p><span>회원권 등록수:</span> {userInfo.firstday}</p>
+                            <p><span>회원권 잔여일수:</span> {userInfo.restday}</p>
                         </div>
 
                         <Button variant="contained" color="primary" component={Link} to="/edit-profile">
@@ -140,7 +141,6 @@ const Mypage = () => {
                     <p>No user info available.</p>
                 )}
             </div>
-            <Footer />  {/* Footer 추가 */}
         </div>
     );
 };

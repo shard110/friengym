@@ -1,64 +1,110 @@
-/* EditProfilePage.module.css */
-
 .EditProfilePage {
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f4f4f4;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 3%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.EditProfilePage_h2 {
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333333;
+}
+
+.Edit_hr {
+  border: none; /* 기본 테두리 제거 */
+  height: 1px; /* 높이 설정 */
+  background-color: #ccc; /* 색상 설정 */
+  margin-top: -30px;
+  margin-bottom: 10px;
+  width: 100%; /* 너비 설정 */
+}
+
+
+.EditProfilePage_formGroup {
+  margin-bottom: 15px;
+}
+
+.EditProfilePage_label {
+  display: block;
+  margin-bottom: 5px; /* 마진을 줄여서 간격 조정 */
+  font-weight: bold;
+  color: #333333;
+}
+
+.EditProfilePage_input,
+.EditProfilePage_select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.EditProfilePage_input:focus,
+.EditProfilePage_select:focus {
+  border-color: #03c7a6;
+  outline: none;
+}
+
+.EditProfilePage_button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  background-color: #03c7a6;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.EditProfilePage_button:hover {
+  background-color: #028f7d;
+}
+
+.EditProfilePage_error {
+  color: #d9534f;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* 미디어 쿼리 */
+@media (max-width: 375px) {
+  .EditProfilePage {
+      padding: 15px;
   }
-  
-  .EditProfilePage h2 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-align: center;
+  .EditProfilePage_button {
+      font-size: 14px;
   }
-  
-  .EditProfilePage form {
-    display: flex;
-    flex-direction: column;
+}
+
+@media (max-width: 425px) {
+  .EditProfilePage_h2 {
+      font-size: 20px;
   }
-  
-  .EditProfilePage label {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 5px;
+}
+
+@media (max-width: 750px) {
+  .EditProfilePage_input,
+  .EditProfilePage_select {
+      font-size: 14px;
   }
-  
-  .EditProfilePage input[type="text"],
-  .EditProfilePage input[type="number"],
-  .EditProfilePage input[type="date"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+}
+
+@media (max-width: 1024px) {
+  .EditProfilePage {
+      max-width: 80%;
   }
-  
-  .EditProfilePage button {
-    padding: 10px 15px;
-    font-size: 16px;
-    color: white;
-    background-color: #22CEB1;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 30%;
-    margin-left: 35%;
-    margin-top: 10px;
+}
+
+@media (max-width: 1200px) {
+  .EditProfilePage {
+      max-width: 90%;
   }
-  
-  .EditProfilePage button:hover {
-    background-color: #1e9e90;
-  }
-  
-  .EditProfilePage p {
-    color: red;
-    font-size: 16px;
-    text-align: center;
-  }
-  
+}

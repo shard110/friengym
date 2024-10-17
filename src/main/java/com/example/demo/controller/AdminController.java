@@ -1,9 +1,14 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Ask; // Ask 엔티티 임포트
-import com.example.demo.repository.AskRepository; // AskRepository 임포트
-import com.example.demo.entity.User; // User 엔티티 임포트
-import com.example.demo.repository.UserRepository; // UserRepository 임포트
+import com.example.demo.entity.Ask;
+import com.example.demo.entity.User;
+import com.example.demo.dto.AskDTO; // AskDTO 임포트
+import com.example.demo.dto.UserDTO; // UserDTO 임포트
+import com.example.demo.dto.WarningDTO;
+import com.example.demo.repository.AskRepository;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.entity.Warning; // Warning 엔티티 임포트
+import com.example.demo.repository.WarningRepository; // WarningRepository 임포트
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +17,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.time.LocalDate;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import java.util.stream.Collectors;
 
-@EnableScheduling
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -30,13 +33,14 @@ public class AdminController {
 
     private final UserRepository userRepository;
     private final AskRepository askRepository;
+    private final WarningRepository warningRepository;
 
     @Autowired
-    public AdminController(UserRepository userRepository, AskRepository askRepository) {
+    public AdminController(UserRepository userRepository, AskRepository askRepository, WarningRepository warningRepository) {
         this.userRepository = userRepository;
         this.askRepository = askRepository;
+        this.warningRepository = warningRepository;
     }
-
 
     // 관리자 로그인
     @PostMapping("/login")
@@ -53,29 +57,37 @@ public class AdminController {
                     .signWith(SignatureAlgorithm.HS256, secretKey) // 비밀 키 사용
                     .compact();
 
-            // HashMap을 사용하여 응답 생성
+            // 응답 생성
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("token", token);
-
             return ResponseEntity.ok(response);
         } else {
             // 실패 응답
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", false);
-            response.put("message", "Invalid credentials"); // 오류 메시지 추가
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", "Invalid credentials"));
         }
     }
 
     // 사용자 목록
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getUsers() {
+    public ResponseEntity<List<UserDTO>> getUsers() {
         try {
-            List<User> users = userRepository.findAll(); // UserRepository를 사용하여 모든 사용자 가져오기
-            return ResponseEntity.ok(users);
+            List<User> users = userRepository.findAll();
+            List<UserDTO> userDTOs = users.stream()
+                .map(user -> new UserDTO(
+                    user.getId(),
+                    user.getName(),
+                    user.getPhone(),
+                    user.getEmail(),
+                    user.getSex(),
+                    user.getBirth(),
+                    user.getFirstday(),
+                    user.getRestday()
+                ))
+                .collect(Collectors.toList());
+
+            return ResponseEntity.ok(userDTOs);
         } catch (Exception e) {
-            // 로그에 오류 기록
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
@@ -85,21 +97,32 @@ public class AdminController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable String id) {
         try {
-            userRepository.deleteById(id); // 여기서 오류 발생
+            userRepository.deleteById(id);
             return ResponseEntity.ok("User deleted successfully.");
         } catch (Exception e) {
-            e.printStackTrace(); // 오류 내용 확인
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting user.");
         }
     }
 
     // 모든 문의글 조회
     @GetMapping("/asks")
-    public ResponseEntity<List<Ask>> getAsks() {
+    public ResponseEntity<List<AskDTO>> getAsks() {
         try {
-            List<Ask> asks = askRepository.findAll(); // 모든 문의글 가져오기
-            System.out.println("Retrieved asks: " + asks);
-            return ResponseEntity.ok(asks);
+            List<Ask> asks = askRepository.findAll();
+            List<AskDTO> askDTOs = asks.stream()
+                .map(ask -> new AskDTO(
+                    ask.getAnum(),
+                    ask.getADate(),
+                    ask.getATitle(),
+                    ask.getAContents(),
+                    (ask.getUser() != null) ? ask.getUser().getId() : "정보 없음",
+                    ask.getReply(),
+                    ask.getAfile() // afile 필드 추가
+                ))
+                .collect(Collectors.toList());
+
+            return ResponseEntity.ok(askDTOs);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -108,11 +131,23 @@ public class AdminController {
 
     // 특정 문의글 조회
     @GetMapping("/asks/{id}")
-    public ResponseEntity<Ask> getAskById(@PathVariable int id) {
+    public ResponseEntity<AskDTO> getAskById(@PathVariable int id) {
         try {
             Ask ask = askRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("문의글을 찾을 수 없습니다."));
-            return ResponseEntity.ok(ask);
+            
+            // AskDTO로 변환하여 사용자 ID와 afile 포함
+            AskDTO askDTO = new AskDTO(
+                ask.getAnum(),
+                ask.getADate(),
+                ask.getATitle(),
+                ask.getAContents(),
+                (ask.getUser() != null) ? ask.getUser().getId() : "정보 없음",
+                ask.getReply(),
+                ask.getAfile() // afile 필드 추가
+            );
+            
+            return ResponseEntity.ok(askDTO);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -123,9 +158,14 @@ public class AdminController {
     @PostMapping("/asks/{id}/reply")
     public ResponseEntity<String> replyToAsk(@PathVariable int id, @RequestBody String reply) {
         try {
-            Ask ask = askRepository.findById(id).orElseThrow(() -> new RuntimeException("문의글이 존재하지 않습니다."));
-            ask.setReply(reply); // 엔티티의 reply 필드에 값 설정
-            askRepository.save(ask); // 업데이트
+            Ask ask = askRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("문의글이 존재하지 않습니다."));
+            
+            // 문자열로 reply를 처리
+            reply = reply.replace("\"", ""); // JSON 형식에서 따옴표 제거 (필요시)
+            
+            ask.setReply(reply);
+            askRepository.save(ask);
             return ResponseEntity.ok("답변이 등록되었습니다.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -137,9 +177,10 @@ public class AdminController {
     @DeleteMapping("/asks/{id}/reply")
     public ResponseEntity<String> deleteReply(@PathVariable int id) {
         try {
-            Ask ask = askRepository.findById(id).orElseThrow(() -> new RuntimeException("문의글이 존재하지 않습니다."));
-            ask.setReply(null); // 답변을 삭제하기 위해 reply 필드를 null로 설정
-            askRepository.save(ask); // 업데이트
+            Ask ask = askRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("문의글이 존재하지 않습니다."));
+            ask.setReply(null);
+            askRepository.save(ask);
             return ResponseEntity.ok("답변이 삭제되었습니다.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -147,47 +188,32 @@ public class AdminController {
         }
     }
 
-    private Map<String, Integer> userRestdayMap = new HashMap<>(); // 사용자의 남은 일수를 저장하는 맵
-
     // 유저 개월 수 선택
     @PatchMapping("/users/{id}/addMonths")
     public ResponseEntity<String> addMonths(@PathVariable String id, @RequestBody Map<String, Integer> payload) {
         int months = payload.get("months");
-        int daysToAdd = 0;
+        int daysToAdd = switch (months) {
+            case 1 -> 30;
+            case 3 -> 90;
+            case 6 -> 180;
+            case 12 -> 360;
+            default -> -1;
+        };
 
-        switch (months) {
-            case 1:
-                daysToAdd = 30;
-                break;
-            case 3:
-                daysToAdd = 90;
-                break;
-            case 6:
-                daysToAdd = 180;
-                break;
-            case 12:
-                daysToAdd = 360;
-                break;
-            default:
-                return ResponseEntity.badRequest().body("Invalid month value.");
+        if (daysToAdd == -1) {
+            return ResponseEntity.badRequest().body("Invalid month value.");
         }
 
         try {
-            User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+            User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-            // firstday가 null인 경우에만 현재 날짜로 설정
             if (user.getFirstday() == null) {
-                LocalDate currentDate = LocalDate.now();
-                user.setFirstday(java.sql.Date.valueOf(currentDate)); // firstday에 현재 날짜 저장
+                user.setFirstday(java.sql.Date.valueOf(LocalDate.now()));
             }
 
-            // 기존 남은 일수에 추가된 일수 더하기
             int newRestday = (user.getRestday() != null ? user.getRestday() : 0) + daysToAdd;
-            user.setRestday(newRestday); // 업데이트된 남은 일수 설정
-
-            // 사용자의 남은 일수를 userRestdayMap에 추가
-            userRestdayMap.put(id, newRestday);
-
+            user.setRestday(newRestday);
             userRepository.save(user);
             return ResponseEntity.ok("개월 수가 성공적으로 추가되었습니다.");
         } catch (Exception e) {
@@ -196,21 +222,24 @@ public class AdminController {
         }
     }
 
-    // 남은 일수 10초마다 1씩 빼기
-    @Scheduled(fixedRate = 10000) // 10초마다 실행
-    public void decreaseRestdays() {
-        for (String userId : userRestdayMap.keySet()) {
-            int currentRestday = userRestdayMap.get(userId);
-            if (currentRestday > 0) {
-                userRestdayMap.put(userId, currentRestday - 1); // 10초마다 남은 일수 감소
-                // 데이터베이스 업데이트
-                User user = userRepository.findById(userId).orElse(null);
-                if (user != null) {
-                    user.setRestday(currentRestday - 1);
-                    userRepository.save(user);
-                }
-            }
+    // 신고글 모아보기
+    @GetMapping("/warnings")
+    public ResponseEntity<List<WarningDTO>> getWarnings() {
+        try {
+            List<Warning> warnings = warningRepository.findAll();
+            List<WarningDTO> warningDTOs = warnings.stream()
+                .map(warning -> new WarningDTO(
+                    warning.getId(),
+                    warning.getPost() != null ? warning.getPost().getPoNum() : 0, // int형으로 반환
+                    warning.getUser() != null ? warning.getUser().getId() : null, // null 체크
+                    warning.getReason()
+                ))
+                .collect(Collectors.toList());
+
+            return ResponseEntity.ok(warningDTOs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
 }
