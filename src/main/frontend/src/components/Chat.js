@@ -6,8 +6,8 @@ import "./Chat.css";
 
 function Chat() {
     const { user } = useAuth();
-    const token = localStorage.getItem('token'); 
-    
+    const token = localStorage.getItem('token');
+
     const [connectedUsers, setConnectedUsers] = useState([]);
     const [messages, setMessages] = useState([]);
     const [selectedUserId, setSelectedUserId] = useState(null);
@@ -15,7 +15,8 @@ function Chat() {
     const [messageInput, setMessageInput] = useState("");
     const [loading, setLoading] = useState(false);
     const messagesEndRef = useRef(null);
-    
+    // 알림 상태 추가
+    const [notifications, setNotifications] = useState({});
 
     // 사용자가 클릭했을 때 대화 내용을 가져오는 함수
     const fetchAndDisplayUserChat = async (userId) => {
@@ -26,6 +27,8 @@ function Chat() {
             }
             const chatHistory = await response.json();
             setMessages(chatHistory);
+            // 대화창이 열릴 때 알림 초기화
+            setNotifications((prev) => ({ ...prev, [userId]: 0 }));
         } catch (error) {
             console.error("Error fetching chat history:", error);
         }
@@ -33,6 +36,7 @@ function Chat() {
 
     const handleUserClick = async (userId) => {
         setSelectedUserId(userId);
+        setNotifications((prev) => ({ ...prev, [userId]: 0 })); // 클릭 시 알림 초기화
         console.log("Selected user ID:", userId);
         await fetchAndDisplayUserChat(userId); // 대화 내용 불러오기
     };
@@ -57,7 +61,7 @@ function Chat() {
         }
     }, [user?.id]);
 
-    //구독
+    // 구독
     const onConnected = (client) => {
         client.subscribe(`/user/${user.id}/queue/messages`, onMessageReceived);
         fetchConnectedUsers();
@@ -65,7 +69,7 @@ function Chat() {
 
     const fetchConnectedUsers = async () => {
         setLoading(true);
-        const token = localStorage.getItem('token'); // 로그인 후 저장된 토큰 가져오기
+        const token = localStorage.getItem('token');
         try {
             const response = await fetch(`http://localhost:8080/in-chat?userId=${user.id}`, {
                 method: 'GET',
@@ -76,7 +80,13 @@ function Chat() {
             });
             const data = await response.json();
             console.log("Fetched users:", data);
-            setConnectedUsers(data.filter((u) => u.id !== user.id)); // 현재 사용자 제외
+
+            // 중복된 사용자 제거
+            const uniqueUsers = data.filter((u, index, self) =>
+                index === self.findIndex((user) => user.id === u.id)
+            );
+
+            setConnectedUsers(uniqueUsers); // 중복 제거된 사용자 목록 설정
         } catch (error) {
             console.error("Error fetching connected users:", error);
         } finally {
@@ -87,6 +97,14 @@ function Chat() {
     const onMessageReceived = (payload) => {
         const message = JSON.parse(payload.body);
         setMessages((prevMessages) => [...prevMessages, message]);
+
+        // 대화창이 열려있지 않으면 알림 증가
+        if (selectedUserId !== message.senderId) {
+            setNotifications((prev) => ({
+                ...prev,
+                [message.senderId]: (prev[message.senderId] || 0) + 1
+            }));
+        }
     };
 
     const sendMessage = () => {
@@ -118,6 +136,27 @@ function Chat() {
 
     return (
         <div className="chat-container">
+            <div className="users-list">
+                <h2>대화 중인 사용자 목록</h2>
+                {loading ? (
+                    <p>Loading...</p>
+                ) : connectedUsers.length > 0 ? (
+                    <ul>
+                        {connectedUsers.map((u, index) => (
+                            <li key={`${u.id}-${index}`} onClick={() => handleUserClick(u.id)}>
+                                <img src={`http://localhost:8080/api/user/photo/${u.photo}`} alt={`${u.name}'s profile`} className="user-photo" />
+                                {u.name}
+                                {notifications[u.id] > 0 && (
+                                    <span className="notification-badge">{notifications[u.id]}</span>
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>대화중인 사용자 없음.</p>
+                )}
+            </div>
+
             <div className="chat-area">
                 <div className="user-info">
                     <p>Welcome, {user.name}!</p>
@@ -130,23 +169,6 @@ function Chat() {
                         </p>
                     </div>
                 )}
-                <div className="users-list">
-                    <h2>Online Users</h2>
-                    {loading ? (
-                        <p>Loading...</p>
-                    ) : connectedUsers.length > 0 ? (
-                        <ul>
-                            {connectedUsers.map((u, index) => (
-                                <li key={`${u.id}-${index}`} onClick={() => handleUserClick(u.id)}>
-                                    <img src={`http://localhost:8080/api/user/photo/${u.photo}`} alt={`${u.name}'s profile`} className="user-photo" />
-                                    {u.name}
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>대화중인 사용자 없음.</p>
-                    )}
-                </div>
                 <div className="messages">
                     {selectedUserId &&
                         messages

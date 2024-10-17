@@ -1,6 +1,7 @@
 package com.example.demo.message;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -52,17 +53,15 @@ public class MessagingController {
     public void processMessage(@Payload ChatMessage chatMessage) {
         ChatMessage saveMsg = chatMessageService.save(chatMessage);
         ChatNotification notification = new ChatNotification(
-            saveMsg.getId(), 
-            saveMsg.getSenderId(), 
-            saveMsg.getRecipientId(), 
-            saveMsg.getContent()
-        );
+                saveMsg.getId(),
+                saveMsg.getSenderId(),
+                saveMsg.getRecipientId(),
+                saveMsg.getContent());
 
         messagingTemplate.convertAndSendToUser(
-            chatMessage.getRecipientId(), 
-            "/queue/messages",
-            notification
-        );
+                chatMessage.getRecipientId(),
+                "/queue/messages",
+                notification);
     }
 
     // 특정 송신자와 수신자의 메시지 조회
@@ -73,10 +72,13 @@ public class MessagingController {
         return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, recipientId));
     }
 
-        // 대화 중인 사용자 목록 가져오기
-        @GetMapping("/in-chat")
-        public ResponseEntity<List<ChatUserResponse>> getUsersInChat(@RequestParam String userId) {
-            List<ChatUserResponse> usersInChat = chatRoomService.getUsersInChat(userId);
-            return ResponseEntity.ok(usersInChat); // JSON 응답으로 반환
-        }
+    // 대화 중인 사용자 목록 가져오기
+    @GetMapping("/in-chat")
+    public ResponseEntity<List<ChatUserResponse>> getUsersInChat(@RequestParam String userId) {
+        List<ChatUserResponse> usersInChat = chatRoomService.getUsersInChat(userId);
+        List<ChatUserResponse> distinctUsers = usersInChat.stream()
+                .distinct() // 중복 제거
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(distinctUsers); // JSON 응답으로 반환
+    }
 }

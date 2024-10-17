@@ -142,9 +142,13 @@ body {
   display: none;
 }
 
-.user-photo {
-  width: 30px;  /* 원하는 크기로 조정 */
-  height: 30px; /* 원하는 크기로 조정 */
-  border-radius: 50%; /* 원형으로 만들기 */
-  margin-right: 10px; /* 이름과 사진 간의 간격 */
+.notification-badge {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  position: absolute; /* 필요에 따라 위치 조정 */
+  top: 0;
+  right: 0;
 }
