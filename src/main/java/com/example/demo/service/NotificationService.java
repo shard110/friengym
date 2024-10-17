@@ -7,9 +7,14 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.Notification;
 import com.example.demo.entity.User;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.NotificationRepository;
 import com.example.demo.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+
+@Slf4j
 @Service
 public class NotificationService {
 
@@ -21,8 +26,9 @@ public class NotificationService {
 
     // 특정 사용자의 알림 목록 가져오기
     public List<Notification> getNotifications(String userId) {
+        log.debug("userId로 알림 조회: {}", userId);
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
         return notificationRepository.findByRecipientOrderByCreatedAtDesc(user);
     }
 

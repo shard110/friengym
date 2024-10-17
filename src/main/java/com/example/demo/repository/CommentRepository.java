@@ -19,5 +19,8 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     
         // 특정 댓글의 답글 조회
         List<Comment> findByParent(Comment parent);
+       
+        void deleteByPost(Post post);
+
 
 }

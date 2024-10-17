@@ -66,6 +66,8 @@ public class PostService {
     @Autowired
     private BlockService blockService;
 
+
+
     //유저 게시물 가져오기
     public List<Post> getPostsByUser(User user) {
         return postRepository.findByUser(user);
@@ -185,7 +187,7 @@ public class PostService {
         
 
     // 삭제하기
-
+    @Transactional
     public void deletePost(Integer poNum, String userId) {
         Post post = postRepository.findById(poNum)
                 .orElseThrow(() -> new PostNotFoundException(poNum));
@@ -194,6 +196,10 @@ public class PostService {
             throw new IllegalArgumentException("User not authorized to delete this post");
         }
 
+       // 해당 게시글과 관련된 댓글 삭제
+       commentRepository.deleteByPost(post);
+        // 해당 게시글과 관련된 모든 알림을 먼저 삭제
+        notificationRepository.deleteByPost(post);
         postRepository.deleteById(poNum);
     }
 
@@ -222,7 +228,8 @@ public class PostService {
 
          // 유저가 해당 게시글에 좋아요를 이미 눌렀는지 확인
          if (user.getLikedPosts().contains(post)) {
-            throw new IllegalArgumentException("이미 이 게시글에 좋아요를 눌렀습니다.");
+           // 이미 좋아요를 누른 경우, 아무 작업도 하지 않고 현재 게시글 반환
+            return post;
         }
          // 유저의 likedPosts에 추가
          user.getLikedPosts().add(post);
@@ -245,6 +252,40 @@ public class PostService {
         
         return post;
     }
+
+    // 좋아요 취소
+    public Post decrementLikes(Integer poNum, String userId) {
+    Post post = postRepository.findById(poNum)
+            .orElseThrow(() -> new PostNotFoundException(poNum));
+
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new UserNotFoundException(userId));
+
+    // 유저가 해당 게시글에 좋아요를 눌렀는지 확인
+    if (!user.getLikedPosts().contains(post)) {
+        throw new IllegalArgumentException("이 게시글에 좋아요를 누르지 않았습니다.");
+    }
+
+    // 유저의 likedPosts에서 제거
+    user.getLikedPosts().remove(post);
+    userRepository.save(user);
+
+    // 좋아요 카운트 감소
+    post.setLikes(post.getLikes() - 1);
+    postRepository.save(post);
+
+    return post;
+}
+
+// 사용자가 좋아요한 게시글 목록 조회
+public List<Post> getLikedPostsByUser(String userId) {
+    User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException(userId));
+
+    // 유저가 좋아요한 게시글 목록 반환
+    return user.getLikedPosts().stream().collect(Collectors.toList());
+}
+
 
 
     // 인기 검색 키워드 추적을 위한 맵 (간단한 예시)

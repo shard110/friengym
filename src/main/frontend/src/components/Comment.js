@@ -46,11 +46,14 @@ const Comment = ({
     <div className="comment">
        {/* 기존 댓글 내용 표시 */}
       <div className="comment-user-info">
-        <img
-          src={comment.photo || "default-photo-url"}
-          alt={comment.id}
+      <img
+          src={comment.userPhoto || "default-photo-url"}
+          alt={comment.userId}
           className="comment-user-photo"
         />
+        <span className="comment-username">{comment.userId}</span>
+        </div>
+
         {isEditing ? (
           <textarea
             className="edit-comment-textarea"
@@ -60,7 +63,8 @@ const Comment = ({
         ) : (
           <span className="comment-text">{parseCommentText(comment.comment)}</span>
         )}
-          {userId === comment.id && (
+
+          {userId === comment.userId && (
           <div className="comment-actions">
             {isEditing ? (
               <>
@@ -71,11 +75,10 @@ const Comment = ({
               <>
                 <button onClick={() => setIsEditing(true)} className="edit-btn">수정</button>
                 <button onClick={() => onDelete(comment.commentNo)} className="delete-btn">삭제</button>
-              </>
-            )}
-          </div>
-        )}
-      </div>
+                </>
+          )}
+        </div>
+      )}
 
       {/* 답글 버튼 */}
       <div className="reply-button">
@@ -116,10 +119,11 @@ const Comment = ({
 Comment.propTypes = {
   comment: PropTypes.shape({
     commentNo: PropTypes.number.isRequired,
-    id: PropTypes.string.isRequired,
+    userId: PropTypes.string.isRequired,
+    userName: PropTypes.string,
+    userPhoto: PropTypes.string,
     comment: PropTypes.string.isRequired,
-    photo: PropTypes.string,
-    replies: PropTypes.array, // replies 추가
+    replies: PropTypes.array,
   }).isRequired,
   userId: PropTypes.string,
   onEdit: PropTypes.func.isRequired,

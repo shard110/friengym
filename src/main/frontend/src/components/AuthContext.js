@@ -42,7 +42,9 @@ export const AuthProvider = ({ children }) => {
             if (token) {
                 try {
                     const userInfo = await fetchUser(token); // 사용자 정보 가져오기
-                    setUser(userInfo); // 상태 업데이트
+                 
+                    console.log('Fetched user info:', userInfo); // 사용자 정보 출력
+                    setUser(userInfo.user);
                 } catch {
                     setUser(null);
                     localStorage.removeItem('jwtToken');
@@ -63,11 +65,12 @@ export const AuthProvider = ({ children }) => {
             // 로그인 후 사용자 정보를 가져옴
             const userInfo = await fetchUser(token);
             setUser(userInfo);
+
         } catch (error) {
             console.error('Failed to log in:', error);
             throw error;
         }
-    };
+        };
 
     const logout = () => {
         setUser(null);

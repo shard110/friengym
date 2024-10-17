@@ -8,10 +8,13 @@ import com.example.demo.entity.Notification;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Setter
 @Getter
 public class NotificationResponse {
+    
 
     private Long id;
     private String senderId;
@@ -23,12 +26,14 @@ public class NotificationResponse {
 
     public NotificationResponse(Notification notification) {
         this.id = notification.getId();
-        this.senderId = notification.getSender().getId();
-        this.postId = notification.getPost().getPoNum();
+        this.senderId = notification.getSender() != null ? notification.getSender().getId() : null;
+        this.postId = notification.getPost() != null ? notification.getPost().getPoNum() : null;
         this.createdAt = notification.getCreatedAt();
         this.isRead = notification.isRead();
-        this.type = notification.getType().toString();
+        this.type = notification.getType() != null ? notification.getType().toString() : null;
 
+        log.debug("Notification을 NotificationResponse로 매핑: {}", notification);
+    
         // 메시지 생성: 알림 타입에 따라 메시지 다르게 설정
         switch (notification.getType()) {
             case FOLLOW:
