@@ -4,7 +4,8 @@ import { AuthProvider } from './components/AuthContext';
 import NavBar from './components/NavBar'; // NavBar 컴포넌트 임포트
 
 import CategoryProductsPage from './components/CategoryProductsPage';
-import Chat from './components/Chat'; //Chat 컴포넌트 임포트
+import Chat from './components/Chat';  //Chat
+import DirectMessage from './components/DirectMessage'; // DirectMessage 컴포넌트 추가
 import CreatePost from "./components/CreatePostForm";
 import Customer from './components/Customer';
 import EditPost from './components/EditPost';
@@ -55,6 +56,7 @@ export default function App() {
           {/* <NavBar /> NavBar 컴포넌트 추가 */}
           <Routes>
             <Route path="/chat" element={<Chat />} /> {/* Chat 라우트 추가 */}
+            <Route path="/chat/:userId" element={<DirectMessage />} /> {/* DirectMessage 라우트 추가 */}
             <Route path="/" element={<HomePage />} />
             <Route path="/posts" element={<Gallery />} />
             <Route path="/create-post" element={<CreatePost />} />

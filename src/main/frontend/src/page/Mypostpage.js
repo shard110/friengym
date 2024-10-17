@@ -207,7 +207,7 @@ const Mypostpage = () => {
           ) : (
             <button className="edit-profile-btn" onClick={() => setIsEditing(true)}>프로필 편집</button>
           )}
-          <button className="contact-btn">DM</button>
+          <button className="contact-btn" onClick={() => navigate('/chat')}>DM</button>
         </div>
       </div>
 

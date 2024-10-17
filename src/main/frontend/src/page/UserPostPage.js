@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import "./UserPostPage.css";
+import DirectMessage from '../components/DirectMessage'; // DM import
 
 const UserPostPage = () => {
   const { id } = useParams(); // URL의 유저 ID 파라미터
@@ -13,9 +14,18 @@ const UserPostPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [blocked, setBlocked] = useState(false); // 초기값을 false로 설정
-  const [isFollowingMe, setIsFollowingMe] = useState(false); // 다른 사용자가 나를 팔로우 중인지 여부
+  const [isDMModalOpen, setIsDMModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null); // 선택된 사용자 ID
+  const [isFollowingMe, setIsFollowingMe] = useState(false); // 맞팔로우 상태 추가
+
+
 
   const navigate = useNavigate();
+
+  const handleDMButtonClick = () => {
+    setSelectedUserId(userInfo.id); // 선택된 사용자 ID 저장
+    setIsDMModalOpen(true); // DM 모달 열기
+  };
 
   // 유저의 게시물과 팔로우 상태를 가져오는 함수
   const fetchUserPostInfo = useCallback(async () => {
@@ -176,9 +186,6 @@ const handleUnblockUser = async () => {
     return <div>Error: Failed to load user information.</div>;
   }
 
-  const handleDMButtonClick = () => {
-    navigate(`/chat/${userInfo.id}`); // 사용자 ID를 URL 파라미터로 전달
-  };
 
   return (
     <div className="user-postpage-container">
@@ -268,8 +275,19 @@ const handleUnblockUser = async () => {
   </div>
 </div>
 
-</div>
-);
+      {/* DM 모달 렌더링 */}
+      {isDMModalOpen && (
+        <DirectMessage
+          isOpen={isDMModalOpen}
+          onClose={() => {
+            setIsDMModalOpen(false);
+            setSelectedUserId(null); // 모달 닫을 때 선택된 ID 초기화
+          }}
+          userId={selectedUserId} // 선택된 사용자 ID 전달
+        />
+      )}
+    </div>
+  );
 };
 
 export default UserPostPage;
