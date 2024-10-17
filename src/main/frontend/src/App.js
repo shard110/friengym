@@ -19,9 +19,6 @@ import PopularProductsPage from './components/PopularProductsPage';
 import PostSearch from './components/PostSearch';
 import ProductHome from './components/ProductHome';
 import RegisterPage from './components/RegisterPage';
-import UpdateAsk from './components/UpdateAsk';
-import ViewAsk from './components/ViewAsk';
-import Chat from './components/Chat'; //Chat 컴포넌트 임포트
 import AskPage from './page/AskPage';
 import Cart from './page/Cart';
 import FollowerList from './page/FollowerList';
