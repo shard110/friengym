@@ -6,8 +6,9 @@ import './CreateAsk.css';
 const CreateAsk = ({ onAskCreated }) => {
   const [title, setTitle] = useState("");
   const [contents, setContents] = useState("");
-  const [file, setFile] = useState(null);
-  const [password, setPassword] = useState(""); // 비밀번호 상태 추가
+  const [password, setPassword] = useState("");
+  const [file, setFile] = useState(null);  // 파일을 저장할 상태 추가
+  const [filePreview, setFilePreview] = useState(null); // 파일 미리보기 상태 추가
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
@@ -25,16 +26,20 @@ const CreateAsk = ({ onAskCreated }) => {
     formData.append("password", password); // 비밀번호 추가
 
     try {
-      const token = localStorage.getItem("jwtToken");
+      // JWT 토큰을 localStorage에서 가져오거나 필요한 방식으로 불러옵니다.
+      const token = localStorage.getItem("jwtToken"); // JWT 토큰 가져오기
+
+      // 토큰이 없는 경우 오류를 표시하고 종료
       if (!token) {
-        alert("로그인이 필요합니다.");
+        console.error("JWT 토큰이 존재하지 않습니다.");
         return;
       }
 
-      const response = await axios.post("/api/asks", formData, {
+      // DTO에 맞는 필드명을 사용하여 서버로 전송
+      await axios.post("/api/asks", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "multipart/form-data" // JWT 토큰을 Authorization 헤더에 추가
         },
       });
 
@@ -51,8 +56,16 @@ const CreateAsk = ({ onAskCreated }) => {
     }
   };
 
+  // 파일 선택 시 파일 상태 업데이트 및 미리보기 설정
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile); // 파일 선택 시 상태에 저장
+    if (selectedFile) {
+      const fileURL = URL.createObjectURL(selectedFile);
+      setFilePreview(fileURL); // 파일 미리보기 설정
+    } else {
+      setFilePreview(null); // 파일이 없는 경우 미리보기 제거
+    }
   };
 
   return (
@@ -79,6 +92,20 @@ const CreateAsk = ({ onAskCreated }) => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+      <input
+        type="file"
+        onChange={handleFileChange}  // 파일 선택
+      />
+
+      {/* 파일이 선택된 경우 미리보기 표시 */}
+      {filePreview && (
+        <div>
+          <h4>파일 미리보기:</h4>
+          <img src={filePreview} alt="파일 미리보기" style={{ maxWidth: "300px", height: "auto" }} />
+        </div>
+      )}
+
+      <button onClick={handleSubmit}>작성완료</button>
       <div className="button-container">
         <button onClick={handleSubmit}>작성완료</button>
         <Link to="/asks">

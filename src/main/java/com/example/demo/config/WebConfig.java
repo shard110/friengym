@@ -36,6 +36,5 @@ public class WebConfig implements WebMvcConfigurer {
           // 게시판 파일 시스템 경로에서 파일 제공 설정
         registry.addResourceHandler("/files/**")
         .addResourceLocations("file:files/");
-       
     }
 }

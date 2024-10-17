@@ -5,7 +5,7 @@ import './AskPage.css'; // CSS 파일 import
 
 const AskPage = () => {
   const [asks, setAsks] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1);  // 페이지 기본값을 1로 설정
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize] = useState(10);
   const [selectedAsk, setSelectedAsk] = useState(null);
@@ -15,12 +15,15 @@ const AskPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchAsks(page);
+    fetchAsks(page);  // 페이지가 변경될 때마다 데이터를 가져옴
   }, [page]);
 
+
+
+  // 페이지별 데이터를 가져오는 함수
   const fetchAsks = async (page) => {
     try {
-      const token = localStorage.getItem('jwtToken');
+      const token = localStorage.getItem('jwtToken');  // localStorage에서 JWT 토큰 가져오기
       if (!token) {
         throw new Error("로그인이 필요합니다.");
       }
@@ -29,6 +32,7 @@ const AskPage = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+
       setAsks(response.data.content);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -36,38 +40,49 @@ const AskPage = () => {
     }
   };
 
-  const handleSelectAsk = (ask) => {
+  const handleSelectAsk = async (ask) => {
     setSelectedAsk(ask);
     setIsPasswordVerified(false); // 비밀번호 확인 상태 초기화
   };
 
+  // 비밀번호 확인 함수
   const handleVerifyPassword = async () => {
     try {
-      const token = localStorage.getItem('jwtToken');
-      if (!token) {
-        throw new Error("로그인이 필요합니다.");
-      }
+      const token = localStorage.getItem('jwtToken'); // localStorage에서 JWT 토큰을 가져옵니다.
+    if (!token) {
+      throw new Error("로그인이 필요합니다.");
+    }
 
-      const response = await axios.post('/api/asks/check-password', {
+      const response = await axios.post(
+        '/api/asks/check-password',
+      {
         anum: selectedAsk.anum,
-        password: password,
-      }, {
+        password: password
+        
+      },
+     
+      {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}` // JWT 토큰을 Authorization 헤더에 추가합니다.
         },
-      });
-
-      if (response.status === 200) {
-        setIsPasswordVerified(true);
-        navigate(`/asks/view/${selectedAsk.anum}`); // 비밀번호 확인 후 ViewAsk 페이지로 이동
-      } else {
-        alert("비밀번호가 일치하지 않습니다.");
       }
-    } catch (error) {
+    );
+
+    
+    if (response.status === 200) {
+      setIsPasswordVerified(true);  // 비밀번호가 일치하면 상태를 업데이트
+    } else {
+      alert("비밀번호가 일치하지 않습니다.");
+      console.log("Response data:", response.data);
+    }
+  } catch (error) {
+    if (error.response ) {
       alert("비밀번호가 일치하지 않습니다.");
     }
-  };
+  }
+};
 
+  // 페이지 버튼을 렌더링하는 함수
   const renderPageButtons = () => {
     const buttons = [];
     const startPage = Math.floor((page - 1) / 10) * 10 + 1;
@@ -88,20 +103,55 @@ const AskPage = () => {
   };
 
   const handleFirstPage = () => {
-    setPage(1);
+    setPage(1);  // 첫 페이지로 이동
   };
 
   const handleLastPage = () => {
-    setPage(totalPages);
+    setPage(totalPages);  // 마지막 페이지로 이동
   };
 
-  const formatDate = (timestamp) => {
-    return new Date(timestamp).toLocaleString();
+  const formatDate = (dateString) => {
+    if (!dateString) return "날짜 정보 없음"; // 날짜가 없을 때 처리
+  
+    // 문자열을 Date 객체로 변환
+    const date = new Date(dateString);
+  
+    if (isNaN(date.getTime())) {
+      return "Invalid Date"; // 유효하지 않은 날짜 처리
+    }
+  
+    // 한국 시간대로 날짜 및 시간 표시
+    return date.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
   };
+  
+  
 
   return (
     <div className="ask-page">
       <h1>문의글 목록</h1>
+
+      {mode === "create" && <CreateAsk onAskCreated={() => fetchAsks(page)} />}
+      {mode === "update" && selectedAsk && isPasswordVerified && (
+        <UpdateAsk anum={selectedAsk.anum} onAskUpdated={() => fetchAsks(page)} />
+      )}
+      {mode === "delete" && selectedAsk && isPasswordVerified && (
+        <DeleteAsk anum={selectedAsk.anum} onAskDeleted={() => fetchAsks(page)} />
+      )}
+      {mode === "view" && selectedAsk && isPasswordVerified && <ViewAsk anum={selectedAsk.anum} />}
+
+      <ul>
+  {asks && asks.length > 0 ? (
+    asks.map((ask) => (
+      <li key={ask.anum} onClick={() => handleSelectAsk(ask)} style={{ cursor: "pointer" }}>
+        <h3>{ask.aTitle}</h3>
+        작성자: {ask.userId ? ask.userId : "Unknown"} {/* 수정된 부분 */}
+        작성일: {formatDate(ask.adate)}  {/* Timestamp를 형식화하여 표시 */}
+      </li>
+    ))
+  ) : (
+    <p>문의글이 없습니다.</p>
+  )}
+</ul>
 
       <table>
         <thead>

@@ -1,0 +1,42 @@
+/* src/components/Comment.css */
+
+.comment {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.comment-user-info {
+  display: flex;
+  align-items: flex-start;
+}
+
+.comment-user-photo {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.comment-text {
+  flex: 1;
+  white-space: pre-wrap;
+}
+
+.comment-actions {
+  margin-left: 10px;
+}
+
+.comment-actions button {
+  margin-left: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.edit-comment-textarea {
+  flex: 1;
+  height: 60px;
+  padding: 5px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

@@ -1,16 +1,31 @@
 package com.example.demo.entity;
 
-import java.sql.Date;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "usertbl")
 public class User {
     @Id
@@ -40,121 +55,29 @@ public class User {
     private String photo;
     private String sessionkey;
     private Date sessionlimit;
+    private String introduction;
 
         // Status enum 추가 (선택적)
     @Enumerated(EnumType.STRING) // ENUM을 문자열로 저장
     private Status status; // 상태 필드 (선택적)
 
-    // Getters and Setters
-    public String getId() {
-        return id;
-    }
+    @ManyToMany
+    @JoinTable(
+        name = "user_likes",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "post_id")
+    )
+    private Set<Post> likedPosts = new HashSet<>(); // 좋아요를 누른 게시글 목록
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getPwd() {
-        return pwd;
-    }
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-    //이메일
-    public String getEmail() {
-        return email;
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts;
     
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> following;
+    
+    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> followers;
 
-    public String getPhone() {
-        return phone;
-    }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
-
-    public void setHeight(Integer height) {
-        this.height = height;
-    }
-
-    public Integer getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Integer weight) {
-        this.weight = weight;
-    }
-
-    public Date getBirth() {
-        return birth;
-    }
-
-    public void setBirth(Date birth) {
-        this.birth = birth;
-    }
-
-    public Date getFirstday() {
-        return firstday; // Date 타입으로 변경
-    }
-
-    public void setFirstday(Date firstday) {
-        this.firstday = firstday; // Date 타입으로 변경
-    }
-
-    public Integer getRestday() {
-        return restday;
-    }
-
-    public void setRestday(Integer restday) {
-        this.restday = restday;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
-    public String getSessionkey() {
-        return sessionkey;
-    }
-
-    public void setSessionkey(String sessionkey) {
-        this.sessionkey = sessionkey;
-    }
-
-    public Date getSessionlimit() {
-        return sessionlimit;
-    }
-
-    public void setSessionlimit(Date sessionlimit) {
-        this.sessionlimit = sessionlimit;
-    }
 }

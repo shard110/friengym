@@ -1,0 +1,2 @@
+ALTER TABLE Notification
+MODIFY COLUMN type VARCHAR(20);

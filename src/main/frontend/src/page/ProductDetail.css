@@ -1,88 +1,108 @@
-/* ProductDetail.css */
+/* src/components/PostDetail.css */
 
-.product-detail {
-    width: 100%;
-    background-color: #fff;
+.post-detail {
+    padding: 20px;
+  }
+  
+  .user-info {
     display: flex;
-    flex-direction: column;
-    margin-top: 80px;
-}
-
-.sec{
-    display: flex;
-    justify-content: center;
-}
-
-.prodDetail{
-    text-align: center;
-    width: 60%;
-    margin-top: 80px;
-}
-
-.product-detail h3 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    margin-top: 80px;
-    color: #333;
-}
-
-.product-detail .prod{
-    max-width: 300px;
+    align-items: center;
+  }
+  
+  .user-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .post-media {
+    margin: 20px 0;
+  }
+  
+  .post-image {
+    max-width: 100%;
     height: auto;
+    border-radius: 8px;
+  }
+  
+  .post-video {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .post-content {
     margin-bottom: 20px;
-    border: solid 1px #999;
-}
-
-.product-detail p {
-    font-size: 1.2em;
-    color: #666;
-    margin-bottom: 10px;
-}
-
-.product-detail .price {
-    font-size: 1.5em;
-    color: #0860d3;
-    font-weight: bold;
-}
-
-.product-detail .count {
-    font-size: 1.2em;
-    color: #333;
-}
-
-.product-detail .date {
-    font-size: 1em;
-    color: #999;
-}
-
-.product-detail div{
-    margin-bottom: 12px;
-}
-
-.product-detail .detail {
-    margin-top: 100px;
-}
-
-.product-detail button{
-    width: 180px;
-    height: 50px;
-    padding: 16px;
-    margin-top: 100px;
+    white-space: pre-wrap; /* 줄바꿈 유지 */
+  }
+  
+  .youtube-video {
+    margin-bottom: 20px;
+  }
+  
+  .comments-section {
+    margin-top: 40px;
+  }
+  
+  .comment {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+  }
+  
+  .comment-user-info {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  .comment-user-photo {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .comment-actions {
+    margin-left: auto;
+  }
+  
+  .comment-actions button {
+    margin-left: 5px;
+    padding: 5px 10px;
+  }
+  
+  .add-comment {
+    margin-top: 20px;
+  }
+  
+  .add-comment textarea {
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    resize: vertical;
+  }
+  
+  .add-comment button {
+    margin-top: 10px;
+    padding: 8px 16px;
     border: none;
-    border-radius: 5px;
-    background-color: #00d6b3;
+    background-color: #007bff;
     color: #fff;
-    font-size: 14px;
-    font-weight: 800;
-    box-sizing: border-box;
-    outline: none;
-}
-
-.product-detail button:hover{
-    outline: none;
-    border: 1px solid #00d6b3;
-    background-color: #fff;
-    color: #00d6b3;
+    border-radius: 4px;
     cursor: pointer;
-    box-sizing: border-box;
-}
+  }
+  
+  .add-comment button:hover {
+    background-color: #0056b3;
+  }
+  
+  .youtube-preview {
+    margin: 10px 0;
+  }
+  
+  .youtube-info {
+    margin-top: 5px;
+  }
+  
