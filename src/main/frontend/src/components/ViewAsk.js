@@ -31,8 +31,9 @@ const ViewAsk = () => {
     fetchAsk();
   }, [anum]);
 
-  const handleUpdate = () => {
-    navigate(`/asks/update/${anum}`);
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return !isNaN(date.getTime()) ? date.toLocaleString() : "Invalid Date";
   };
 
   const handleDelete = async () => {
@@ -58,55 +59,6 @@ const ViewAsk = () => {
     }
   };
 
-  const handleBackToList = () => {
-    navigate("/asks"); // 게시글 목록 페이지로 이동
-  };
-
-  const formatDate = (timestamp) => {
-    return new Date(timestamp).toLocaleString();
-  };
-
-  // 파일 미리보기 함수
-  const renderFilePreview = (filePath) => {
-    const fileExtension = filePath.split('.').pop().toLowerCase(); // 파일 확장자를 추출
- // 이미지 파일인지 확인 (jpg, jpeg, png, gif 확장자 확인)
- if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
-  return (
-    <div>
-      <p>파일 미리보기:</p>
-      <img
-        src={`http://localhost:8080${filePath}`}
-        alt="첨부파일 미리보기"
-        style={{ maxWidth: '100%', height: 'auto' }}
-      />
-    </div>
-  );
-} 
-// PDF 파일인 경우
-else if (fileExtension === 'pdf') {
-  return (
-    <div>
-      <p>파일 미리보기:</p>
-      <embed
-        src={`http://localhost:8080${filePath}`}
-        type="application/pdf"
-        width="100%"
-        height="600px"
-      />
-    </div>
-  );
-}
-// 그 외 파일은 다운로드 링크 제공
-else {
-  return (
-    <div>
-      <p>파일 다운로드: <a href={`http://localhost:8080${filePath}`} target="_blank" rel="noopener noreferrer">파일 보기</a></p>
-    </div>
-  );
-}
-};
-
-
   return (
     <div className="view-ask-container">
       <h1>문의글 조회</h1>
@@ -119,9 +71,9 @@ else {
             </tr>
             <tr>
               <th>작성자</th>
-              <td>{ask.user ? ask.user.id : "Unknown"}</td>
+              <td>{ask.userId ? ask.userId : "Unknown"}</td>
               <th>작성일</th>
-              <td>{formatDate(ask.aDate)}</td>
+              <td>{ask.adate ? formatDate(ask.adate) : "Unknown"}</td>
             </tr>
             <tr>
               <th colSpan="4">내용</th>
@@ -149,8 +101,8 @@ else {
         <p>문의글을 불러오는 중입니다...</p>
       )}
       <div className="view-ask-buttons">
-        <button onClick={handleBackToList}>목록으로 돌아가기</button>
-        <button onClick={handleUpdate}>수정하기</button>
+        <button onClick={() => navigate("/asks")}>목록으로 돌아가기</button>
+        <button onClick={() => navigate(`/asks/update/${anum}`)}>수정하기</button>
         <button onClick={handleDelete}>삭제하기</button>
       </div>
     </div>
