@@ -8,20 +8,19 @@ const ChatPage = () => {
   const { senderId, recipientId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-
+  const token = localStorage.getItem("jwtToken");
   const [message, setMessage] = useState("");
   const [stompClient, setStompClient] = useState(null);
   const [connected, setConnected] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [userNames, setUserNames] = useState({});
 
-  // 사용자 이름을 가져오는 함수
+  // 사용자 이름을 가져오는 함수 (이름을 표시하지 않으므로 이 부분은 삭제)
   const fetchUserNames = async () => {
     try {
       const response = await fetch(`http://localhost:8080/users/${senderId},${recipientId}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+          Authorization: `Bearer ${token}`,
+      },
       });
       const users = await response.json();
       const namesMap = {};
@@ -29,7 +28,6 @@ const ChatPage = () => {
         namesMap[user.id] = user.name;
       });
       console.log("사용자 이름 맵:", namesMap); // 디버깅 로그
-      setUserNames(namesMap);
     } catch (error) {
       console.error("Error fetching user names:", error);
     }
@@ -99,6 +97,7 @@ const ChatPage = () => {
           senderId: senderId,
           recipientId: recipientId,
           content: message,
+          timestamp: new Date(),
         })
       );
 
@@ -129,6 +128,10 @@ const ChatPage = () => {
   return (
     <div>
       <h2>DM</h2>
+      {/* 대화 중인 사용자들의 ID 표시 */}
+      <div>
+        <p>대화 중인 사용자 ID: {recipientId}</p>
+      </div>
       <div>
         <input
           type="text"
@@ -151,7 +154,7 @@ const ChatPage = () => {
               color: msg.isSender ? "blue" : "green",
             }}
           >
-            <strong>{msg.isSender ? "나" : userNames[msg.senderId] || "Unknown"}:</strong> {msg.content}
+            <strong>{msg.isSender ? "나" : "상대방"}:</strong> {msg.content}
           </div>
         ))}
       </div>
