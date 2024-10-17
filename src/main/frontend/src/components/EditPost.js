@@ -7,9 +7,9 @@ import "./EditPost.css"; // 새로 정의된 CSS
 export default function EditPost() {
   const [post, setPost] = useState({
     poContents: "",
-    hashtags: [], // 해시태그 추가
-    existingFileUrl: null, // 기존 파일 URL
-    file: null, // 새로 선택된 파일
+    hashtags: [],
+    existingFileUrl: null,
+    file: null,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,7 +20,7 @@ export default function EditPost() {
   useEffect(() => {
     const loadPost = async () => {
       try {
-        const result = await axios.get(`http://localhost:8080/posts/${poNum}`);
+        const result = await axios.get(`http://localhost:8080/api/posts/${poNum}`);
         setPost({
           poContents: result.data.poContents,
           hashtags: result.data.hashtags || [],
@@ -42,14 +42,14 @@ export default function EditPost() {
 
     const formData = new FormData();
     formData.append('poContents', post.poContents);
-    formData.append('hashtags', post.hashtags.join(' ')); // 해시태그를 문자열로 변환하여 전송
+    formData.append('hashtags', post.hashtags.join(' ')); // 배열을 공백으로 구분된 문자열로 변환
 
     if (post.file) {
       formData.append('file', post.file);
     }
 
     try {
-      await axios.put(`http://localhost:8080/posts/${poNum}`, formData, {
+      await axios.put(`/api/posts/${poNum}`, formData, {
         headers: {
           'Authorization': `Bearer ${user?.token || localStorage.getItem('jwtToken')}`,
           'Content-Type': 'multipart/form-data',
@@ -77,16 +77,12 @@ export default function EditPost() {
           onChange={(e) => setPost({ ...post, poContents: e.target.value })}
           required
         />
-
-        {/* 해시태그 입력 필드 */}
         <input
           type="text"
           value={post.hashtags.map(tag => `#${tag}`).join(' ')}
           onChange={handleHashtagsChange}
           placeholder="#해시태그 입력"
         />
-
-        {/* 기존 파일이 있으면 미리보기 제공 */}
         {post.existingFileUrl && (
           <div className="existing-file-preview">
             {post.existingFileUrl.endsWith(".mp4") ? (
@@ -98,18 +94,6 @@ export default function EditPost() {
             )}
           </div>
         )}
-
-        <label>
-          <input
-            type="checkbox"
-            checked={post.deleteExistingFile || false}
-            onChange={(e) => setPost({ ...post, deleteExistingFile: e.target.checked })}
-          />
-          파일 삭제
-        </label>
-
-
-        {/* 새 파일 선택 */}
         <input
           type="file"
           onChange={(e) => setPost({ ...post, file: e.target.files[0] })}

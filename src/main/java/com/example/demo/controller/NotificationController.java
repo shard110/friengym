@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.NotificationResponse;
 import com.example.demo.entity.Notification;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.service.NotificationService;
 import com.example.demo.service.PostService;
 
@@ -25,6 +28,8 @@ import com.example.demo.service.PostService;
 @RequestMapping("/notifications")
 @CrossOrigin(origins = "http://localhost:3000")
 public class NotificationController {
+
+    private static final Logger logger = LoggerFactory.getLogger(NotificationController.class);
 
     @Autowired
     private NotificationService notificationService;
@@ -44,10 +49,14 @@ public class NotificationController {
                     .collect(Collectors.toList());
 
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(401).body("Unauthorized");
-        }
+        } catch (UserNotFoundException e) {
+        logger.error("사용자를 찾을 수 없음", e);
+        return ResponseEntity.status(404).body("사용자를 찾을 수 없습니다");
+    } catch (Exception e) {
+        logger.error("알림을 가져오는 중 오류 발생", e);
+        return ResponseEntity.status(500).body("서버 내부 오류");
     }
+}
 
     // 알림 읽음 처리
     @PostMapping("/{id}/read")

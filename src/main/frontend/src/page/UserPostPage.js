@@ -215,20 +215,56 @@ const handleUnblockUser = async () => {
 
       <div className="posts-section">
         <h2>{userInfo.name}님의 게시물</h2>
-        <div className="posts-grid">
-          {posts.map((post) => (
-            <div key={post.poNum} className="post-item">
-              {post.fileUrl ? (
-                <img src={post.fileUrl} alt="Post" />
-              ) : (
-                <div className="post-text">{post.poContents || "내용 없음"}</div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
+       {/* 미디어 게시글 */}
+    <h2>Media</h2>
+    <div className="posts-grid">
+      {posts
+        .filter((post) => post.fileUrl)
+        .map((post) => (
+          <div
+            key={post.poNum}
+            className="post-item"
+            onClick={() => navigate(`/posts/${post.poNum}`)}
+          >
+            {/\.(jpeg|jpg|png|gif)$/i.test(post.fileUrl) ? (
+              <img src={post.fileUrl} alt="Post" />
+            ) : /\.(mp4|webm|ogg)$/i.test(post.fileUrl) ? (
+              <video
+                src={post.fileUrl}
+                controls
+                autoPlay
+                muted
+                loop
+                className="post-video"
+              />
+            ) : (
+              <p>Unsupported media type</p>
+            )}
+            <div className="post-info"></div>
+          </div>
+        ))}
     </div>
-  );
+
+  {/* 텍스트 게시글 */}
+  <h2>Text</h2>
+  <div className="posts-grid">
+    {posts
+      .filter((post) => !post.fileUrl)
+      .map((post) => (
+        <div key={post.poNum}
+        className="post-item"
+        onClick={() => navigate(`/posts/${post.poNum}`)}
+        >
+          <div className="post-info">
+            <h4>{post.poContents || "내용 없음"}</h4>
+          </div>
+        </div>
+      ))}
+  </div>
+</div>
+
+</div>
+);
 };
 
 export default UserPostPage;

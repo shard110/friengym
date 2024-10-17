@@ -154,3 +154,13 @@
   border-radius: 50%;
   margin-right: 10px;
 }
+
+.post-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.post-actions button {
+  margin-left: 5px;
+}

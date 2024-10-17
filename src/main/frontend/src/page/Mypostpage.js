@@ -213,21 +213,34 @@ const Mypostpage = () => {
 
       <div className="posts-section">
   {/* 미디어 게시글 */}
-  <h2>Media</h2>
-  <div className="posts-grid">
-    {posts
-      .filter((post) => post.fileUrl)
-      .map((post) => (
-        <div key={post.poNum}
-        className="post-item"
-        onClick={() => navigate(`/posts/${post.poNum}`)}
-        >
-          <img src={post.fileUrl} alt="Post" />
-          <div className="post-info">
+    <h2>Media</h2>
+    <div className="posts-grid">
+      {posts
+        .filter((post) => post.fileUrl)
+        .map((post) => (
+          <div
+            key={post.poNum}
+            className="post-item"
+            onClick={() => navigate(`/posts/${post.poNum}`)}
+          >
+            {/\.(jpeg|jpg|png|gif)$/i.test(post.fileUrl) ? (
+              <img src={post.fileUrl} alt="Post" />
+            ) : /\.(mp4|webm|ogg)$/i.test(post.fileUrl) ? (
+              <video
+                src={post.fileUrl}
+                controls
+                autoPlay
+                muted
+                loop
+                className="post-video"
+              />
+            ) : (
+              <p>Unsupported media type</p>
+            )}
+            <div className="post-info"></div>
           </div>
-        </div>
-      ))}
-  </div>
+        ))}
+    </div>
 
   {/* 텍스트 게시글 */}
   <h2>Text</h2>

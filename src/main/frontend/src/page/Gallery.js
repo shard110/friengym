@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
+import LikeButton from "../components/LikeButton"; // LikeButton 컴포넌트 추가
 import PostSideBar from "../components/PostSideBar";
 import ReportPopup from "../components/ReportPopup"; // 신고 팝업 추가
 import YouTubePreview from "../components/YouTubePreview";
@@ -15,16 +16,18 @@ const Gallery = () => {
   const { user } = useAuth(); // 현재 로그인한 유저 정보
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
   const [likedPosts, setLikedPosts] = useState({}); // 좋아요 상태를 관리하는 상태
-  
+  const userId = user?.id;
 
-  // 유저가 로드된 후에만 좋아요 상태를 초기화
   useEffect(() => {
-    if (!user?.id) return; // 유저 정보가 없으면 실행하지 않음
-
-    const likedPostsKey = `likedPosts_${user.id}`;
+    if (!user || !userId) return; // user 객체가 없거나 id가 없으면 실행하지 않음
+    
+    const likedPostsKey = `likedPosts_${userId}`;
     const storedLikedPosts = JSON.parse(localStorage.getItem(likedPostsKey)) || {};
     setLikedPosts(storedLikedPosts);
-  }, [user?.id]);
+  }, [userId]); // user.id가 변경될 때만 실행
+  
+  
+  
 
    // 게시글 불러오기
    useEffect(() => {
@@ -102,60 +105,6 @@ const Gallery = () => {
       });
   };
   
-  
-
-  const handleLike = async (post) => {
-    const token = localStorage.getItem("jwtToken");
-  
-    if (!token) {
-      alert("로그인이 필요합니다.");
-      return;
-    }
-  
-    const likedPostsKey = `likedPosts_${user?.id}`; // 유저별로 좋아요 누른 게시글 관리
-    const likedPosts = JSON.parse(localStorage.getItem(likedPostsKey)) || {};
-  
-    // 이미 좋아요를 누른 경우 처리
-    if (likedPosts[post.poNum]) {
-      alert("이미 이 게시글에 좋아요를 눌렀습니다.");
-      return;
-    }
-  
-    try {
-      const response = await fetch(`/api/posts/${post.poNum}/like`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-  
-      if (!response.ok) {
-        const errorText = await response.text(); // 서버에서 반환된 오류 메시지 추출
-        if (errorText.includes("이미 이 게시글에 좋아요를 눌렀습니다")) {
-          alert("이미 이 게시글에 좋아요를 눌렀습니다.");
-        } else {
-          throw new Error(errorText); // 기타 오류는 그대로 처리
-        }
-        return;
-      }
-  
-      const updatedPost = await response.json(); // 성공 시 업데이트된 게시글 데이터
-      setPosts((prevPosts) =>
-        prevPosts.map((p) => (p.poNum === updatedPost.poNum ? updatedPost : p))
-      );
-  
-      // 로컬 스토리지에 유저의 좋아요 기록 업데이트
-      const updatedLikedPosts = { ...likedPosts, [post.poNum]: true };
-      localStorage.setItem(likedPostsKey, JSON.stringify(updatedLikedPosts));
-  
-      alert("좋아요를 눌렀습니다.");
-    } catch (error) {
-      console.error("좋아요 처리 중 오류:", error);
-      alert("좋아요 처리에 실패했습니다.");
-    }
-  };
-  
 
 if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
@@ -179,24 +128,24 @@ if (loading) return <div>로딩 중...</div>;
               style={{ cursor: "pointer" }}
             >
               <div className="user-info">
-                {post.user ? (
+                {post.userId ? (
                   <>
                     <img
-                      src={post.user.photo || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
-                      alt={post.user.id}
+                      src={post.userPhoto  || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                      alt={post.userId}
                       className="user-photo"
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate(`/users/${post.user.id}`);
+                        navigate(`/users/${post.userId}`);
                       }}
                     />
                     <span
                     onClick={(e) => {
                       e.stopPropagation();
-                      navigate(`/users/${post.user.id}`);
+                      navigate(`/users/${post.userId}`);
                     }}
                     ></span>
-                    <span>{post.user.id}</span>
+                    <span>{post.userId}</span>
                        {/* 신고 버튼 */}
                        <button
                       className="report-btn"
@@ -219,7 +168,12 @@ if (loading) return <div>로딩 중...</div>;
                   {/\.(jpeg|jpg|png|gif)$/i.test(post.fileUrl) ? (
                     <img src={post.fileUrl} alt="Uploaded" className="post-image" />
                   ) : /\.(mp4|mov)$/i.test(post.fileUrl) ? (
-                    <video controls className="post-video">
+                    <video
+                    controls
+                    autoPlay
+                    muted
+                    loop
+                    className="gallery-post-video">
                       <source src={post.fileUrl} type="video/mp4" />
                     </video>
                   ) : (
@@ -257,20 +211,17 @@ if (loading) return <div>로딩 중...</div>;
               </div>
 
               <div className="post-actions">
-                <button
-                  className="like-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleLike(post);
-                  }}
-                  disabled={likedPosts[post.poNum]} // 이미 좋아요를 눌렀다면 버튼 비활성화
-                >
-                  👍 {post.likes}
-                </button>
+              <LikeButton
+                  post={post}
+                  likedPosts={likedPosts}
+                  setLikedPosts={setLikedPosts}
+                  setPosts={setPosts}
+                  user={user}
+                />
 
                 <span>👁 {post.viewCnt}</span>
 
-                {user?.id === post.user?.id && (
+                {userId === post.userId  && (
                   <div className="action-buttons">
                     <button
                       onClick={(e) => {

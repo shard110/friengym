@@ -46,7 +46,7 @@ const  PostSideBar = () => {
     <Link to="/notifications">알림
     {unreadCount > 0 && <span style={{ color: 'red' }}> ({unreadCount})</span>}
     </Link>
-    <Link to="/create-post">만들기</Link>
+    <Link to="/liked-posts">좋아요 목록</Link>
     <Link to="/totalmypage">프로필</Link>
     </div>
     </nav>

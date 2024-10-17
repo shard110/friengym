@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.demo.entity.Notification;
+import com.example.demo.entity.Post;
 import com.example.demo.entity.User;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
@@ -14,4 +15,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     // 읽지 않은 알림 수 조회
     int countByRecipientAndIsReadFalse(User recipient);
+
+    void deleteByPost(Post post);
 }

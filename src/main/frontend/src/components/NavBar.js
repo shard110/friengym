@@ -33,8 +33,7 @@ export default function Navbar() {
     return <div>사용자 정보를 불러오지 못했습니다.</div>;
   }
 
-  // user 객체가 중첩된 구조일 경우 올바르게 접근
-  const userName = user.user?.name || "사용자"; // name을 중첩된 구조에서 가져오기
+  
 
   return (
     <nav className="navbarH">
@@ -68,7 +67,7 @@ export default function Navbar() {
         <div className="navbar-user-menu">
           {user ? (
             <div className="user-menu-logged-in">
-              <span className="nav-link">환영합니다! {userName}님</span>
+              <span className="nav-link">환영합니다! {user.name}님</span>
               <button onClick={handleLogout} className="nav-link">로그아웃</button>
               <button onClick={() => navigate('/totalmypage')} className="nav-link">마이페이지</button>
             </div>
