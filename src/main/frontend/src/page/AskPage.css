@@ -60,29 +60,31 @@
     border-color: #f2994a; 
 }
 
-.ask-page .passbutton {
-    display: flex; 
-    justify-content: center; 
-    margin-top: 15px; 
+.password-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 수직 정렬을 위해 추가 */
+    margin-top: 20px; /* 위쪽 여백 추가 */
 }
 
-.ask-page .passbutton button {
+.password-section button {
     background-color: #03c7a6; 
     color: white; 
     border: none; 
     border-radius: 30px; 
     cursor: pointer; 
     font-size: 20px; 
-    font-weight: bold;
     padding: 12px 20px; 
     transition: background-color 0.3s, transform 0.2s; 
     width: 170px; 
+    margin-top: 10px; /* 버튼과 입력 필드 사이의 여백 추가 */
 }
 
-.ask-page .passbutton button:hover {
+.password-section button:hover {
     background-color: #f2994a; 
     transform: scale(1.05); 
 }
+
 
 .ask-page .pagination {
     display: flex; 
