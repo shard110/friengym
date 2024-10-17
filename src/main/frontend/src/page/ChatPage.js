@@ -8,35 +8,13 @@ const ChatPage = () => {
   const { senderId, recipientId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const token = localStorage.getItem("jwtToken");
+  const token = localStorage.getItem("jwtToken");  // JWT 토큰 가져오기
   const [message, setMessage] = useState("");
   const [stompClient, setStompClient] = useState(null);
   const [connected, setConnected] = useState(false);
   const [messages, setMessages] = useState([]);
 
-  // 사용자 이름을 가져오는 함수 (이름을 표시하지 않으므로 이 부분은 삭제)
-  const fetchUserNames = async () => {
-    try {
-      const response = await fetch(`http://localhost:8080/users/${senderId},${recipientId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-      },
-      });
-      const users = await response.json();
-      const namesMap = {};
-      users.forEach(user => {
-        namesMap[user.id] = user.name;
-      });
-      console.log("사용자 이름 맵:", namesMap); // 디버깅 로그
-    } catch (error) {
-      console.error("Error fetching user names:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchUserNames(); // 컴포넌트 마운트 시 사용자 이름 가져오기
-  }, [senderId, recipientId]);
-
+  // WebSocket 연결 및 메시지 수신 설정
   useEffect(() => {
     if (!user || connected) {
       return;
@@ -46,28 +24,29 @@ const ChatPage = () => {
     const client = Stomp.over(socket);
 
     client.connect(
-      { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      { Authorization: `Bearer ${token}` }, // Authorization 헤더에 토큰 추가
       (frame) => {
-        console.log("WebSocket 연결 성공:", frame); // 디버깅 로그
+        console.log("WebSocket 연결 성공:", frame);  // 디버깅 로그
         setConnected(true);
         setStompClient(client);
 
+        // 수신한 메시지 처리
         client.subscribe(
           `/user/${user.user.id}/queue/messages`,
           (messageOutput) => {
             const notification = JSON.parse(messageOutput.body);
-            console.log("수신한 메시지:", notification); // 디버깅 로그
+            // console.log("수신한 메시지:", notification);  // 디버깅 로그
 
             if (notification.recipientId === user.user.id) {
               setMessages((prevMessages) => {
-                if (!prevMessages.some(prevMsg => prevMsg.id === notification.id)) {
-                  console.log("새 메시지 추가:", notification); // 디버깅 로그
+                // 중복 메시지 처리
+                if (!prevMessages.some((prevMsg) => prevMsg.id === notification.id)) {
                   return [
                     ...prevMessages,
                     { ...notification, isSender: notification.senderId === user.user.id },
                   ];
                 }
-                return prevMessages; // 중복 메시지 처리
+                return prevMessages;
               });
             }
           }
@@ -78,16 +57,18 @@ const ChatPage = () => {
       }
     );
 
+    // 컴포넌트 언마운트 시 WebSocket 연결 해제
     return () => {
       if (client && connected) {
         client.disconnect(() => {
-          console.log("WebSocket 연결 해제"); // 디버깅 로그
+          console.log("WebSocket 연결 해제");  // 디버깅 로그
           setConnected(false);
         });
       }
     };
-  }, [connected, user, senderId, recipientId]);
+  }, [connected, user, senderId, recipientId, token]);
 
+  // 메시지 보내기
   const sendMessage = () => {
     if (stompClient && connected && message) {
       stompClient.send(
@@ -106,19 +87,20 @@ const ChatPage = () => {
         { senderId: senderId, content: message, isSender: true },
       ]);
 
-      console.log("메시지 전송:", message); // 디버깅 로그
-      setMessage("");
+      console.log("메시지 전송:", message);  // 디버깅 로그
+      setMessage("");  // 메시지 입력창 비우기
     } else {
       console.error("WebSocket 연결이 되어 있지 않거나 메시지가 비어 있습니다.");
     }
   };
 
+  // WebSocket 연결 해제 및 페이지 이동
   const disconnectAndGoBack = () => {
     if (stompClient && connected) {
       stompClient.disconnect(() => {
-        console.log("WebSocket 연결 해제"); // 디버깅 로그
+        console.log("WebSocket 연결 해제");  // 디버깅 로그
         setConnected(false);
-        navigate(`/userpostpage/${senderId}`);
+        navigate(`/users/${recipientId}`);
       });
     } else {
       console.error("WebSocket 연결이 되어 있지 않습니다.");
