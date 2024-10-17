@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
-import { useAuth } from "./AuthContext"; 
+import { useAuth } from "./AuthContext";
 import "./Chat.css";
 
 function Chat() {
     const { user } = useAuth();
+    const token = localStorage.getItem('token'); 
+    
     const [connectedUsers, setConnectedUsers] = useState([]);
     const [messages, setMessages] = useState([]);
     const [selectedUserId, setSelectedUserId] = useState(null);
@@ -13,6 +15,7 @@ function Chat() {
     const [messageInput, setMessageInput] = useState("");
     const [loading, setLoading] = useState(false);
     const messagesEndRef = useRef(null);
+    
 
     // 사용자가 클릭했을 때 대화 내용을 가져오는 함수
     const fetchAndDisplayUserChat = async (userId) => {
@@ -52,8 +55,9 @@ function Chat() {
 
             connect();
         }
-    }, [user?.id]); 
+    }, [user?.id]);
 
+    //구독
     const onConnected = (client) => {
         client.subscribe(`/user/${user.id}/queue/messages`, onMessageReceived);
         fetchConnectedUsers();
@@ -61,8 +65,15 @@ function Chat() {
 
     const fetchConnectedUsers = async () => {
         setLoading(true);
+        const token = localStorage.getItem('token'); // 로그인 후 저장된 토큰 가져오기
         try {
-            const response = await fetch("http://localhost:8080/users");
+            const response = await fetch(`http://localhost:8080/in-chat?userId=${user.id}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
             const data = await response.json();
             console.log("Fetched users:", data);
             setConnectedUsers(data.filter((u) => u.id !== user.id)); // 현재 사용자 제외
@@ -125,14 +136,15 @@ function Chat() {
                         <p>Loading...</p>
                     ) : connectedUsers.length > 0 ? (
                         <ul>
-                            {connectedUsers.map((u) => (
-                                <li key={u.id} onClick={() => handleUserClick(u.id)}>
+                            {connectedUsers.map((u, index) => (
+                                <li key={`${u.id}-${index}`} onClick={() => handleUserClick(u.id)}>
+                                    <img src={`http://localhost:8080/api/user/photo/${u.photo}`} alt={`${u.name}'s profile`} className="user-photo" />
                                     {u.name}
                                 </li>
                             ))}
                         </ul>
                     ) : (
-                        <p>온라인 사용자가 없습니다.</p>
+                        <p>대화중인 사용자 없음.</p>
                     )}
                 </div>
                 <div className="messages">

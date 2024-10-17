@@ -176,6 +176,10 @@ const handleUnblockUser = async () => {
     return <div>Error: Failed to load user information.</div>;
   }
 
+  const handleDMButtonClick = () => {
+    navigate(`/chat/${userInfo.id}`); // 사용자 ID를 URL 파라미터로 전달
+  };
+
   return (
     <div className="user-postpage-container">
       <div className="profile-section">
@@ -207,7 +211,8 @@ const handleUnblockUser = async () => {
                 <button onClick={handleBlockUser} className="block-btn">차단하기</button>
               )}
 
-                <button className="DM-btn"> DM </button>
+                {/* DM 버튼 추가 */}
+                <button onClick={handleDMButtonClick} className="DM-btn"> DM </button>
             </>
           )}
         </div>

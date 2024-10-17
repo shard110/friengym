@@ -141,3 +141,10 @@ body {
 .hidden {
   display: none;
 }
+
+.user-photo {
+  width: 30px;  /* 원하는 크기로 조정 */
+  height: 30px; /* 원하는 크기로 조정 */
+  border-radius: 50%; /* 원형으로 만들기 */
+  margin-right: 10px; /* 이름과 사진 간의 간격 */
+}
