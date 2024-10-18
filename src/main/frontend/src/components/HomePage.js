@@ -5,9 +5,9 @@ import logo from '../img/logo.png';
 
 // 슬라이드 데이터
 const slides = [
-  { id: 1, content: '슬라이드 1' },
-  { id: 2, content: '슬라이드 2' },
-  { id: 3, content: '슬라이드 3' },
+  { id: 1, content: '슬라이드 1', img: '/images/banner1.jpg' },
+  { id: 2, content: '슬라이드 2', img: '/images/banner3.jpg' },
+  { id: 3, content: '슬라이드 3', img: '/images/banner4.jpg' },
 ];
 
 const HomePage = () => {
@@ -24,6 +24,10 @@ const HomePage = () => {
 
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  const handleSlideClick = (index) => {
+    setCurrentSlide(index);
   };
 
   useEffect(() => {
@@ -56,15 +60,21 @@ const HomePage = () => {
       {/* 슬라이드 부분 */}
       <div className="slider">
         <div className="slides" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
-          {slides.map(slide => (
-            <div key={slide.id} className="slide">
-              {slide.content}
+          {slides.map((slide, index) => (
+            <div key={slide.id} className="slide" onClick={() => handleSlideClick(index)}>
+              <img src={slide.img} alt={slide.content} className="slide-image" />
+              <div className="slide-content">{slide.content}</div>
             </div>
           ))}
         </div>
-        <div className="controls">
-          <button onClick={prevSlide} className="control prev">◀</button>
-          <button onClick={nextSlide} className="control next">▶</button>
+        <div className="indicators">
+          {slides.map((_, index) => (
+            <div
+              key={index}
+              className={`indicator ${currentSlide === index ? 'active' : ''}`}
+              onClick={() => setCurrentSlide(index)}
+            />
+          ))}
         </div>
       </div>
     </>
