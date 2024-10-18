@@ -77,7 +77,7 @@ const UserList = () => {
     <div>
       <h2>사용자 목록</h2>
       {error && <p>{error}</p>}
-      <table>
+      <table className="common-table">
         <thead>
           <tr>
             <th>ID</th>

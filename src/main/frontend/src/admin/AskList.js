@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import './ListStyles.css'; // CSS 파일 import
+import './ListStyles.css';
 
 const AskList = () => {
   const [asks, setAsks] = useState([]);
@@ -49,7 +49,7 @@ const AskList = () => {
   return (
     <div className="container">
       <h2>문의글 목록</h2>
-      <table>
+      <table className="common-table">
         <thead>
           <tr>
             <th>제목</th>

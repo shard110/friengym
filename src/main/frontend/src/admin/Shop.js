@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Shop.css'; // CSS 파일 임포트
+import './ListStyles.css';
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
@@ -194,7 +194,7 @@ const Shop = () => {
       </div>
 
       {/* 상품 목록을 표 형식으로 표시 */}
-      <table className="shop-table">
+      <table className="common-table">
         <thead>
           <tr>
             <th>상품명</th>

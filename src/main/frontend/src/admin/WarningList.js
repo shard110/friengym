@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'; // Link 추가
 import axios from 'axios';
+import './ListStyles.css';
 
 const WarningList = () => {
   const [warnings, setWarnings] = useState([]);
@@ -42,7 +43,7 @@ const WarningList = () => {
   return (
     <div>
       <h2>Warning List</h2>
-      <table>
+      <table className="common-table">
         <thead>
           <tr>
             <th>ID</th>
