@@ -1,17 +1,24 @@
 .cart {
-    width: 70%;
-    padding: 20px;
+    width: 100%;
+    padding-bottom: 20%;
+}
+
+.cart .cart-wrap{
+    max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
 }
 
 .cart h2 {
     font-size: 24px;
-    margin-bottom: 80px;
+    margin: 80px;
 }
 
 .cart table {
     width: 100%;
     border-collapse: collapse;
+    box-shadow: none;
+    margin-bottom: 40px;
 }
 
 .cart th, .cart td {
@@ -19,27 +26,223 @@
     padding: 32px 16px;
     text-align: center;
     vertical-align:middle;
+    background: none;
+    color: #333;
+}
+
+.cart td a{
+    color: #333;
 }
 
 .cart th{
     border-bottom: 1px solid #999;
 }
 
+.cart tr:nth-child(even){
+    background: none;
+}
+
 .cart-img {
     width: 100px;
     height: 100px;
     object-fit: cover;
+    border-radius: 6px;
 }
 
 .cart button {
     min-width: 0;
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     padding: 0px;
     margin: 0 5px;
+    background:none;
+    border: none;
+    cursor: pointer;
+    font-family: "Noto Sans KR", sans-serif !important;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
+
+.cart .buy{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.cart .buy span{
+    line-height: 1.8em;
+}
+
+.cart .buy>span{
+    font-weight: 400;
+}
+
+.cart .buy>span>span{
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.cart .buy button{
+    width: 320px;
+    background: #03C7A6;
+    height: 48px;
+    border-radius: 100px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 24px 0;
+}
+
+.cart .buy button svg{
+    margin-left: 16px;
+}
+
 
 .cart .btn_del:nth-last-of-type(1){
     font-size: 12px;
     width: 60px;
+}
+
+.order-user span{
+    display: block;
+    line-height: 2em;
+    padding-left: 20px;
+}
+
+.order-user span:first-child{
+    border-top: #999 1px solid;
+    padding-top: 32px;
+    padding-bottom: 16px;
+    font-size: 18px;
+}
+
+.order-user span:last-child{
+    border-bottom: #999 1px solid;
+    padding-bottom: 40px;
+    margin-bottom: 7em;
+}
+
+.order-total{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.order tfoot tr td:first-child{
+
+    border-top: #333 solid 1px;
+}
+.order tfoot td:last-child{
+
+    border-bottom: #333 solid 1px;
+}
+
+.cart .order-buy{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    
+}
+
+.cart .order-buy button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 320px;
+    height: 80px;
+    border-radius: 8px;
+}
+.cart .order-buy button span{
+    margin-left: 16px;
+    color: #fff;
+}
+
+.cart .order-buy button:first-child img{
+    width: 32px;
+    height: auto;
+    border-radius: 50px;
+}
+.cart .order-buy button:first-child{
+    background-color: #0064FF;
+    margin-bottom: 16px;
+}
+.cart .order-buy button:last-child{
+    background-color: #f12214;
+    color: #fff;
+}
+
+td.order-total{
+    background: #f7f7f7;
+}
+
+/*모바일*/
+
+@media (max-width: 1280px){
+    .cart .cart-wrap{
+        width: 100vw;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    .cart .float-menu {
+        background-color: #fff;
+        width: 100%;
+        bottom: 0;
+        box-shadow: none;
+        border: 1px solid #e0e0e0;
+        border-radius: 0;
+    }
+
+    .cart th{
+        display: none;
+    }
+
+    .cart td:nth-child(2){
+        border-bottom: none;
+    }
+
+    .cart td:nth-child(3){
+        display: none;
+    }
+
+    
+    .cart td:nth-child(4){
+        display: flex;
+        padding: 0;
+        border-bottom: none;
+    }
+
+    .cart td:nth-child(2){
+        display: flex;
+    }
+
+    .cart td:nth-child(5){
+        display: flex;
+    }
+
+    .cart tr:first-child{
+        border-top: #ddd solid 1px;
+    }
+
+    .cart .buy{
+        align-items: unset;
+        padding:  20px;
+    }
+    .cart .buy span{
+        padding-left: 3px;
+        display: block;
+    }
+    
+    .cart .buy button{
+        width: 100%;
+    }
+    
+    
+    .order tbody tr:last-child td:first-child{
+        border-bottom: #333 solid 1px;
+    }
+
 }

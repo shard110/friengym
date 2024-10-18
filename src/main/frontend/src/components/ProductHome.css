@@ -1,57 +1,64 @@
-.product-home .banner img{
-  width: 100vw;
-  max-width: 100%;
-  height: auto;
-  
-}
-
 .product-home .popular-products .navbar{
   display: none;
 }
 
-@media (min-width: 1200px) {
+.product-home section footer{
+  display: none;
+}
+
+.product-home section{
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .product-home .product-home {
+    padding: 0;
+  }
 
   /* 배너 */
   .product-home .banner {
     position: relative;
+    width: 100vw;
+    max-width: 100%;
     width: 100%;
-    height: 60vh;
     margin: 0 auto;
     overflow: hidden;
   }
-
+  
   .product-home .banner-image {
     width: 100%;
-    height: 100%;
+    height: auto;
     object-fit: cover;
   }
 
   .product-home .prev-button, .product-home .next-button {
-    width: 48px;
-    height: 48px;
-    border: none;
-    border-bottom: 2px solid #fff;
-    border-left: 2px solid #fff;
     position: absolute;
-    top: 48%;
+    width: 10%;
+    height: 30%;
+    top: 50%;
+    transform: translateY(-50%);
     cursor: pointer;
-    z-index: 1;
-    background-color: rgba(255, 255, 255, 0);
+    z-index: 9;
+    border: none;
+    opacity: 75%;
+    background: none;
+    color: #fff;
+  }
+
+  .product-home .prev-button:hover polyline, .product-home .next-button:hover polyline{
+    color: #03C7A6;
   }
 
   .product-home .prev-button {
-    left: 40px;
-    transform: rotate(45deg);
+    left: 0;
   }
 
   .product-home .next-button {
-    right: 40px;
-    transform: rotate(225deg);
+    right: 0;
   }
 
   /* 상품 섹션 */
   #shop_cont{
-    width: 1200px;
     margin: 0 auto;
   }
 
@@ -86,7 +93,6 @@
 
   .product-home .product-list {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
     margin-bottom: 20px;
   }
@@ -125,13 +131,11 @@
   .product-home .ad{
     width: 100%;
     height: 360px;
-    background: url("../img/ad1.jpg") left center/100% no-repeat fixed;
+    background: url("../img/ad1.jpg") center center/cover fixed;
     margin: 100px 0;
-  }
-
-  .product-home .ad{
     display: flex;
     flex-direction: column;
+    text-align: center;
     justify-content: center;
   }
 
@@ -161,7 +165,48 @@
   .product-home .ad a:hover{
     background-color: #ffffff56;
     opacity: 100%;
+    transition: 0.8s ease;
+    text-decoration: none;
   }
+  
+@media (max-width: 1280px) {
+  .product-home .prev-button svg, .product-home .next-button svg{
+    width: 32px;
+  }
+
+  .product-home section{
+    width: 100vw;
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-x: scroll;
+  }
+
+  .product-home section::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .product-home .popular-products>h2, .product-home .popular-products>.flex_box {
+    padding: 0 20px;
+  }
+
+  .product-home .ad{
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+  .product-home .ad p:first-child{
+    font-size: 20px;
+  }
+  
+  .product-home .product-list {
+    display: flex;
+    width: 1200px;
+    flex-wrap: nowrap;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    padding: 0;
+  }
+
 }
 
 

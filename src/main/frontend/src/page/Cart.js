@@ -5,6 +5,9 @@ import { useAuth } from '../components/AuthContext';
 import './Cart.css';
 import ShopLnb from '../components/ShopLnb';
 import FloatingMenu from '../components/FloatingMenu';
+import replace from "../img/product_replace.png";
+import { Minus, Plus, Trash2, Truck } from 'react-feather';
+
 
 const Cart = () => {
     const { user, loading:authLoading } = useAuth();
@@ -91,10 +94,19 @@ const Cart = () => {
         return <div>Loading...</div>;
     }
 
+    const onErrorImg = (e) => {
+        e.target.src = replace;
+      };
+
+    const calculateTotalPrice = () => {
+        return cartItems.reduce((total, item) => total + item.product.pPrice * item.cCount, 0).toLocaleString();
+    }
+
     return (
         <div className="cart">
             <ShopLnb />
             <FloatingMenu />
+            <div className='cart-wrap'>
             <h2>장바구니</h2>
             {Array.isArray(cartItems) && cartItems.length === 0 ? (
                 <p>장바구니가 비어 있습니다.</p>
@@ -115,7 +127,7 @@ const Cart = () => {
                             <tr key={item.cnum}>
                                 <td>
                                     <Link to={`/productslist/${item.product.pNum}`}>
-                                        <img src={item.product.pImgUrl} alt={item.product.pName} className="cart-img" />
+                                        <img src={item.product.pImgUrl} alt={item.product.pName} className="cart-img" onError={onErrorImg}/>
                                     </Link>
                                 </td>
                                 <td>
@@ -125,20 +137,24 @@ const Cart = () => {
                                 </td>
                                 <td>{item.product.pPrice.toLocaleString()}원</td>
                                 <td>
-                                    <button onClick={() => updateCartItemCount(item.cnum, item.cCount - 1)} disabled={item.cCount <= 1}>-</button>
+                                    <button onClick={() => updateCartItemCount(item.cnum, item.cCount - 1)} disabled={item.cCount <= 1}><Minus /></button>
                                     {item.cCount}
-                                    <button onClick={() => updateCartItemCount(item.cnum, item.cCount + 1)}>+</button>
+                                    <button onClick={() => updateCartItemCount(item.cnum, item.cCount + 1)}><Plus /></button>
                                 </td>
                                 <td>{(item.product.pPrice * item.cCount).toLocaleString()}원</td>
                                 <td>
-                                    <button className='btn_del' onClick={() => removeCartItem(item.cnum)}>삭제</button>
+                                    <button className='btn_del' onClick={() => removeCartItem(item.cnum)}><Trash2 /></button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             )}
-            <button onClick={handleBuyNow}>구매하기</button>
+            <div className='buy'>
+                <span>총 결제 금액: <span>{calculateTotalPrice()}원</span></span>
+                <button onClick={handleBuyNow}>결제하기 <Truck /></button>
+            </div>
+            </div>
         </div>
     );
 };

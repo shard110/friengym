@@ -6,7 +6,7 @@ public class ProductResponseDTO {
   private int pNum;
   private String pName;
   private int pPrice;
-  private String pImg;
+  private String pImgUrl;
   private String categoryName;
 
   // Constructor to convert Product entity to ProductResponseDTO
@@ -14,7 +14,7 @@ public class ProductResponseDTO {
       this.pNum = product.getpNum();
       this.pName = product.getpName();
       this.pPrice = product.getpPrice();
-      this.pImg = product.getpImg();
+      this.pImgUrl = product.getpImgUrl();
       this.categoryName = product.getCategory() != null ? product.getCategory().getCatename() : null;
   }
 
@@ -43,12 +43,12 @@ public class ProductResponseDTO {
       this.pPrice = pPrice;
   }
 
-  public String getpImg() {
-      return pImg;
+  public String getpImgUrl() {
+      return pImgUrl;
   }
 
-  public void setpImg(String pImg) {
-      this.pImg = pImg;
+  public void setpImgUrl(String pImgUrl) {
+      this.pImgUrl = pImgUrl;
   }
 
   public String getCategoryName() {

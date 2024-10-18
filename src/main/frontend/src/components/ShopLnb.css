@@ -8,25 +8,39 @@
   justify-content: space-between;
   font-weight: bold;
   border-bottom: 1px solid #eee;
+  overflow: hidden;
 }
 
 .navbar .wrap {
-  max-width: 1152px;
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex: 1;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
+  position: relative;
+  overflow: hidden;
 }
 
-.navbar ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+.navbar .wrap>ul {
+  width: 70%;
   display: flex;
   gap: 24px;
   white-space: nowrap;
+  overflow-x: auto;
+}
+
+.navbar .wrap>ul::after{
+  content: "";
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 30%;
+  box-shadow: 20px 0px 15px 30px #fff;
+}
+
+.navbar .wrap>ul::-webkit-scrollbar {
+  display: none;
 }
 
 .category-list li {
@@ -71,7 +85,7 @@
   height: 0;
   overflow: hidden;
   transition: height 0.2s ease;
-  z-index: 998;
+  z-index: 9999999999;
   min-width: 400px;
 }
 
@@ -85,20 +99,20 @@
   align-items: center;
 }
 
-.search-bar input {
-  padding: 8px 8px 8px 0;
+.search-bar input, .search-bar-moblie input {
+  padding: 8px;
   font-size: 16px;
   border: none;
   border-bottom: 1px solid #dbdbdb;
   transition: 1s ease;
 }
 
-.search-bar input:focus {
+.search-bar input:focus, .search-bar-moblie input:focus{
   outline: 0;
   border-bottom: 0.5px solid #03C7A6;
 }
 
-.search-bar button {
+.search-bar button, .search-bar-moblie button {
   width: 48px;
   height: 48px;
   border: none;
@@ -107,7 +121,7 @@
   color: #333;
 }
 
-.search-bar button:hover {
+.search-bar button:hover, .search-bar-moblie button:hover {
   color: #03C7A6;
 }
 
@@ -116,18 +130,84 @@
   border-bottom: 2px solid #03C7A6;
 }
 
-.search-action-button {
-  margin-left: 8px;
-  padding: 8px 16px;
-  border: none;
-  cursor: pointer;
-  background: #03C7A6;
-  color: #fff;
-  display: block; /* 검색 버튼 표시 */
+.navbar .search-toggle-button, .navbar .search-bar-moblie, .navbar .search-bar-cloase {
+  display: none;
 }
 
 @media (max-width: 1280px) {
-  .navbar .search-bar input {
+  .navbar .wrap{
+    padding-left: 20px;
+  }
+
+  .navbar .search-bar-moblie{
+    display: block;
+  }
+
+  .navbar .search-bar .search-action-button {
     display: none;
+  }
+
+  .navbar .wrap>ul {
+    width: 80%;
+  }
+  
+  .navbar .wrap>ul::after{
+    right: 20%;
+  }
+
+  .navbar .search-toggle-button {
+    display: block;
+    position: absolute;
+    top: 4px;
+    right: 7px;
+    padding: 12px;
+    cursor: pointer;
+    color: #333;
+    box-shadow: -10px -10px 11px 8px #ffffff;
+    background: #fff;
+  }
+
+  .navbar .search-toggle-button:hover {
+    color: #03C7A6;
+  }
+
+  .navbar .search-bar>input {
+    display: none;
+  }
+
+  .navbar .sliding-search{
+    background-color: #fff;
+    width: 100%;
+    height: 56px;
+    overflow: hidden;
+    position: absolute;
+    top: -56px;
+    left: 0;
+    z-index: 9;
+    transition: 0.5s ease;
+  }
+
+  .navbar .sliding-search--open{
+    top: 0;
+  }
+
+  .search-bar-moblie input{
+    width: 65%;
+    margin: 12px 0 0 20px;
+    padding-left: 40px;
+  }
+
+  .search-bar-moblie .search-action-button-moblie{
+    display: block;
+    position: absolute;
+    top: 4px;
+    left: 8px;
+  }
+
+  .search-close{
+    display: block;
+    position: absolute;
+    top: 5px;
+    right: 7px;
   }
 }

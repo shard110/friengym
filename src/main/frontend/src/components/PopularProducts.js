@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './PopularProducts.css';
 import { Link } from 'react-router-dom';
 import ShopLnb from './ShopLnb';
+import Footer from './Footer';
+import FloatingMenu from './FloatingMenu';
 
 function PopularProducts({ limit }) {
     const [popularProducts, setPopularProducts] = useState([]);
@@ -28,11 +30,12 @@ function PopularProducts({ limit }) {
     return (
         <div className='popular-products'>
             <ShopLnb />
+            <FloatingMenu />
             <div className="product-list">
                 {popularProducts.map(product => (
                     <div key={product.pNum} className="product-item">
                         <Link to={`/productslist/${product.pNum}`}>
-                            <img src={product.pImg} alt={`상품명: ${product.pName}`} />
+                            <img src={product.pImgUrl} alt={`상품명: ${product.pName}`} />
                         </Link>
                         <p className='prod_name'>{product.pName}</p>
                         <p className='prod_price'> ₩ {product.pPrice.toLocaleString()}</p>
@@ -40,6 +43,7 @@ function PopularProducts({ limit }) {
                     </div>
                 ))}
             </div>
+            <Footer />
         </div>
     );
 }

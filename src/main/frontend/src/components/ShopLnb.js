@@ -2,13 +2,13 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import './ShopLnb.css';
-import { Search } from 'react-feather';
+import { Search, X } from 'react-feather';
 
 function ShopLnb() {
   const [categories, setCategories] = useState([]);
   const [showCategories, setShowCategories] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [showSearch, setShowSearch] = useState(false); // 검색창 표시 상태 추가
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     axios.get('/api/categories')
@@ -21,12 +21,23 @@ function ShopLnb() {
   }, []);
 
   const handleSearch = () => {
+    setIsOpen(false);
     window.location.href = `/productslist?keyword=${searchKeyword}`;
   };
 
-  const toggleSearch = () => {
-    setShowSearch(!showSearch); // 검색창 표시 상태 토글
+  const toggleSearchMenu = () => {
+    setIsOpen(!isOpen);
   };
+
+  const handleKeySearch = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const closeSearch =()=>{
+    setIsOpen(false);
+  }
 
   return (
     <nav className="navbar">
@@ -49,19 +60,36 @@ function ShopLnb() {
           </li>
           <li><NavLink to="/products/new" activeclassname='active'>신상품</NavLink></li>
           <li><NavLink to="/products/popular" activeclassname='active'>베스트</NavLink></li>
+          <li><NavLink to="/cart" activeclassname='active'>장바구니</NavLink></li>
+          <li><NavLink to="/order-history" activeclassname='active'>주문내역</NavLink></li>
         </ul>
         <div className="search-bar">
           <input
+            className='search-input'
             type="text"
             placeholder="쇼핑몰 상품 검색"
             value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)} // 상태에 따라 표시
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyDown={handleKeySearch}
           />
-          <button onClick={toggleSearch}><Search /></button>
-          {showSearch && (
-            <button onClick={handleSearch} className="search-action-button">검색</button>
-          )}
+          <button onClick={handleSearch} className="search-action-button"><Search /></button>
         </div>
+          {/* 모바일용 */}
+          <div className="search-bar-moblie">
+            <div className="search-toggle-button" onClick={toggleSearchMenu}><Search /></div>
+                <div className={`sliding-search ${isOpen ? 'sliding-search--open':''}`}>
+                    <input
+                        className='search-input-moblie'
+                        type="text"
+                        placeholder="쇼핑몰 상품 검색"
+                        value={searchKeyword}
+                        onChange={(e) => setSearchKeyword(e.target.value)}
+                        onKeyDown={handleKeySearch}
+                    />
+                    <button onClick={handleSearch} className="search-action-button-moblie"><Search /></button>
+                    <button onClick={closeSearch} className="search-close"><X /></button>
+                </div>
+            </div>
       </div>
     </nav>
   );

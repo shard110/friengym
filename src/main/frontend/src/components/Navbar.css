@@ -11,18 +11,14 @@
   }
   
 .navbarH .navbar-container {
-    max-width: 1152px;
+    max-width: 1200px;
     height: 64px;
     margin: 0 auto;
     display: flex;
     align-items: center;
-    padding: 0 24px;
   }
   
-  .navbarH .menu-mobile{
-    display: none;
-  }
-
+  
   .navbarH .navbar-logo-container{
     margin-right: 56px;
     }
@@ -54,7 +50,7 @@
 .navbarH .nav-link {
     color: #333;
     text-decoration: none;
-    font-size: 16px; /* 글자 크기 조정 */
+    font-size: 16px;
     font-weight: bold;
     transition: 0.2s ease;
   }
@@ -70,11 +66,15 @@
     gap: 10px;
     flex: 1;
   }
+
+  .navbarH .user-menu-logged-out{
+    gap: 24px;
+  }
   
 .navbarH .user-menu-logged-in, .user-menu-logged-out {
     display: flex;
     align-items: center;
-    gap: 24px;
+    justify-content: space-between;
   }
   
 .navbarH button.nav-link {
@@ -84,13 +84,23 @@
     font-family: 'Noto Sans KR', sans-serif !important;
   }
 
+.navbarH .sliding-navbar, .navbarH .menu-mobile {
+  display: none;
+}
+
 @media (max-width: 1280px) {
-  
-  .navbarH .navbar-main-menu{
-    display: none;
+  .navbarH .navbar-container{
+    padding-left: 20px;
   }
 
-  .navbarH .navbar-user-menu{
+  .navbarH .sliding-navbar, .navbarH .show, .navbarH .sliding-navbar .navbar-user-menu{
+    display: block;
+  }
+  .navbarH a{
+    color: #333;
+  }
+
+  .navbarH .navbar-main-menu, .navbarH .navbar-user-menu{
     display: none;
   }
 
@@ -114,12 +124,13 @@
   .navbarH .sliding-navbar{
     position: absolute;
     top: 0;
-    right: -70%;
+    right: -110%;
     height: 100vh;
-    width: 70%;
+    width: 55%;
     background-color: #fff;
-    transition: 0.5s ease;
+    transition: 0.2s ease-out;
     z-index: 3000;
+    padding: 80px 40px 40px 40px;
   }
 
   .navbarH .sliding-navbar--open {
@@ -128,41 +139,32 @@
 
   .navbarH .mask {
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 100%;
     height: 100vh;
     width: 100%;
     background: #444c50;
     opacity: 0.8;
-    display: none;
-    
   }
 
   .navbarH .show {
-    display: block;
-  }
-  
-  .navbarH .navbar--items {
-    list-style-type: none;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    left: 0;
   }
   
   .navbarH .navbar--item {
-    margin: 20px;
-    letter-spacing: 1px;
-    color: white;
-    font-family: sans-serif;
-    text-transform: uppercase;
+    margin: 16px;
+    margin-left: 0;
+  }
+
+  .navbarH .navbar--item:first-child{
+    margin-top: 92px;
   }
   
   .navbarH .hamburger-menu {
     z-index: 3999;
     position: absolute;
     top: 8px;
-    right: 4%;
+    right: 6px;
     margin: auto;
     width: 48px;
     height: 48px;
