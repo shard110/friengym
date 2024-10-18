@@ -8,10 +8,7 @@ import java.util.stream.Stream; // Stream import 추가
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.message.ChatRoom;
-import com.example.demo.message.ChatUserResponse;
 
 import lombok.RequiredArgsConstructor;
 
