@@ -8,6 +8,7 @@ import FloatingMenu from './FloatingMenu';
 import Footer from './Footer';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 import replace from "../img/product_replace.png";
+import Navbar from './NavBar';
 
 function ProductHome() {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -64,6 +65,7 @@ function ProductHome() {
     
     return (
         <div className="product-home">
+            <Navbar />
             <ShopLnb />
             <FloatingMenu />
             <div className="banner">

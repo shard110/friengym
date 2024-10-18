@@ -8,6 +8,7 @@ import { ShoppingCart } from "react-feather";
 import ShopLnb from "../components/ShopLnb";
 import replace from "../img/product_replace.png";
 import FloatingMenu from "../components/FloatingMenu";
+import Navbar from "../components/NavBar";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -54,6 +55,7 @@ const ProductList = () => {
 
   return (
     <div>
+      <Navbar />
       <ShopLnb />
       <FloatingMenu />
       <div id="productlist-wrap">

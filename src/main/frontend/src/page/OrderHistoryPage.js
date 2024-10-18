@@ -6,6 +6,7 @@ import './OrderHistoryPage.css'; // CSS 파일을 import 합니다.
 import ShopLnb from '../components/ShopLnb';
 import FloatingMenu from '../components/FloatingMenu';
 import replace from "../img/product_replace.png";
+import Navbar from '../components/NavBar';
 
 const OrderHistoryPage = () => {
     const { user } = useAuth();
@@ -43,6 +44,7 @@ const OrderHistoryPage = () => {
 
     return (
         <div className="order-history">
+            <Navbar />
             <ShopLnb />
             <FloatingMenu />
             <div className='order-wrap'>

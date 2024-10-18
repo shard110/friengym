@@ -4,6 +4,7 @@ import ShopLnb from './ShopLnb';
 import replace from "../img/product_replace.png";
 import FloatingMenu from './FloatingMenu';
 import Footer from './Footer';
+import Navbar from './NavBar';
 
 function NewProducts() {
   const [newProducts, setNewProducts] = useState([]);
@@ -37,6 +38,7 @@ function NewProducts() {
           }
         `}
       </style>
+      <Navbar />
       <ShopLnb />
       <FloatingMenu />
       <h2>New Products</h2>

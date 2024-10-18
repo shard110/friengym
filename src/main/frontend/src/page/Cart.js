@@ -6,7 +6,8 @@ import './Cart.css';
 import ShopLnb from '../components/ShopLnb';
 import FloatingMenu from '../components/FloatingMenu';
 import replace from "../img/product_replace.png";
-import { Minus, Plus, Trash2, Truck } from 'react-feather';
+import { Loader, Minus, Plus, Trash2, Truck } from 'react-feather';
+import Navbar from '../components/NavBar';
 
 
 const Cart = () => {
@@ -104,12 +105,13 @@ const Cart = () => {
 
     return (
         <div className="cart">
-            <ShopLnb />
+            <Navbar />
+            <ShopLnb/>
             <FloatingMenu />
             <div className='cart-wrap'>
             <h2>장바구니</h2>
             {Array.isArray(cartItems) && cartItems.length === 0 ? (
-                <p>장바구니가 비어 있습니다.</p>
+                <div className='cart-empty'><Loader color="#ddd" strokeWidth={"1.5"} stroke-linecap="none" size={"160"}/><br /><span>장바구니가 비어 있습니다.</span></div>
             ) : (
                 <table>
                     <thead>

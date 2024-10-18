@@ -1,12 +1,14 @@
 /* Navbar.css */
 
 .navbarH {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100vw;
     max-width: 100%;
     background-color: #fff;
     box-shadow: 0 0 4px #575f6434;
     margin: 0 auto;
-    position: fixed;
     z-index: 2000;
   }
   
@@ -75,6 +77,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 16px;
   }
   
 .navbarH button.nav-link {
@@ -109,8 +112,9 @@
   }
 
   .navbarH .navbar-logo-container a{
-    display: block;
+    display: flex;
     height: 50px;
+    align-items: center;
     }
 
   .navbarH .navbar-logo-container .navbar-logo {
@@ -118,7 +122,6 @@
     width: 42px;
     object-fit: cover;
     object-position: left;
-    padding: 16px 8px 16px 0;
   }
 
   .navbarH .sliding-navbar{

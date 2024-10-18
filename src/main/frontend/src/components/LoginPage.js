@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import styles from './LoginPage.module.css';
 
-import logo from '../img/logo.png';
+import logo from '../img/logo_friengym.svg';
 
 function LoginPage() {
   const [id, setId] = useState('');

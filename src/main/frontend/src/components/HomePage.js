@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'; // Link 컴포넌트 임포트
 import './HomePage.css';
 import Footer from './Footer';
 import FloatingMenu from './FloatingMenu';
+import Navbar from './NavBar';
 
 // 슬라이드 데이터
 const slidesData = [
@@ -49,6 +50,7 @@ const HomePage = () => {
 
   return (
     <div className="homepage">
+      <Navbar />
       <FloatingMenu />
       <div className="homepage-inner">
         <section className="slide-container">

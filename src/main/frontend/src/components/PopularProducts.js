@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import ShopLnb from './ShopLnb';
 import Footer from './Footer';
 import FloatingMenu from './FloatingMenu';
+import Navbar from './NavBar';
 
 function PopularProducts({ limit }) {
     const [popularProducts, setPopularProducts] = useState([]);
@@ -29,6 +30,7 @@ function PopularProducts({ limit }) {
 
     return (
         <div className='popular-products'>
+            <Navbar />
             <ShopLnb />
             <FloatingMenu />
             <div className="product-list">

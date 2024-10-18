@@ -7,6 +7,8 @@ import { addToCart } from '../utils/cartUtils.js'; // addToCart 함수 임포트
 import './ProductDetail.css';
 import Gnb from '../components/Gnb';
 import ShopLnb from '../components/ShopLnb.js';
+import Navbar from '../components/NavBar.js';
+import FloatingMenu from '../components/FloatingMenu.js';
 
 const ProductDetail = () => {
     const { pNum } = useParams();
@@ -43,7 +45,9 @@ const ProductDetail = () => {
     return (
         <div className="product-detail">
             <div className="product-detail-header">
+                <Navbar />
                 <ShopLnb />
+                <FloatingMenu />
             </div>
             <div className='sec'>
                 <img src={product.pImgUrl} alt={product.pName} className='prodImg'/>

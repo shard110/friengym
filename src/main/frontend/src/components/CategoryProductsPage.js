@@ -6,6 +6,7 @@ import ShopLnb from './ShopLnb';
 import replace from "../img/product_replace.png";
 import FloatingMenu from "../components/FloatingMenu";
 import Footer from './Footer';
+import Navbar from './NavBar';
 
 function CategoryProductsPage() {
     const [categories, setCategories] = useState([]);
@@ -53,6 +54,7 @@ function CategoryProductsPage() {
 
     return (
         <div className="category-products">
+            <Navbar />
             <ShopLnb />
             <FloatingMenu />
             <div className='cate-wrap'>

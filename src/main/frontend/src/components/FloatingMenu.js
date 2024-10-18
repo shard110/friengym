@@ -10,10 +10,10 @@ function FloatingMenu() {
                         <MessageCircle />
                         <span>커뮤니티</span>
                     </NavLink></li>
-                    {/* <li><NavLink to="/" activeclassname='active'>
+                    <li><NavLink to="/" activeclassname='active'>
                         <Bell />
                         <span>알림</span>
-                    </NavLink></li> */}
+                    </NavLink></li>
                     <li><NavLink to="/cart" activeclassname='active'>
                         <ShoppingCart />
                         <span>장바구니</span>
