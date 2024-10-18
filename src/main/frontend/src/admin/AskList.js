@@ -72,7 +72,7 @@ const AskList = () => {
                   </Link>
                 </td>
                 <td>{ask.userId || 'Unknown'}</td>
-                <td>{new Date(ask.aDate).toLocaleString()}</td>
+                <td>{new Date(ask.adate).toLocaleString()}</td>
                 <td>{renderReplyStatus(ask.reply)}</td>
               </tr>
             ))

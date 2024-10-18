@@ -68,7 +68,7 @@ const AskDetail = () => {
       <h2>{ask.atitle}</h2>
       <p><strong>작성자:</strong> {ask.userId || '정보 없음'}</p>
       <p><strong>내용:</strong> {ask.acontents}</p>
-      <p><strong>작성일:</strong> {new Date(ask.aDate).toLocaleString()}</p>
+      <p><strong>작성일:</strong> {new Date(ask.adate).toLocaleString()}</p>
       <p>
         <strong>첨부파일:</strong> 
         {ask.afile ? (
