@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; // Link 추가
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './ListStyles.css';
 
@@ -38,6 +38,35 @@ const WarningList = () => {
     fetchWarnings();
   }, []);
 
+  const checkPostExists = async (postId) => {
+    try {
+      await axios.get(`http://localhost:8080/api/posts/${postId}`);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleDeletePost = async (postId) => {
+    try {
+      console.log(`Deleting post with ID: ${postId}`);
+  
+      const postExists = await checkPostExists(postId);
+      if (!postExists) {
+        alert('Post not found. Cannot delete.');
+        return;
+      }
+  
+      // 게시물 삭제 요청
+      await axios.delete(`http://localhost:8080/api/posts/${postId}`);
+      setWarnings(prevWarnings => prevWarnings.filter(warning => warning.postId !== postId));
+      alert('Post deleted successfully.');
+    } catch (error) {
+      console.error("Error deleting post:", error.response ? error.response.data : error.message);
+      alert('Failed to delete post. Please check the console for details.');
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -50,6 +79,7 @@ const WarningList = () => {
             <th>Post Title</th>
             <th>User ID</th>
             <th>Reason</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -63,8 +93,11 @@ const WarningList = () => {
               </td>
               <td>{warning.userId}</td>
               <td>{warning.reason}</td>
+              <td>
+                <button onClick={() => handleDeletePost(warning.postId)}>Delete Post</button>
+              </td>
             </tr>
-          ))} 
+          ))}
         </tbody>
       </table>
     </div>
