@@ -10,8 +10,7 @@ body {
 }
 
 .chat-container {
-  justify-content: center; /* 수평 중앙 정렬 */
-  align-items: center; /* 수직 중앙 정렬 */
+
   display: flex;
   max-width: 800px;
   min-width: 800px;
@@ -25,10 +24,6 @@ body {
   border-radius: 8px;
 }
 
-.chat-wrapper {
-  display: flex;
-  width: 100%;
-}
 
 .users-list {
   width: 250px; /* 사용자 리스트의 고정 너비 설정 */
@@ -56,10 +51,6 @@ body {
   overflow-y: auto;
 }
 
-.chat-area {
-  flex: 1; /* 남은 공간을 차지함 */
-  padding: 20px; /* 선택적 패딩 */
-}
 
 .messages {
     display: flex;

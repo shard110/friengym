@@ -223,8 +223,7 @@ const Mypostpage = () => {
           ) : (
             <button className="edit-profile-btn" onClick={() => setIsEditing(true)}>프로필 편집</button>
           )}
-          {/* DM 버튼 클릭 시 작성자 ID 전달 */}
-          <button className="contact-btn" onClick={() => handleOpenChat(userInfo.id)}>DM</button>
+          <button className="contact-btn" onClick={() => navigate('/chat')}>DM</button>
         </div>
 
         {isChatOpen && (

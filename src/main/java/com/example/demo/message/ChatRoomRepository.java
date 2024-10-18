@@ -13,4 +13,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, String> {
 	
 	//(한 쌍의 사용자만 찾는 기능)
 	Optional<ChatRoom> findBySenderIdAndRecipientId(String senderId, String recipientId);
+
+	List<ChatRoom> findBySenderIdOrRecipientId(String senderId, String recipientId);
 }

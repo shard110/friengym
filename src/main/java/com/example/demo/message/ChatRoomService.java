@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream; // Stream import 추가
 
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.message.ChatRoom;
+import com.example.demo.message.ChatUserResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class ChatRoomService {
 
 	private final ChatRoomRepository chatRoomRepository;
-	 private final UserRepository userRepository; // 사용자 정보를 가져오기 위한 리포지토리 추가
+	private final UserRepository userRepository; // User 정보를 가져오기 위한 레포지토리
 
 	// 채팅방 ID 가져오기
 	public Optional<String> getChatRoomId(
@@ -34,8 +37,8 @@ public class ChatRoomService {
 				});
 	}
 
-	// 새로운 채팅 ID 생성
-	private String createChatId(String senderId, String recipientId) {
+		// 새로운 채팅 ID 생성
+		private String createChatId(String senderId, String recipientId) {
 		var chatId = String.format("%s_%s", senderId, recipientId); // 발신자_수신자
 
 		// 두 사용자 간의 채팅 방 생성
@@ -56,22 +59,30 @@ public class ChatRoomService {
 		return UUID.randomUUID().toString(); // ☆UUID를 사용한 방 ID 생성
 	}
 
-	    // 특정 사용자가 대화 중인 사용자 목록 가져오기
-		public List<String> getUsersInChat(String userId) {
-			// 사용자가 발신자나 수신자인 모든 채팅방을 찾음
+	public List<ChatUserResponse> getUsersInChat(String userId) {
+		try {
+			// 사용자 ID로 대화 중인 채팅방 목록 가져오기
 			List<ChatRoom> chatRooms = chatRoomRepository.findBySenderIdOrRecipientId(userId, userId);
 	
-			// 대화 중인 상대방 목록을 추출
+			// 사용자 목록 생성
 			return chatRooms.stream()
-					.map(chatRoom -> chatRoom.getSenderId().equals(userId) ? chatRoom.getRecipientId() : chatRoom.getSenderId())
-					.distinct() // 중복 사용자 제거
-					.collect(Collectors.toList());
+				.flatMap(room -> {
+					String otherUserId = room.getSenderId().equals(userId) ? room.getRecipientId() : room.getSenderId();
+					return userRepository.findById(otherUserId)
+						.map(user -> new ChatUserResponse(
+								user.getId(),
+								user.getName(),
+								user.getPhoto(),
+								user.getStatus() != null ? user.getStatus().name() : "UNKNOWN" // 상태가 null일 경우 "UNKNOWN" 반환
+						))
+						.map(Stream::of)
+						.orElseGet(Stream::empty); // 사용자 정보가 없을 경우 빈 Stream 반환
+				})
+				.collect(Collectors.toList());
+		} catch (Exception e) {
+			// 예외 발생 시 로그 기록 및 적절한 메시지 반환
+			e.printStackTrace();
+			throw new RuntimeException("Error fetching users in chat: " + e.getMessage());
 		}
-
-	    // 대화 중인 사용자 ID 목록을 받아 이름 목록을 반환하는 메서드
-		public List<String> getUserNamesInChat(String userId) {
-			List<String> userIdsInChat = getUsersInChat(userId); // 대화 중인 사용자 ID 목록 가져오기
-			List<User> users = userRepository.findAllById(userIdsInChat); // 사용자 ID로 사용자 목록 가져오기
-			return users.stream().map(User::getName).collect(Collectors.toList()); // 이름 목록으로 변환
-		}
+	}
 }

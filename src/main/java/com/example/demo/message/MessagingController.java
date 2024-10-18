@@ -1,6 +1,7 @@
 package com.example.demo.message;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MessagingController {
 
-    private final UserStatusService userStatusService; // 사용자 관리 서비스
+    private final ChatUserService userStatusService; // 사용자 관리 서비스
     private final ChatMessageService chatMessageService; // 채팅 메시지 처리 서비스
     private final SimpMessagingTemplate messagingTemplate; // WebSocket 메시지 전송 템플릿
     private final ChatRoomService chatRoomService;
@@ -56,12 +57,12 @@ public class MessagingController {
                 saveMsg.getSenderId(),
                 saveMsg.getRecipientId(),
                 saveMsg.getContent());
-        // WebSocket을 통해 수신자에게 메시지 전송
+
         messagingTemplate.convertAndSendToUser(
                 chatMessage.getRecipientId(),
                 "/queue/messages",
                 notification);
-    } 
+    }
 
     // 특정 송신자와 수신자의 메시지 조회
     @GetMapping("/messages/{senderId}/{recipientId}")
@@ -73,13 +74,11 @@ public class MessagingController {
 
     // 대화 중인 사용자 목록 가져오기
     @GetMapping("/in-chat")
-    public ResponseEntity<List<String>> getUsersInChat(@RequestParam String userId) {
-        List<String> usersInChat = chatRoomService.getUsersInChat(userId);
-        return ResponseEntity.ok(usersInChat); // JSON 응답으로 반환
+    public ResponseEntity<List<ChatUserResponse>> getUsersInChat(@RequestParam String userId) {
+        List<ChatUserResponse> usersInChat = chatRoomService.getUsersInChat(userId);
+        List<ChatUserResponse> distinctUsers = usersInChat.stream()
+                .distinct() // 중복 제거
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(distinctUsers); // JSON 응답으로 반환
     }
-    @GetMapping("/in-chat-names")
-public ResponseEntity<List<String>> getUserNamesInChat(@RequestParam String userId) {
-    List<String> userNamesInChat = chatRoomService.getUserNamesInChat(userId);
-    return ResponseEntity.ok(userNamesInChat); // JSON 응답으로 반환
-}
 }

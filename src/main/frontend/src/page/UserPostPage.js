@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import "./UserPostPage.css";
+import DirectMessage from '../components/DirectMessage'; // DM import
 
 const UserPostPage = () => {
   const { id } = useParams(); // URL의 유저 ID 파라미터
@@ -11,21 +12,20 @@ const UserPostPage = () => {
   const [posts, setPosts] = useState([]); // 게시물 상태 관리
   const [following, setFollowing] = useState(false); // 팔로잉 상태
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // 에러 상태 관리
-  const [blocked, setBlocked] = useState(false); // 차단 상태
-  const [isFollowingMe, setIsFollowingMe] = useState(false); // 맞팔로우 상태 관리
+  const [error, setError] = useState(null);
+  const [blocked, setBlocked] = useState(false); // 초기값을 false로 설정
+  const [isDMModalOpen, setIsDMModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null); // 선택된 사용자 ID
+  const [isFollowingMe, setIsFollowingMe] = useState(false); // 맞팔로우 상태 추가
+
+
 
   const navigate = useNavigate();
 
-  // DM 버튼 클릭 시 채팅 페이지로 리다이렉트
-  const handleChatRedirect = () => {
-    if (userInfo && userInfo.id) {
-      console.log("Navigating to chat with:", user.user.id, userInfo.id);
-      navigate(`/chat/${user.user.id}/${userInfo.id}`); // DM 페이지로 이동
-  } else {
-      console.error("User information not available for chat redirect.");
-  }
-};
+  const handleDMButtonClick = () => {
+    setSelectedUserId(userInfo.id); // 선택된 사용자 ID 저장
+    setIsDMModalOpen(true); // DM 모달 열기
+  };
 
   // 유저의 게시물과 팔로우 상태를 가져오는 함수
   const fetchUserPostInfo = useCallback(async () => {
@@ -185,6 +185,7 @@ const UserPostPage = () => {
     return <div>Error: Failed to load user information.</div>;
   }
 
+
   return (
     <div className="user-postpage-container">
       <div className="profile-section">
@@ -218,12 +219,8 @@ const UserPostPage = () => {
                 </button>
               )}
 
-              <button
-                className="DM-btn"
-                onClick={handleChatRedirect} // 클릭 시 채팅 페이지로 이동
-              >
-                DM
-              </button>
+                {/* DM 버튼 추가 */}
+                <button onClick={handleDMButtonClick} className="DM-btn"> DM </button>
             </>
           )}
         </div>
@@ -279,8 +276,19 @@ const UserPostPage = () => {
   </div>
 </div>
 
-</div>
-);
+      {/* DM 모달 렌더링 */}
+      {isDMModalOpen && (
+        <DirectMessage
+          isOpen={isDMModalOpen}
+          onClose={() => {
+            setIsDMModalOpen(false);
+            setSelectedUserId(null); // 모달 닫을 때 선택된 ID 초기화
+          }}
+          userId={selectedUserId} // 선택된 사용자 ID 전달
+        />
+      )}
+    </div>
+  );
 };
 
 export default UserPostPage;
