@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
+import Chat from "../components/Chat";  //추가
 import "./Mypostpage.css";
 
 // MyPageSideBar 컴포넌트 추가
@@ -34,8 +35,23 @@ const Mypostpage = () => {
   const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
   const fileInput = useRef(null); // 파일 입력 참조
   const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 훅
+  const [isChatOpen, setIsChatOpen] = useState(false); // 채팅 모드 상태 추가
+  const [currentChatUserId, setCurrentChatUserId] = useState(null); // 현재 채팅 사용자 ID 저장
 
-  
+  // DM 버튼 클릭 핸들러
+  const handleOpenChat = (authorId) => {
+    console.log("DM 버튼 클릭:", authorId); // 확인용 로그
+    setCurrentChatUserId(authorId); // 작성자 ID 설정
+    setIsChatOpen(true); // 채팅 열기
+  };
+
+  const handleCloseChat = () => {
+    setIsChatOpen(false); // 채팅 닫기
+    setCurrentChatUserId(null); // 채팅 사용자 ID 초기화
+  };
+
+
+
   // 유저의 게시물, 팔로잉, 팔로워 정보를 가져오는 함수
   const fetchUserPostInfo = useCallback(async () => {
     const token = localStorage.getItem("jwtToken");
@@ -56,12 +72,12 @@ const Mypostpage = () => {
 
 
       // 서버 응답 데이터 구조를 확인하고 안전하게 처리
-    if (response.data) {
-      const { posts = [], following = [], followers = [], user: userData = {} } = response.data;
+      if (response.data) {
+        const { posts = [], following = [], followers = [], user: userData = {} } = response.data;
 
-      // userData가 존재하는지 확인한 후 상태 업데이트
-      if (userData) {
-        setUserInfo(userData);
+        // userData가 존재하는지 확인한 후 상태 업데이트
+        if (userData) {
+          setUserInfo(userData);
           setImage(userData.photo || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
           setIntroduction(userData.introduction || ""); // 소개 설정
         }
@@ -148,11 +164,11 @@ const Mypostpage = () => {
   if (loading || authLoading) {
     return <div>Loading...</div>;
   }
-  
+
   if (!userInfo) {
     return <div>Error: Failed to load user information.</div>;
   }
-  
+
 
   if (error) {
     return <div>Error: {error}</div>; // 에러 발생 시 에러 메시지 출력
@@ -160,7 +176,7 @@ const Mypostpage = () => {
 
   return (
     <div className="mypostpage-container">
-         <MyPageSideBar /> {/* 사이드바 추가 */}
+      <MyPageSideBar /> {/* 사이드바 추가 */}
       <div className="profile-section">
         <div className="profile-header">
           <div className="user-info">
@@ -179,36 +195,43 @@ const Mypostpage = () => {
             <span>{userInfo.id}</span>
           </div>
           <div className="profile-info">
-          <h2>{userInfo.name}</h2>
+            <h2>{userInfo.name}</h2>
             <div className="stats">
               <span>게시물 {posts.length}</span>
               <button onClick={() => navigate("/followers")} className="follower-list-btn">
-              팔로워 {followers.length}
+                팔로워 {followers.length}
               </button>
               <button onClick={() => navigate("/following")} className="following-list-btn">
-              팔로잉 {following.length}
+                팔로잉 {following.length}
               </button>
             </div>
           </div>
         </div>
         {isEditing ? (
-              <textarea
-                className="user-introduction"
-                value={introduction}
-                onChange={handleIntroductionChange}
-                placeholder="자기 소개를 입력하세요."
-              />
-            ) : (
-              <p>{introduction || "소개가 없습니다."}</p>
-            )}
+          <textarea
+            className="user-introduction"
+            value={introduction}
+            onChange={handleIntroductionChange}
+            placeholder="자기 소개를 입력하세요."
+          />
+        ) : (
+          <p>{introduction || "소개가 없습니다."}</p>
+        )}
         <div className="profile-actions">
-        {isEditing ? (
+          {isEditing ? (
             <button className="edit-profile-btn" onClick={handleSaveProfile}>프로필 편집 저장</button>
           ) : (
             <button className="edit-profile-btn" onClick={() => setIsEditing(true)}>프로필 편집</button>
           )}
-          <button className="contact-btn">DM</button>
+          <button className="contact-btn" onClick={() => navigate('/chat')}>DM</button>
         </div>
+
+        {isChatOpen && (
+          <div className="chat-modal">
+            <Chat recipientId={currentChatUserId} /> {/* 현재 채팅 사용자 ID 전달 */}
+            <button onClick={handleCloseChat}>Close</button>
+          </div>
+        )}
       </div>
 
       <div className="posts-section">
@@ -242,25 +265,25 @@ const Mypostpage = () => {
         ))}
     </div>
 
-  {/* 텍스트 게시글 */}
-  <h2>Text</h2>
-  <div className="posts-grid">
-    {posts
-      .filter((post) => !post.fileUrl)
-      .map((post) => (
-        <div key={post.poNum}
-        className="post-item"
-        onClick={() => navigate(`/posts/${post.poNum}`)}
-        >
-          <div className="post-info">
-            <h4>{post.poContents || "내용 없음"}</h4>
-          </div>
+        {/* 텍스트 게시글 */}
+        <h2>Text</h2>
+        <div className="posts-grid">
+          {posts
+            .filter((post) => !post.fileUrl)
+            .map((post) => (
+              <div key={post.poNum}
+                className="post-item"
+                onClick={() => navigate(`/posts/${post.poNum}`)}
+              >
+                <div className="post-info">
+                  <h4>{post.poContents || "내용 없음"}</h4>
+                </div>
+              </div>
+            ))}
         </div>
-      ))}
-  </div>
-</div>
+      </div>
 
-</div>
-);
+    </div>
+  );
 };
 export default Mypostpage;

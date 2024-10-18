@@ -4,7 +4,8 @@ import { AuthProvider } from './components/AuthContext';
 import NavBar from './components/NavBar'; // NavBar 컴포넌트 임포트
 
 import CategoryProductsPage from './components/CategoryProductsPage';
-import Chat from './components/Chat'; //Chat 컴포넌트 임포트
+import Chat from './components/Chat';  //Chat
+import DirectMessage from './components/DirectMessage'; // DirectMessage 컴포넌트 추가
 import CreatePost from "./components/CreatePostForm";
 import Customer from './components/Customer';
 import EditPost from './components/EditPost';
@@ -37,6 +38,10 @@ import QnaPage from './page/QnaPage';
 import Recommendations from './page/Recommendations'; // 새로운 추천 페이지 임포트
 import ReviewPage from './page/ReviewPage';
 import UserPostPage from './page/UserPostPage';
+
+//ChatPage추가
+import ChatPage from "./page/ChatPage"; 
+
 //관리자용 import
 import AdminHome from './admin/AdminHome';
 //아이디 찾기
@@ -55,6 +60,7 @@ export default function App() {
           {/* <NavBar /> NavBar 컴포넌트 추가 */}
           <Routes>
             <Route path="/chat" element={<Chat />} /> {/* Chat 라우트 추가 */}
+            <Route path="/chat/:userId" element={<DirectMessage />} /> {/* DirectMessage 라우트 추가 */}
             <Route path="/" element={<HomePage />} />
             <Route path="/posts" element={<Gallery />} />
             <Route path="/create-post" element={<CreatePost />} />
@@ -104,6 +110,8 @@ export default function App() {
 
           {/*아이디 찾기 */}
           <Route path="/find-id" element={<FindIdPage />} />
+          {/*ChatPage 추가 */}
+          <Route path="/chat/:senderId/:recipientId" element={<ChatPage />} /> {/* 새로 추가된 라우트 */}
           </Routes>
         </div>
       </Router>
