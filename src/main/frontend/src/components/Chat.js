@@ -20,7 +20,7 @@ function Chat() {
     const fetchAndDisplayUserChat = async (userId) => {
         try {
             const response = await fetch(
-                `http://localhost:8080/messages/${user.user.id}/${userId}`,
+                `http://localhost:8080/messages/${user.id}/${userId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
