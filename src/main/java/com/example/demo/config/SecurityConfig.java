@@ -30,6 +30,7 @@ public class SecurityConfig {
     http
         .csrf(csrf -> csrf.disable())  // CSRF 비활성화
         .authorizeHttpRequests(authorize -> authorize
+            .requestMatchers("/api/login", "/api/register").permitAll()  // 로그인 엔드포인트는 인증 불필요
             .requestMatchers("/api/asks/**").authenticated()  // 인증 필요 경로
             .requestMatchers("/uploads/**").permitAll()  // 인증 불필요 경로
             .requestMatchers("/files/**").permitAll()  // /files 경로도 인증 없이 허용

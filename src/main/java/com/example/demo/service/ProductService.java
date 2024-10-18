@@ -13,8 +13,8 @@ import com.example.demo.dto.ProductDetailDTO;
 import com.example.demo.dto.ProductListDTO;
 import com.example.demo.dto.ProductResponseDTO;
 import com.example.demo.entity.Product;
-import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.CategoryRepository; // 카테고리 레포지토리 추가
+import com.example.demo.repository.ProductRepository;
 
 @Service
 public class ProductService {
@@ -66,7 +66,7 @@ public class ProductService {
         productRepository.deleteById(pNum);
     }
 
-    // 인기상품 가져오기 
+    // 인기상품 가져오기
     public List<Product> findPopularProducts(Integer limit) {
         String sql =  "SELECT p.pNum, p.pName, p.pPrice, p.pCount, p.pImgUrl, p.pDate, p.pIntro, SUM(d.docount) AS total_quantity " +
                  "FROM product p " +

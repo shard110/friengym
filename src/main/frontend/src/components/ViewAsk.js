@@ -1,23 +1,24 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import './ViewAsk.css'; // CSS 파일 import
 
-const ViewAsk = ({ anum }) => {
+const ViewAsk = () => {
+  const { anum } = useParams();
   const [ask, setAsk] = useState(null);
   const navigate = useNavigate();
 
-  // 문의글 데이터를 서버에서 가져옴
   useEffect(() => {
     const fetchAsk = async () => {
       try {
-        const token = localStorage.getItem('jwtToken'); // 토큰 가져오기
+        const token = localStorage.getItem('jwtToken');
         if (!token) {
           throw new Error("로그인이 필요합니다.");
         }
 
         const response = await axios.get(`/api/asks/${anum}`, {
           headers: {
-            Authorization: `Bearer ${token}`, // JWT 토큰을 Authorization 헤더에 포함
+            Authorization: `Bearer ${token}`,
           },
         });
         setAsk(response.data);
@@ -30,8 +31,9 @@ const ViewAsk = ({ anum }) => {
     fetchAsk();
   }, [anum]);
 
-  const handleUpdate = () => {
-    navigate(`/asks/update/${anum}`); // update 페이지로 이동
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return !isNaN(date.getTime()) ? date.toLocaleString() : "Invalid Date";
   };
 
   const handleDelete = async () => {
@@ -45,11 +47,11 @@ const ViewAsk = ({ anum }) => {
 
         await axios.delete(`/api/asks/${anum}`, {
           headers: {
-            Authorization: `Bearer ${token}`, // JWT 토큰을 Authorization 헤더에 포함
+            Authorization: `Bearer ${token}`,
           },
         });
         alert("문의글이 삭제되었습니다.");
-        navigate("/asks"); // 삭제 후 목록 페이지로 이동
+        navigate("/asks");
       } catch (error) {
         console.error("Error deleting ask:", error);
         alert("문의글 삭제 중 오류가 발생했습니다.");
@@ -57,39 +59,52 @@ const ViewAsk = ({ anum }) => {
     }
   };
 
-  const formatDate = (timestamp) => {
-    return new Date(timestamp).toLocaleString(); // 날짜와 시간을 함께 표시
-  };
-
   return (
-    <div>
+    <div className="view-ask-container">
       <h1>문의글 조회</h1>
       {ask ? (
-        <div>
-          <h3>{ask.atitle}</h3>
-          <p>내용: {ask.acontents}</p>
-          <p>작성자: {ask.user ? ask.user.id : "Unknown"}</p>
-          <p>작성일: {formatDate(ask.aDate)}</p>
-          {ask.afile && (
-            <div>
-              <p>첨부파일 경로: {ask.afile}</p>  {/* 경로를 출력해서 확인 */}
-              <p>첨부파일: <a href={`http://localhost:8080${ask.afile}`} target="_blank" rel="noopener noreferrer">파일 보기</a></p>
-            </div>
-          )}
-
-          {ask.reply && ( // 답변이 있을 경우
-            <div>
-              <h4>답변 내용</h4>
-              <p>{ask.reply}</p>
-            </div>
-          )}
-
-          <button onClick={handleUpdate}>수정하기</button>
-          <button onClick={handleDelete}>삭제하기</button>
-        </div>
+        <table className="view-ask-table">
+          <tbody>
+            <tr>
+              <th colSpan="2" className="view-ask-title">게시글 제목</th>
+              <td colSpan="2" className="view-ask-title-content">{ask.atitle}</td>
+            </tr>
+            <tr>
+              <th>작성자</th>
+              <td>{ask.userId ? ask.userId : "Unknown"}</td>
+              <th>작성일</th>
+              <td>{ask.adate ? formatDate(ask.adate) : "Unknown"}</td>
+            </tr>
+            <tr>
+              <th colSpan="4">내용</th>
+            </tr>
+            <tr>
+              <td colSpan="4" className="view-ask-content">{ask.acontents}</td>
+            </tr>
+            {ask.afile && (
+              <tr>
+                <th>첨부파일</th>
+                <td colSpan="3">
+                  <a href={`http://localhost:8080${ask.afile}`} target="_blank" rel="noopener noreferrer">파일 보기</a>
+                </td>
+              </tr>
+            )}
+            {ask.reply && (
+              <tr>
+                <th>답변 내용</th>
+                <td colSpan="3">{ask.reply}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       ) : (
         <p>문의글을 불러오는 중입니다...</p>
       )}
+      <div className="view-ask-buttons">
+        <button onClick={() => navigate("/asks")}>목록으로 돌아가기</button>
+        <button onClick={() => navigate(`/asks/update/${anum}`)}>수정하기</button>
+        <button onClick={handleDelete}>삭제하기</button>
+      </div>
     </div>
   );
 };

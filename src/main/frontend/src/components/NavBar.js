@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from './AuthContext'; // 사용자 인증 정보를 가져오는 훅
 import './Navbar.css';
@@ -7,8 +7,16 @@ import { LogOut, User } from "react-feather";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
   const navigate = useNavigate();
+
+ // 토큰 확인 및 로그인 페이지로 이동 로직을 useEffect로 관리
+  useEffect(() => {
+  const token = localStorage.getItem('jwtToken');
+  if (!token) {
+    navigate('/login');
+  }
+}, [navigate]); // navigate가 변경될 때마다 실행
 
   const handleLogout = () => {
     logout();
@@ -22,6 +30,20 @@ export default function Navbar() {
   const closeMenu = () => {
     setIsOpen(false);
   };
+
+  console.log("Navbar user state:", user); // user 상태 확인
+  
+  if (loading) {
+    // 로딩 중일 때 로딩 메시지 표시
+    return <div>로딩 중...</div>;
+  }
+
+  if (!user) {
+    // 사용자 정보가 없을 때 표시
+    return <div>사용자 정보를 불러오지 못했습니다.</div>;
+  }
+
+  
 
   return (
     <nav className="navbarH">
@@ -51,7 +73,7 @@ export default function Navbar() {
             <div className="user-menu-logged-in">
               {/* <span className="nav-link">환영합니다! {user.name}님</span> */}
               <button onClick={handleLogout} className="nav-link">로그아웃</button>
-              <button onClick={() => navigate('/mypage')} className="nav-link">마이페이지</button>
+              <button onClick={() => navigate('/totalmypage')} className="nav-link">마이페이지</button>
             </div>
           ) : (
             <div className="user-menu-logged-out">

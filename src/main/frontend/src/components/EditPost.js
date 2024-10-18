@@ -2,13 +2,14 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from './AuthContext'; // 인증 컨텍스트 추가
-import style from './EditPost.module.css'; // CSS 모듈 임포트
+import "./EditPost.css"; // 새로 정의된 CSS
 
 export default function EditPost() {
   const [post, setPost] = useState({
-    poTitle: "",
     poContents: "",
-    file: null, // 파일 선택 상태
+    hashtags: [],
+    existingFileUrl: null,
+    file: null,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,10 +20,12 @@ export default function EditPost() {
   useEffect(() => {
     const loadPost = async () => {
       try {
-        const result = await axios.get(`http://localhost:8080/posts/${poNum}`);
+        const result = await axios.get(`http://localhost:8080/api/posts/${poNum}`);
         setPost({
-          poTitle: result.data.poTitle,
           poContents: result.data.poContents,
+          hashtags: result.data.hashtags || [],
+          existingFileUrl: result.data.fileUrl || null,
+          file: null,
         });
       } catch (error) {
         setError("게시글을 가져오는 데 실패했습니다.");
@@ -34,89 +37,69 @@ export default function EditPost() {
     loadPost();
   }, [poNum]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setPost((prevPost) => ({
-      ...prevPost,
-      [name]: value,
-    }));
-  };
-
-  const handleFileChange = (e) => {
-    setPost((prevPost) => ({
-      ...prevPost,
-      file: e.target.files[0], // 선택한 파일을 상태에 저장
-    }));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('poTitle', post.poTitle);
     formData.append('poContents', post.poContents);
+    formData.append('hashtags', post.hashtags.join(' ')); // 배열을 공백으로 구분된 문자열로 변환
+
     if (post.file) {
       formData.append('file', post.file);
     }
 
     try {
-      await axios.put(`http://localhost:8080/posts/${poNum}`, formData, {
+      await axios.put(`/api/posts/${poNum}`, formData, {
         headers: {
-          'Authorization': `Bearer ${user?.token || localStorage.getItem('jwtToken')}`, // 인증 헤더 추가
+          'Authorization': `Bearer ${user?.token || localStorage.getItem('jwtToken')}`,
           'Content-Type': 'multipart/form-data',
         }
       });
-      navigate(`/post/${poNum}`); // 수정 완료 후 상세 페이지로 이동
+      navigate(`/posts/${poNum}`); // 수정 후 해당 게시글로 이동
     } catch (error) {
       setError("게시글 업데이트에 실패했습니다.");
     }
   };
 
-  if (loading) return <div className={style.loading}>로딩 중...</div>;
-  if (error) return <div className={style.error}>오류: {error}</div>;
+  const handleHashtagsChange = (e) => {
+    const tags = e.target.value.split(' ').map(tag => tag.trim().replace('#', '')).filter(tag => tag !== '');
+    setPost({ ...post, hashtags: tags });
+  };
+
+  if (loading) return <div>로딩 중...</div>;
+  if (error) return <div>오류: {error}</div>;
 
   return (
-    <div className={style.container}>
-      <div className={style.postEditCard}>
-        <div className={style.cardHeader}>게시글 수정</div>
-        <div className={style.cardBody}>
-          <form onSubmit={handleSubmit}>
-            <div className={style.formGroup}>
-              <label htmlFor="poTitle">제목</label>
-              <input
-                type="text"
-                id="poTitle"
-                name="poTitle"
-                value={post.poTitle}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className={style.formGroup}>
-              <label htmlFor="poContents">내용</label>
-              <textarea
-                id="poContents"
-                name="poContents"
-                value={post.poContents}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className={style.formGroup}>
-              <label htmlFor="file">파일 (선택)</label>
-              <input
-                type="file"
-                id="file"
-                name="file"
-                onChange={handleFileChange}
-              />
-            </div>
-            <button type="submit" className={style.button}>
-              수정하기
-            </button>
-          </form>
-        </div>
-      </div>
+    <div className="edit-post-form">
+      <form onSubmit={handleSubmit}>
+        <textarea
+          value={post.poContents}
+          onChange={(e) => setPost({ ...post, poContents: e.target.value })}
+          required
+        />
+        <input
+          type="text"
+          value={post.hashtags.map(tag => `#${tag}`).join(' ')}
+          onChange={handleHashtagsChange}
+          placeholder="#해시태그 입력"
+        />
+        {post.existingFileUrl && (
+          <div className="existing-file-preview">
+            {post.existingFileUrl.endsWith(".mp4") ? (
+              <video controls className="post-video">
+                <source src={post.existingFileUrl} type="video/mp4" />
+              </video>
+            ) : (
+              <img src={post.existingFileUrl} alt="Uploaded" className="post-image" />
+            )}
+          </div>
+        )}
+        <input
+          type="file"
+          onChange={(e) => setPost({ ...post, file: e.target.files[0] })}
+        />
+        <button type="submit">수정하기</button>
+      </form>
     </div>
   );
 }

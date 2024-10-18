@@ -1,0 +1,131 @@
+.ask-page {
+    max-width: 800px; 
+    margin: 0 auto; 
+    padding: 20px; 
+    border-radius: 8px; 
+    background-color: #f9f9f9; 
+}
+
+.ask-page h1 {
+    text-align: center; 
+    color: #333; 
+    margin-bottom: 25px; 
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.ask-page table {
+    width: 100%; 
+    border-collapse: collapse; 
+}
+
+.ask-page th, .ask-page td {
+    padding: 17px; 
+    text-align: center; 
+    border: 1px solid #ddd; 
+}
+
+.ask-page th {
+    background-color: #03c7a6; 
+    color: white; 
+    font-weight: bold; 
+}
+
+.ask-page tr:nth-child(even) {
+    background-color: #e0e0e0; 
+}
+
+.ask-page tr:hover {
+    background-color: #bdbdbd; 
+}
+
+.ask-page h2 {
+    margin-top: 50px; 
+    text-align: center; 
+    color: #333; 
+    font-weight: bold;
+}
+
+.ask-page input[type="password"] {
+    padding: 12px; 
+    width: calc(100% - 24px); 
+    border: 2px solid #03c7a6; 
+    border-radius: 20px; 
+    margin-bottom: 15px; 
+    transition: border-color 0.3s; 
+}
+
+.ask-page input[type="password"]:focus {
+    outline: none; 
+    border-color: #f2994a; 
+}
+
+.password-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 수직 정렬을 위해 추가 */
+    margin-top: 20px; /* 위쪽 여백 추가 */
+}
+
+.password-section button {
+    background-color: #03c7a6; 
+    color: white; 
+    border: none; 
+    border-radius: 30px; 
+    cursor: pointer; 
+    font-size: 20px; 
+    padding: 12px 20px; 
+    transition: background-color 0.3s, transform 0.2s; 
+    width: 170px; 
+    margin-top: 10px; /* 버튼과 입력 필드 사이의 여백 추가 */
+}
+
+.password-section button:hover {
+    background-color: #f2994a; 
+    transform: scale(1.05); 
+}
+
+
+.ask-page .pagination {
+    display: flex; 
+    justify-content: center; 
+    margin-top: 20px; 
+}
+
+.ask-page .pagination button {
+    margin: 0 5px; 
+    padding: 10px 15px; 
+    background-color: #03c7a6; 
+    color: white; 
+    border: none; 
+    border-radius: 20px; 
+    cursor: pointer; 
+    transition: background-color 0.3s, transform 0.2s; 
+}
+
+.ask-page .pagination button:hover {
+    background-color: #f2994a; 
+    transform: scale(1.05); 
+}
+
+.create-button-container {
+    display: flex;
+    justify-content: center; 
+    margin-top: 20px; 
+}
+
+.create-button {
+    padding: 12px 20px; 
+    background-color: #03c7a6; 
+    color: white; 
+    border: none; 
+    border-radius: 30px; 
+    cursor: pointer; 
+    font-size: 18px; 
+    transition: background-color 0.3s, transform 0.2s; 
+}
+
+.create-button:hover {
+    background-color: #f2994a; 
+    transform: scale(1.05); 
+}

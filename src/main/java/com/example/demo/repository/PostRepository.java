@@ -1,21 +1,47 @@
 package com.example.demo.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Post;
+import com.example.demo.entity.User;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Integer> {
+public interface PostRepository extends JpaRepository<Post, Integer>, JpaSpecificationExecutor<Post> {
 
-    // 페이지네이션을 위한 메서드
-    Page<Post> findAll(Pageable pageable);
+    @Query("SELECT p FROM Post p JOIN FETCH p.user ORDER BY p.poDate DESC")
+    List<Post> findAllWithUserOrderedByDateDesc();
 
-    Page<Post> findByPoTitleContainingIgnoreCaseOrPoContentsContainingIgnoreCase(
-        String title, String content, Pageable pageable);
+    // 모든 게시글을 최신순으로 조회하는 메서드
+    List<Post> findAllByOrderByPoDateDesc();
+
+    // 좋아요 수가 많은 게시글 10개 가져오기
+    List<Post> findTop10ByOrderByLikesDesc();
+
+    // 내용으로 검색할 수 있는 메서드
+    List<Post> findByPoContents(String poContents);
+
+    // 특정 해시태그를 가진 게시글 조회
+   @Query("SELECT p FROM Post p JOIN p.hashtags h WHERE h.tag = :tag")
+    List<Post> findByHashtag(@Param("tag") String tag);
+
+    // 여러 해시태그를 포함한 게시글을 찾기 위한 메서드
+    @Query("SELECT DISTINCT p FROM Post p JOIN p.hashtags h WHERE h.tag IN :tags")
+    List<Post> findByHashtagsIn(@Param("tags") String hashtag);
+
+    // 최신 게시글 10개 가져오기 (추가)
+    List<Post> findTop10ByOrderByPoDateDesc();
+
+    //유저 찾기
+    List<Post> findByUser(User user);
+
+    Optional<User> findByPoNum(Integer poNum);
+
     
-    // 제목으로만 검색할 수 있는 메서드
-    Page<Post> findByPoTitleContainingIgnoreCase(String title, Pageable pageable);
 }

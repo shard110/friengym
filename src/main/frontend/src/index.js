@@ -6,6 +6,7 @@ import App from "./App";
 import reportWebVitals from './reportWebVitals';
 //import "bootstrap/dist/css/bootstrap.min.css"; // Bootstrap CSS 임포트
 
+//두번랜더링,스트릭트모드 제거
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>

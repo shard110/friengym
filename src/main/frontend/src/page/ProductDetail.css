@@ -1,9 +1,8 @@
-/* ProductDetail.css */
-
+/* src/components/PostDetail.css */
 .product-detail {
-    width: 100%;
-    background-color: #fff;
-    display: flex;
+  width: 100%;
+  background-color: #fff;
+  display: flex;
     flex-direction: column;
 }
 
@@ -21,13 +20,10 @@
 .product-detail h3 {
     font-size: 24px;
     margin-bottom: 20px;
-    margin-top: 80px;
-    color: #333;
-}
-
-.product-detail .prod{
-    max-width: 300px;
-    height: auto;
+    white-space: pre-wrap; /* 줄바꿈 유지 */
+  }
+  
+  .youtube-video {
     margin-bottom: 20px;
     border: solid 1px #999;
 }
@@ -62,12 +58,31 @@
     margin-top: 100px;
 }
 
-.product-detail .sec button{
+.product-detail button{
     width: 180px;
     height: 50px;
     padding: 16px;
     margin-top: 100px;
-    border: none;
+    /* border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .add-comment button:hover {
+    background-color: #0056b3;
+  }
+  
+  .youtube-preview {
+    margin: 10px 0;
+  }
+  
+  .youtube-info {
+    margin-top: 5px;
+  }
+   */
+   border: none;
     border-radius: 5px;
     background-color: #00d6b3;
     color: #fff;
@@ -84,4 +99,3 @@
     color: #00d6b3;
     cursor: pointer;
     box-sizing: border-box;
-}

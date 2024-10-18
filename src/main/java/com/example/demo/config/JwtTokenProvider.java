@@ -26,9 +26,11 @@ public class JwtTokenProvider {
     public String createToken(String username) {
         Claims claims = Jwts.claims().setSubject(username);
         Date now = new Date();
-        System.out.println("Current time: " + now.getTime()); // 현재 시간 확인
         Date validity = new Date(now.getTime() + VALIDITY_IN_MS);
-        System.out.println("Expiration time: " + validity.getTime()); // 만료 시간 확인
+        
+        System.out.println("Creating token for username: " + username);
+        System.out.println("Current time: " + now.getTime());
+        System.out.println("Expiration time: " + validity.getTime());
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -40,22 +42,21 @@ public class JwtTokenProvider {
 
     // JWT 토큰에서 Claims 추출
     public Claims getClaims(String token) {
-        System.out.println("Parsing token: " + token);  // 토큰 출력
-        
-        if (isTokenBlacklisted(token)) {
-            throw new JwtException("Token is blacklisted");
-        }
         try {
+            System.out.println("Parsing token: " + token);
+            if (isTokenBlacklisted(token)) {
+                throw new JwtException("Token is blacklisted");
+            }
             return Jwts.parser()
-                    .setSigningKey(secretKey.getBytes())   // secretKey 확인
+                    .setSigningKey(secretKey.getBytes())
                     .parseClaimsJws(token)
                     .getBody();
         } catch (JwtException | IllegalArgumentException e) {
-            // 여기서 오류가 발생하면 정확한 이유를 확인할 수 있도록 로깅 추가
-        System.err.println("Error parsing JWT token: " + e.getMessage());
-            throw new JwtException("Invalid JWT token");
+            System.err.println("Error parsing JWT token: " + e.getMessage());
+            throw new JwtException("Invalid JWT token", e);
         }
     }
+    
 
     // 토큰 유효성 검증
     public boolean validateToken(String token) {

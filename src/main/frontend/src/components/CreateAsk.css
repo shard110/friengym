@@ -1,0 +1,140 @@
+/* 기본 스타일 */
+#create-ask {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+#create-ask h1 {
+    text-align: center;
+    color: #333333;
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 5%;
+}
+
+#create-ask input[type="text"],
+#create-ask textarea,
+#create-ask input[type="file"],
+#create-ask input[type="password"] { /* 비밀번호 필드 추가 */
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    margin-left: 3%;
+    border: 1px solid #03c7a6;
+    border-radius: 2px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+#create-ask input[type="text"]:focus,
+#create-ask textarea:focus,
+#create-ask input[type="password"]:focus { /* 비밀번호 포커스 스타일 추가 */
+    border-color: #03c7a6;
+    outline: none;
+}
+
+#create-ask textarea {
+    height: 150px;
+    resize: none; 
+}
+
+#create-ask .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+#create-ask button {
+    padding: 12px;
+    background-color: #03c7a6;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin: 0 5px;
+    min-width: 150px;
+}
+
+#create-ask button:hover {
+    background-color: #03c7a6; 
+    transform: translateY(-2px);
+}
+
+#create-ask input[type="file"] {
+    border: none; 
+    padding: 0; 
+}
+
+#create-ask input::placeholder,
+#create-ask textarea::placeholder {
+    color: #828282; 
+}
+
+#create-ask input[type="file"] {
+    margin: 10px 0;
+}
+
+/* 비밀번호 입력 필드에 대한 스타일 추가 */
+#create-ask input[type="password"] {
+}
+
+/* 미디어 쿼리 */
+@media (max-width: 375px) {
+    #create-ask h1 {
+        font-size: 20px;
+    }
+    #create-ask input[type="text"],
+    #create-ask textarea,
+    #create-ask input[type="password"] {
+        font-size: 14px; /* 비밀번호 필드의 폰트 크기 */
+    }
+    #create-ask button {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 425px) {
+    #create-ask h1 {
+        font-size: 22px;
+    }
+    #create-ask input[type="text"],
+    #create-ask textarea,
+    #create-ask input[type="password"] {
+        font-size: 15px; /* 비밀번호 필드의 폰트 크기 */
+    }
+}
+
+@media (max-width: 770px) {
+    #create-ask {
+        padding: 15px;
+    }
+    #create-ask h1 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 1024px) {
+    #create-ask {
+        max-width: 90%;
+    }
+    #create-ask button {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 1200px) {
+    #create-ask {
+        max-width: 80%;
+    }
+    #create-ask button {
+        font-size: 18px;
+    }
+}
