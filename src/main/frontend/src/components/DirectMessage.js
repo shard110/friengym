@@ -44,7 +44,8 @@ const DirectMessage = ({ isOpen, onClose, userId }) => {
   const connectWebSocket = () => {
     const socket = new SockJS('http://localhost:8080/ws');
     const client = Stomp.over(socket);
-
+    if (stompClient) return; // 이미 연결된 경우 종료
+    
     client.connect({}, (frame) => {
       console.log('Connected: ' + frame);
       setStompClient(client);

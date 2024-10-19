@@ -144,7 +144,7 @@ function Chat() {
                     <ul>
                         {connectedUsers.map((u, index) => (
                             <li key={`${u.id}-${index}`} onClick={() => handleUserClick(u.id)}>
-                                <img src={`http://localhost:8080/api/user/photo/${u.photo}`} alt={`${u.name}'s profile`} className="user-photo" />
+                                <img src={`http://localhost:8080${u.photo}`} alt={`${u.name}'s profile`} className="user-photo" />
                                 {u.name}
                                 {notifications[u.id] > 0 && (
                                     <span className="notification-badge">{notifications[u.id]}</span>
