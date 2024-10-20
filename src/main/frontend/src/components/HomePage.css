@@ -1,131 +1,218 @@
-/* 기본 스타일은 이전과 동일 */
+.navbarH {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #ff5722;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  height: 80px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
 
-/* 슬라이드 컨테이너 스타일 */
-.slide-container {
+.menu-icon {
+  margin-right: auto;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.logo img {
+  height: 20px;
+}
+
+.logo {
+  flex-grow: 1;
+  text-align: center;
+  height: 50px;
+}
+
+.search-icon {
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+/* 메뉴바 메뉴 부분 */
+.homepage-menu {
+  background-color: #ff5722;
+  padding: 0;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 200px;
+  transition: max-height 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  z-index: 999;
+}
+
+.homepage-menu.open {
+  max-height: 200px;
+}
+
+.homepage-menu ul {
+  list-style-type: none;
+  padding: 10px 0;
+  margin: 0;
+}
+
+.homepage-menu li {
+  padding: 10px 15px;
+  color: white;
+  cursor: pointer;
+}
+
+.homepage-menu li:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 슬라이드 부분 */
+.slider {
   position: relative;
   overflow: hidden;
   width: 100%;
-  max-height: 500px;
+  margin-top: 80px; /* 메뉴바 높이만큼 간격 조정 */
 }
 
-/* 슬라이드 스타일 */
 .slides {
   display: flex;
-  transition: transform 0.5s ease-in-out;
+  transition: transform 0.5s ease; /* 슬라이드 애니메이션 */
 }
 
-/* 개별 슬라이드 스타일 */
 .slide {
-  min-width: 100%;
-  box-sizing: border-box;
+  min-width: 100%; /* 각 슬라이드가 전체 너비를 차지 */
+  height: 500px; /* 슬라이드 높이 조정 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
 }
 
-.slide img {
+.slide-image {
+  width: 100%; /* 이미지 너비 조정 */
+  height: 100%; /* 이미지 높이 조정 */
+  object-fit: cover; /* 이미지 비율 유지 */
+}
+
+.slide-content {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+  font-size: 24px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* 슬라이드 인디케이터 스타일 */
+.indicators {
+  display: flex;
+  justify-content: center;
+  position: absolute; /* 슬라이드 내부에서 위치 조정 */
+  bottom: 10px; /* 슬라이드 바닥에서의 위치 */
+  left: 50%;
+  transform: translateX(-50%); /* 가운데 정렬 */
+}
+
+.indicator {
+  width: 12px; /* 원의 크기 */
+  height: 12px; /* 원의 크기 */
+  border-radius: 50%; /* 둥글게 만들기 */
+  background-color: #ededed; /* 비활성 상태 색상 */
+  margin: 0 5px; /* 간격 조정 */
+  cursor: pointer; /* 커서 포인터로 변경 */
+}
+
+.indicator.active {
+  background-color: #03c7a6; /* 활성 상태 색상 */
+}
+
+/* 트렌트 숏츠 스타일 */
+.trend-shorts {
+  margin-top: 40px;
+  padding: 20px;
+}
+
+.trend-shorts h2 {
+  font-size: 24px;
+  color: #828282;
+  text-align: left; /* 제목 왼쪽 정렬 */
+  margin-bottom: 20px;
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 반응형 그리드 레이아웃 */
+  gap: 20px; /* 아이템 사이 간격 */
+}
+
+.video-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.video-item:hover {
+  transform: scale(1.05); /* 마우스 오버 시 확대 */
+}
+
+.video-item video {
   width: 100%;
   height: auto;
+  border-radius: 10px; /* 부드러운 모서리 */
 }
 
-/* 버튼 스타일 */
-.slide-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
+.video-item p {
+  margin-top: 10px;
   font-size: 16px;
-  border-radius: 5px;
-  z-index: 10;
+  color: #666;
+  text-align: center;
+  font-weight: 600;
 }
 
-.prev-button {
-  left: 10px;
-}
-
-.next-button {
-  right: 10px;
-}
-
-/* 전체 너비를 100%로 하고 콘텐츠를 1200px로 제한 */
-.homepage {
+/* 비디오 슬라이더 스타일 */
+.video-slider {
+  display: flex;
+  overflow: hidden;
   width: 100%;
-  padding: 0 20px; /* 좌우 여백 */
+}
+
+.video-group {
+  display: flex;
+  width: 100%;
+  transition: transform 0.5s ease-in-out; /* 비디오 그룹 슬라이드 전환 */
+}
+
+.video-item {
+  flex: 1;
+  padding: 10px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.homepage-inner {
-  max-width: 1200px;
-  width: 100%;
-}
-
-/* 상품 섹션 스타일 */
-.product-section, .product-section2 {
-  width: 100%;
-  padding: 20px 0; /* 상하 여백 */
-}
-
-/* .product-section2 배경색 설정 */
-.product-section {
-  background-color: #f0f0f0; /* 배경색 예시, 필요에 따라 조정 */
-}
-
-.product-header {
-  display: flex;
-  justify-content: space-between; /* 제목과 링크를 양 끝에 배치 */
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.product-title {
-  font-size: 24px;
-  margin: 0;
-  font-weight: bold;
-}
-
-.more-products-link, .more-products-link2 {
-  color: #333;
-  text-decoration: none;
-  font-size: 16px;
-}
-
-.more-products-link:hover, .more-products-link2:hover {
-  text-decoration: underline;
-}
-
-.product-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px; /* 카드 사이의 간격 */
-}
-
-.product-card {
-  flex: 1 1 calc(25% - 20px); /* 4개의 카드가 한 줄에 표시되도록 설정, 카드 사이의 간격 고려 */
-  box-sizing: border-box;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #fff;
-  padding: 10px;
-  text-align: center;
-}
-
-.product-card img {
+.video-item video {
   width: 100%;
   height: auto;
+  border-radius: 10px;
 }
 
-.product-card h3 {
-  font-size: 18px;
-  margin: 10px 0 5px;
-}
-
-.product-card p {
+.video-item p {
+  margin-top: 10px;
   font-size: 16px;
-  margin: 0;
+  color: #666;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* 각 그룹에 대한 스타일 */
+.video-group:first-of-type {
+  margin-right: 10px; /* 첫 번째 비디오 그룹 간격 */
+}
+
+.video-group:last-of-type {
+  margin-left: 10px; /* 마지막 비디오 그룹 간격 */
 }
