@@ -1,3 +1,4 @@
+/* 기본 스타일 */
 .navbarH {
   display: flex;
   align-items: center;
@@ -18,34 +19,14 @@
   cursor: pointer;
 }
 
-.section-title {
-  text-align: left; /* 왼쪽 정렬 */
-  font-weight: bold; /* 볼드 처리 */
-  margin: 20px 0; /* 위아래 여백 추가 (선택사항) */
-}
-
-.section-title1 {
-  text-align: left; /* 왼쪽 정렬 */
-  font-weight: bold; /* 볼드 처리 */
-  margin-left: 10%;
-  margin-top: 3%;
-}
-
-.section-title2 {
-  text-align: left; /* 왼쪽 정렬 */
-  font-weight: bold; /* 볼드 처리 */
-  margin-left: 20%;
-  margin-top: 3%;
-}
-
-.logo img {
-  height: 20px;
-}
-
 .logo {
   flex-grow: 1;
   text-align: center;
   height: 50px;
+}
+
+.logo img {
+  height: 20px;
 }
 
 .search-icon {
@@ -104,8 +85,8 @@
 
 .slide {
   min-width: 100%;
-  transition: opacity 0.5s ease-in-out;
   position: relative;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .slide-image {
@@ -147,11 +128,13 @@
 }
 
 /* 트렌드 숏츠 스타일 */
-/* 트렌드 숏츠 스타일 */
 .trend-shorts {
   padding: 20px;
+  display: flex;
+  justify-content: center; /* 섹션을 중앙으로 정렬 */
 }
 
+/* 비디오 스타일 */
 .video-slider {
   display: flex;
   align-items: center; /* 버튼과 비디오 아이템을 가운데 정렬 */
@@ -174,188 +157,37 @@
   margin-right: 0; /* 마지막 아이템의 오른쪽 마진 없애기 */
 }
 
-/* 슬라이드 버튼 스타일 */
-.slider-button {
-  font-size: 24px;
-  cursor: pointer;
-  color: #ff5722; /* 버튼 색상 */
-  margin: 0 10px; /* 버튼 사이의 여백 추가 */
-}
-
-
-
-/* 베스트 게시물 스타일 */
-.Hbest-posts {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 각 열을 고정 너비로 설정 */
-  gap: 0px; /* 이미지 사이에 약간의 간격 추가 */
-}
-
-.Hpost-item {
+/* 스크롤바 스타일 */
+.scroll-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden; /* 이미지가 영역 밖으로 나가지 않도록 설정 */
+  justify-content: center; /* 비디오 아이템을 중앙 정렬 */
+  overflow-x: auto; /* 가로 스크롤 활성화 */
+  scroll-snap-type: x mandatory; /* 스크롤 스냅 기능 활성화 */
+  width: 80%; /* 섹션 크기 설정 */
 }
 
-.Hpost-image {
-  width: 100%;
-  height: auto; /* 이미지를 비율에 맞게 표시 */
-  object-fit: cover; /* 이미지가 잘리지 않고 커버되도록 설정 */
+/* 웹킷 기반 브라우저에서의 스크롤바 색상 및 스타일 지정 */
+.scroll-container::-webkit-scrollbar {
+  height: 8px; /* 스크롤바 높이 설정 */
 }
 
-.navbarH {
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #ff5722;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  height: 80px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
+.scroll-container::-webkit-scrollbar-thumb {
+  background-color: #03c7a6; /* 스크롤바 색상 */
+  border-radius: 10px; /* 둥근 모서리 */
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); /* 안쪽 그림자 추가 */
+  border: 2px solid #f1f1f1; /* 스크롤바에 테두리 추가 */
+  transition: background-color 0.3s ease, border-color 0.3s ease; /* 색상 변화 애니메이션 */
 }
 
-.menu-icon {
-  margin-right: auto;
-  font-size: 24px;
-  cursor: pointer;
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background-color: #f2994a; /* 스크롤바 호버 시 색상 */
+  border-color: #f78929; /* 호버 시 테두리 색상 변경 */
 }
 
-.logo img {
-  height: 20px;
-}
-
-.logo {
-  flex-grow: 1;
-  text-align: center;
-  height: 50px;
-}
-
-.search-icon {
-  font-size: 20px;
-  cursor: pointer;
-  margin-left: 20px;
-}
-
-/* 메뉴바 메뉴 부분 */
-.homepage-menu {
-  background-color: #ff5722;
-  padding: 0;
-  position: absolute;
-  top: 60px;
-  left: 0;
-  width: 200px;
-  transition: max-height 0.3s ease;
-  max-height: 0;
-  overflow: hidden;
-  z-index: 999;
-}
-
-.homepage-menu.open {
-  max-height: 200px;
-}
-
-.homepage-menu ul {
-  list-style-type: none;
-  padding: 10px 0;
-  margin: 0;
-}
-
-.homepage-menu li {
-  padding: 10px 15px;
-  color: white;
-  cursor: pointer;
-}
-
-.homepage-menu li:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* 슬라이드 부분 */
-.slider {
-  position: relative;
-  width: 100%;
-  height: 300px;
-  overflow: hidden;
-  margin-top: 80px;
-}
-
-.slides {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-}
-
-.slide {
-  min-width: 100%;
-  transition: opacity 0.5s ease-in-out;
-  position: relative;
-}
-
-.slide-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.slide-content {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-.indicators {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-}
-
-.indicator {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: white;
-  opacity: 0.5;
-  cursor: pointer;
-}
-
-.indicator.active {
-  opacity: 1;
-}
-
-/* 트렌드 숏츠 스타일 */
-.trend-shorts {
-  padding: 20px;
-}
-
-.video-slider {
-  display: flex;
-  justify-content: center; /* 가운데 정렬로 수정 */
-  overflow-x: auto;
-}
-
-.video-group {
-  display: flex;
-  gap: 10px; /* 비디오 아이템들 간의 간격 설정 */
-}
-
-.video-item {
-  flex: 0 0 auto; /* 비디오 아이템을 가로로 고정된 너비로 설정 */
-  text-align: center;
-}
-
-.video-item video {
-  width: 250px; /* 너비 늘리기 */
-  height: 150px; /* 높이 비율 맞추기 */
+.scroll-container::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* 스크롤바 트랙 배경색 */
+  border-radius: 10px; /* 트랙도 둥글게 */
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); /* 트랙에 부드러운 그림자 추가 */
 }
 
 /* 베스트 게시물 스타일 */
@@ -376,14 +208,6 @@
   width: 100%;
   height: auto; /* 이미지를 비율에 맞게 표시 */
   object-fit: cover; /* 이미지가 잘리지 않고 커버되도록 설정 */
-}
-
-/* 인기 상품 슬라이드 버튼 스타일 */
-.slider-button {
-  font-size: 24px;
-  cursor: pointer;
-  align-self: center; /* 버튼을 가운데 정렬 */
-  color: #ff5722; /* 버튼 색상 */
 }
 
 /* 인기 상품 슬라이드 스타일 */
@@ -393,12 +217,6 @@
   justify-content: center; /* 슬라이드 전체를 중앙으로 정렬 */
   overflow: hidden; /* 아이템이 넘치지 않도록 설정 */
   padding: 20px;
-}
-
-/* 상품 아이템을 담는 컨테이너의 스타일 */
-.product-items {
-  display: flex; /* 상품 아이템을 가로로 배치 */
-  transition: transform 0.5s ease-in-out; /* 슬라이드 전환 효과 */
 }
 
 /* 상품 아이템 스타일 */
@@ -416,11 +234,24 @@
 .slider-button {
   font-size: 24px;
   cursor: pointer;
-  color: #ff5722; /* 버튼 색상 */
+  color: #03c7a6; /* 버튼 색상 */
   margin: 0 10px; /* 버튼 사이의 여백 추가 */
 }
 
+.section-title {
+  margin-right: 90%;
+  margin-top: 3%;
+  font-weight: bold;
+}
 
+.section-title1 {
+  margin-right: 70%;
+  margin-top: 3%;
+  font-weight: bold;
+}
 
-
-
+.section-title2 {
+  margin-right:50%;
+  margin-top: 3%;
+  font-weight: bold;
+}

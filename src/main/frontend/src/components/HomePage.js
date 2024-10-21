@@ -3,6 +3,9 @@ import { FaBars, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { Link } from 'react-router-dom';
 import './HomePage.css';
 import logo from '../img/logo.png';
+import Footer from './Footer'; // Footer 컴포넌트 import
+
+
 
 // 슬라이드 데이터
 const slides = [
@@ -111,9 +114,10 @@ const popularProducts = [
     price: '39,500원',
     rating: '4.3',
     reviews: '320',
-  }
+  },
 ];
 
+// 신상품 데이터
 const newProducts = [
   {
     id: 1,
@@ -152,14 +156,14 @@ const newProducts = [
 const HomePage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [currentVideoGroup, setCurrentVideoGroup] = useState(0);
-  const [currentProductSlide, setCurrentProductSlide] = useState(0); 
+  const [currentProductSlide, setCurrentProductSlide] = useState(0);
   const [currentNewProductSlide, setCurrentNewProductSlide] = useState(0);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // 슬라이드 변경 함수
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
   };
@@ -178,44 +182,33 @@ const HomePage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // 비디오 그룹 자동 순환
-  useEffect(() => {
-    const groupInterval = setInterval(() => {
-      setCurrentVideoGroup((prevGroup) => (prevGroup + 1) % 2);
-    }, 5000);
-
-    return () => clearInterval(groupInterval);
-  }, []);
-
-  // 현재 그룹에 따라 비디오를 선택
-  const displayedVideos = currentVideoGroup === 0 ? videos.slice(0, 5) : videos.slice(5);
-
   // 인기 상품 슬라이드 변경
   const nextProductSlide = () => {
-    setCurrentProductSlide((prev) => prev + 1 < Math.ceil(popularProducts.length / 4) ? prev + 1 : 0);
+    setCurrentProductSlide((prev) => (prev + 1 < Math.ceil(popularProducts.length / 4) ? prev + 1 : 0));
   };
 
   const prevProductSlide = () => {
-    setCurrentProductSlide((prev) => prev > 0 ? prev - 1 : Math.ceil(popularProducts.length / 4) - 1);
+    setCurrentProductSlide((prev) => (prev > 0 ? prev - 1 : Math.ceil(popularProducts.length / 4) - 1));
   };
 
   // 현재 상품 그룹에 따라 상품을 선택
-  const displayedProducts = popularProducts.slice(currentProductSlide * 4, currentProductSlide * 4 + 4); 
+  const displayedProducts = popularProducts.slice(currentProductSlide * 4, currentProductSlide * 4 + 4);
 
   // 신상품 슬라이드 변경
   const nextNewProductSlide = () => {
-    setCurrentNewProductSlide((prev) => prev + 1 < Math.ceil(newProducts.length / 4) ? prev + 1 : 0);
+    setCurrentNewProductSlide((prev) => (prev + 1 < Math.ceil(newProducts.length / 4) ? prev + 1 : 0));
   };
 
   const prevNewProductSlide = () => {
-    setCurrentNewProductSlide((prev) => prev > 0 ? prev - 1 : Math.ceil(newProducts.length / 4) - 1);
+    setCurrentNewProductSlide((prev) => (prev > 0 ? prev - 1 : Math.ceil(newProducts.length / 4) - 1));
   };
 
   // 현재 신상품 그룹에 따라 상품을 선택
-  const displayedNewProducts = newProducts.slice(currentNewProductSlide * 4, currentNewProductSlide * 4 + 4); 
+  const displayedNewProducts = newProducts.slice(currentNewProductSlide * 4, currentNewProductSlide * 4 + 4);
 
   return (
     <>
+      {/* 네비게이션 바 */}
       <nav className="navbarH">
         <div className="menu-icon" onClick={toggleMenu}>
           <FaBars />
@@ -227,6 +220,8 @@ const HomePage = () => {
           <FaSearch />
         </div>
       </nav>
+
+      {/* 메뉴 */}
       <div className={`homepage-menu ${isMenuOpen ? 'open' : ''}`}>
         <ul>
           <li>Home</li>
@@ -261,19 +256,19 @@ const HomePage = () => {
 
       {/* 트렌드 숏츠 부분 */}
       <h2 className="section-title1">트렌드 숏츠</h2>
-      <div className="trend-shorts">
-        <div className="video-slider">
-          <div className="video-group">
-            {displayedVideos.map((video) => (
+      <div className="trend-shorts" style={{ margin: '0 20px', display: 'flex', justifyContent: 'center' }}>
+        <div className="scroll-container">
+          {videos.map((video, index) => (
+            index < 10 && ( // 1번부터 10번까지 비디오 출력
               <div key={video.id} className="video-item">
-                <video width="150" height="100" controls loop>
+                <video width="100%" height="auto" controls loop>
                   <source src={video.src} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
                 <p>{video.description}</p>
               </div>
-            ))}
-          </div>
+            )
+          ))}
         </div>
       </div>
 
@@ -316,7 +311,7 @@ const HomePage = () => {
               <img src={product.img} alt={product.description} className="product-image" />
               <div className="product-info">
                 <p>{product.description}</p>
-                <p>{product.discount} {product.price}</p>
+                <p>{product.price}</p>
                 <p>★ {product.rating} 리뷰 {product.reviews}</p>
               </div>
             </div>
@@ -324,6 +319,9 @@ const HomePage = () => {
         </div>
         <FaChevronRight className="slider-button" onClick={nextNewProductSlide} />
       </div>
+
+      <Footer/>
+      
     </>
   );
 };
