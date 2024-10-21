@@ -33,7 +33,7 @@ const Cart = () => {
 
             try {
                 console.log("토큰 확인", `${token}`);
-                const response = await axios.get(`/api/cart/${user.user.id}`, {
+                const response = await axios.get(`/api/cart/${user.id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

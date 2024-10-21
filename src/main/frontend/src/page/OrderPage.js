@@ -15,6 +15,7 @@ const OrderPage = () => {
 
     useEffect(() => {
         const fetchCartItems = async () => {
+            console.log("스토어 아이디 확인",process.env.REACT_APP_PORTONE_STORE_ID);
             const token = user?.token || localStorage.getItem('jwtToken');
             if (!token) {
                 console.error('토큰을 찾을 수 없습니다.');
@@ -25,7 +26,7 @@ const OrderPage = () => {
             try {
                 const response = await axios.get(`/api/cart/${user.id}`, {
                     headers: {
-                        'Authorization': `${token}`
+                        'Authorization': `Bearer ${token}`
                     }
                 });
                 setCartItems(response.data);
