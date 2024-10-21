@@ -1,110 +1,153 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Link 컴포넌트 임포트
+import React, { useState, useEffect } from 'react';
+import { FaBars, FaSearch } from 'react-icons/fa';
+import { Link } from 'react-router-dom'; // Link 컴포넌트 추가
 import './HomePage.css';
-import Footer from './Footer';
-import FloatingMenu from './FloatingMenu';
-import Navbar from './NavBar';
+import logo from '../img/logo.png';
 
 // 슬라이드 데이터
-const slidesData = [
-  { id: 1, img: 'http://localhost:8080/images/banner2.jpg', title: '', description: '' },
-  { id: 2, img: 'http://localhost:8080/images/banner3.jpg', title: '', description: '' },
-  { id: 3, img: 'http://localhost:8080/images/banner4.jpg', title: '', description: '' },
+const slides = [
+  { id: 1, content: '슬라이드 1', img: '/images/banner1.jpg' },
+  { id: 2, content: '슬라이드 2', img: '/images/banner3.jpg' },
+  { id: 3, content: '슬라이드 3', img: '/images/banner4.jpg' },
 ];
 
-// 인기 상품 데이터
-const productsData = [
-  { id: 1, name: 'Product 1', price: '$10', img: 'http://localhost:8080/images/p7.jpg', link: '/productslist/1' },
-  { id: 2, name: 'Product 2', price: '$20', img: 'http://localhost:8080/images/banner2.jpg', link :'/productslist/2' },
-  { id: 3, name: 'Product 3', price: '$30', img: 'http://localhost:8080/images/banner2.jpg', link: '/productslist/3' },
-  { id: 4, name: 'Product 4', price: '$30', img: 'http://localhost:8080/images/banner2.jpg', link: '/productslist/4' },
+// 트렌드 숏츠 비디오 데이터 (1번~10번)
+const videos = [
+  { id: 1, src: '/video/video1.mp4', description: '트렌트 숏츠 설명 문구 1' },
+  { id: 2, src: '/video/video2.mp4', description: '트렌트 숏츠 설명 문구 2' },
+  { id: 3, src: '/video/video3.mp4', description: '트렌트 숏츠 설명 문구 3' },
+  { id: 4, src: '/video/video4.mp4', description: '트렌트 숏츠 설명 문구 4' },
+  { id: 5, src: '/video/video5.mp4', description: '트렌트 숏츠 설명 문구 5' },
+  { id: 6, src: '/video/video6.mp4', description: '트렌트 숏츠 설명 문구 6' },
+  { id: 7, src: '/video/video7.mp4', description: '트렌트 숏츠 설명 문구 7' },
+  { id: 8, src: '/video/video8.mp4', description: '트렌트 숏츠 설명 문구 8' },
+  { id: 9, src: '/video/video9.mp4', description: '트렌트 숏츠 설명 문구 9' },
+  { id: 10, src: '/video/video10.mp4', description: '트렌트 숏츠 설명 문구 10' },
 ];
 
-// 인기 게시물 데이터
-const postsData = [
-  { id: 1, name: 'post 1', price: '$10', img: 'http://localhost:8080/images/p7.jpg', link: '/posts/1' },
-  { id: 2, name: 'post 2', price: '$20', img: 'http://localhost:8080/images/p8.jpg', link: '/posts/2' },
-  { id: 3, name: 'post 3', price: '$30', img: 'http://localhost:8080/images/p9.jpg', link: '/posts/3' },
-  { id: 4, name: 'post 4', price: '$30', img: 'http://localhost:8080/images/p4.jpg', link: '/posts/4' },
+// 베스트 게시물 데이터
+const bestPosts = [
+  { id: 1, img: '/images/p1.jpg', alt: '베스트 이미지 1' },
+  { id: 2, img: '/images/p2.jpg', alt: '베스트 이미지 2' },
+  { id: 3, img: '/images/p3.jpg', alt: '베스트 이미지 3' },
+  { id: 4, img: '/images/p1.jpg', alt: '베스트 이미지 4' },
+  { id: 5, img: '/images/p2.jpg', alt: '베스트 이미지 5' },
+  { id: 6, img: '/images/p3.jpg', alt: '베스트 이미지 6' },
+  { id: 7, img: '/images/p1.jpg', alt: '베스트 이미지 7' },
+  { id: 8, img: '/images/p2.jpg', alt: '베스트 이미지 8' },
+  { id: 9, img: '/images/p3.jpg', alt: '베스트 이미지 9' },
 ];
-
-// 상품 카드 컴포넌트
-const ProductCard = ({ product }) => (
-  <Link to={product.link || '/'} className="product-card">
-    <img src={product.img} alt={product.name} />
-    <h3>{product.name}</h3>
-    <p>{product.price}</p>
-  </Link>
-);
 
 const HomePage = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentVideoGroup, setCurrentVideoGroup] = useState(0); // 현재 비디오 그룹 인덱스
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   const nextSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % slidesData.length);
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide - 1 + slidesData.length) % slidesData.length);
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
+  const handleSlideClick = (index) => {
+    setCurrentSlide(index);
+  };
+
+  // 슬라이드 자동 전환
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 3000); // 3초마다 슬라이드 변경
+    return () => clearInterval(interval); // 컴포넌트 언마운트 시 인터벌 정리
+  }, []);
+
+  // 비디오 그룹 자동 순환
+  useEffect(() => {
+    const groupInterval = setInterval(() => {
+      setCurrentVideoGroup((prevGroup) => (prevGroup + 1) % 2); // 0, 1 두 그룹을 순환
+    }, 5000); // 5초마다 그룹 변경
+
+    return () => clearInterval(groupInterval); // 컴포넌트 언마운트 시 인터벌 정리
+  }, []);
+
+  // 현재 그룹에 따라 비디오를 선택
+  const displayedVideos = currentVideoGroup === 0 ? videos.slice(0, 5) : videos.slice(5); // 그룹 0은 1~5번, 그룹 1은 6~10번
+
   return (
-    <div className="homepage">
-      <Navbar />
-      <FloatingMenu />
-      <div className="homepage-inner">
-        <section className="slide-container">
-          <div className="slides" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
-            {slidesData.map((slide) => (
-              <div className="slide" key={slide.id}>
-                <img src={slide.img} alt={`Slide ${slide.id}`} />
-                <h2>{slide.title}</h2>
-                <p>{slide.description}</p>
+    <>
+      <nav className="navbarH">
+        <div className="menu-icon" onClick={toggleMenu}>
+          <FaBars />
+        </div>
+        <div className="logo">
+          <img src={logo} alt="My Logo" />
+        </div>
+        <div className="search-icon">
+          <FaSearch />
+        </div>
+      </nav>
+      <div className={`homepage-menu ${isMenuOpen ? 'open' : ''}`}>
+        <ul>
+          <li>Home</li>
+          <li>About</li>
+          <li>Services</li>
+          <li>Contact</li>
+        </ul>
+      </div>
+
+      {/* 슬라이드 부분 */}
+      <div className="slider">
+        <div className="slides" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+          {slides.map((slide, index) => (
+            <div key={slide.id} className="slide" onClick={() => handleSlideClick(index)}>
+              <img src={slide.img} alt={slide.content} className="slide-image" />
+              <div className="slide-content">{slide.content}</div>
+            </div>
+          ))}
+        </div>
+        <div className="indicators">
+          {slides.map((_, index) => (
+            <div
+              key={index}
+              className={`indicator ${currentSlide === index ? 'active' : ''}`}
+              onClick={() => setCurrentSlide(index)}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* 트렌트 숏츠 부분 */}
+      <h2>트렌트 숏츠</h2>
+      <div className="trend-shorts">
+        <div className="video-slider">
+          <div className="video-group">
+            {displayedVideos.map((video) => (
+              <div key={video.id} className="video-item">
+                <video width="150" height="100" controls loop>
+                  <source src={video.src} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                <p>{video.description}</p>
               </div>
-            ))}
-          </div>
-          <button className="slide-button prev-button" onClick={prevSlide}>Previous</button>
-          <button className="slide-button next-button" onClick={nextSlide}>Next</button>
-        </section>
-
-        <div className="product-section2">
-          <div className="product-header">
-            <h2 className="product-title">Best 게시물</h2>
-            <Link to="/posts" className="more-products-link">게시물 더보기</Link>
-          </div>
-          <div className="product-list">
-            {postsData.map((post) => (
-              <ProductCard key={post.id} product={post} />
-            ))}
-          </div>
-        </div>
-
-        <div className="product-section">
-          <div className="product-header">
-            <h2 className="product-title">인기 상품</h2>
-            <Link to="/products" className="more-products-link2">상품 더보기</Link>
-          </div>
-          <div className="product-list">
-            {productsData.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-
-        <div className="product-section2">
-          <div className="product-header">
-            <h2 className="product-title">새 상품</h2>
-            <Link to="/products" className="more-products-link">상품 더보기</Link>
-          </div>
-          <div className="product-list">
-            {productsData.map((product) => (
-              <ProductCard key={product.id} product={product} />
             ))}
           </div>
         </div>
       </div>
-      <Footer /> {/* Footer 컴포넌트 추가 */}
-    </div>
+
+      {/* 베스트 게시물 부분 */}
+      <h2>베스트 게시물</h2>
+      <div className="Hbest-posts">
+        {bestPosts.map((post) => (
+          <Link to={`/post/${post.id}`} key={post.id} className="Hpost-item"> {/* 링크 추가 */}
+            <img src={post.img} alt={post.alt} className="Hpost-image" />
+          </Link>
+        ))}
+      </div>
+    </>
   );
 };
 

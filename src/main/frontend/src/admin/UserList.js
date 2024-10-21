@@ -74,10 +74,10 @@ const UserList = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <h2 className={styles.h2}>사용자 목록</h2>
-      {error && <p className={styles.p}>{error}</p>}
-      <table className={styles.table}>
+    <div>
+      <h2>사용자 목록</h2>
+      {error && <p>{error}</p>}
+      <table className="common-table">
         <thead>
           <tr>
             <th className={styles.th}>ID</th>

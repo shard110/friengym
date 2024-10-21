@@ -19,9 +19,7 @@ function extractYouTubeVideoId(url) {
 // 유튜브 동영상 정보 가져오기
 async function fetchYouTubeVideoInfo(videoId) {
   const url = `https://www.youtube.com/watch?v=${videoId}`;
-  const oEmbedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(
-    url
-  )}&format=json`;
+  const oEmbedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`;
 
   try {
     const response = await fetch(oEmbedUrl);
@@ -201,9 +199,9 @@ const CreatePostForm = () => {
           value={hashtags.join(' ')}
           onChange={(e) => setHashtags(e.target.value.split(' '))}
           placeholder="#해시태그"
-        /><br></br>
+        />
+        <br />
         <input type="file" onChange={handleFileChange} />
-
         {filePreview && (
           <div>
             {/* 파일 미리보기 설정 */}
@@ -223,7 +221,6 @@ const CreatePostForm = () => {
             )}
           </div>
         )}
-
         <button type="submit">게시글 등록</button>
       </form>
     </div>

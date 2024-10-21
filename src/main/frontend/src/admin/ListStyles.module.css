@@ -1,55 +1,72 @@
-/* ListStyles.css */
-.container {
-  max-width: 1160px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f8f9fa;
-  padding: 20px;
-}
+/* Liststyles.css */
 
-h2 {
-  text-align: center;
-  color: #343a40;
-  margin-bottom: 20px;
-}
-
-table {
+/* 공통 테이블 스타일 */
+.common-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: #e0f0ff; /* 파란색 배경 */
 }
 
-th, td {
+.common-table th,
+.common-table td {
+  border: 1px solid #ddd;
   padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #dee2e6;
+  text-align: center; /* 가운데 정렬 */
 }
 
-th {
-  background-color: #007bff;
-  color: white;
+.common-table th {
+  background-color: rgb(66, 66, 116); /* 헤더 부분의 배경색 */
+  color: white; /* 헤더 텍스트 색상 */
 }
 
-tr:nth-child(even) {
-  background-color: #f9f9f9;
+.common-table img {
+  width: 50px;
+  height: 50px; /* 이미지 크기 조정 */
 }
 
-tr:hover {
-  background-color: #f1f1f1;
+/* 테이블 내 아이템에 대한 추가 스타일 */
+.common-table tr:nth-child(even) {
+  background-color: #f2f2f2; /* 짝수 행에 대한 배경색 */
 }
 
+.common-table tr:hover {
+  background-color: #d1e7ff; /* 마우스 오버 시 행의 배경색 */
+}
+
+/* 상품 등록 및 수정 폼 스타일 */
+.shop-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.shop-form input,
+.shop-form select,
+.shop-form button {
+  margin: 10px 0; /* 여백 추가 */
+  padding: 10px; /* 패딩 추가 */
+  border: 1px solid #ddd;
+  border-radius: 4px; /* 모서리 둥글게 */
+}
+
+.shop-form button {
+  background-color: rgb(66, 66, 116); /* 버튼 배경색 */
+  color: white; /* 버튼 텍스트 색상 */
+  cursor: pointer; /* 커서 포인터로 변경 */
+}
+
+.shop-form button:hover {
+  background-color: #555; /* 버튼 마우스 오버 색상 */
+}
+
+/* 링크 스타일 */
 a {
-  text-decoration: none;
-  color: #007bff;
+  color: #007bff; /* 기본 링크 색상 */
+  text-decoration: none; /* 밑줄 제거 */
 }
 
 a:hover {
-  text-decoration: underline;
-}
-
-p {
-  color: #dc3545; /* 오류 메시지 색상 */
-  font-weight: bold;
+  color: #0056b3; /* 마우스 오버 시 색상 */
+  text-decoration: underline; /* 마우스 오버 시 밑줄 추가 */
 }

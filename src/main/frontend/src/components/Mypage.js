@@ -87,6 +87,11 @@ const Mypage = () => {
         return "비만";
     };
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toISOString().split('T')[0].replace(/-/g, ' - '); // ISO 문자열을 변환하여 ' - '로 구분
+    };
+
     if (authLoading || loading) {
         return <CircularProgress />;  // 로딩 중 스피너 표시
     }
@@ -123,18 +128,17 @@ const Mypage = () => {
                         <div className="user-info">
                             <p><span>아이디:</span> {userInfo.id}</p>
                             <p><span>이름:</span> {userInfo.name}</p>
-                            <p><span>이메일:</span> {userInfo.email}</p> {/* 이메일 추가 */}
+                            <p><span>이메일:</span> {userInfo.email}</p>
                             <p><span>전화번호:</span> {userInfo.phone}</p>
                             <p><span>성별:</span> {userInfo.sex}</p>
                             <p><span>키:</span> {userInfo.height} cm</p>
                             <p><span>몸무게:</span> {userInfo.weight} kg</p>
-                            {bmi !== null && <p><span>BMI:</span> {bmi} ({bmiCategory})</p>}  {/* BMI와 범주 표시 */}
-                            <p><span>생년월일:</span> {userInfo.birth}</p>
+                            {bmi !== null && <p><span>BMI:</span> {bmi} ({bmiCategory})</p>}
+                            <p><span>생년월일:</span> {userInfo.birth ? formatDate(userInfo.birth) : '정보 없음'}</p>
                             <hr className='Mypage_hr' /> {/* 가로 줄 추가 */}
-                            <p><span>회원권 등록수:</span> {userInfo.firstday}</p>
+                            <p><span>회원권 등록수:</span> {userInfo.firstday ? formatDate(userInfo.firstday) : '정보 없음'}</p>
                             <p><span>회원권 잔여일수:</span> {userInfo.restday}</p>
                         </div>
-
                         <Button variant="contained" color="primary" component={Link} to="/edit-profile">
                             회원정보 수정
                         </Button>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import styles from './ListStyles.module.css';
+import './ListStyles.css';
 
 const AskList = () => {
   const [asks, setAsks] = useState([]);
@@ -47,9 +47,9 @@ const AskList = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <h2 className={styles.h2}>문의글 목록</h2>
-      <table className={styles.table}>
+    <div className="container">
+      <h2>문의글 목록</h2>
+      <table className="common-table">
         <thead>
           <tr>
             <th className={styles.th}>제목</th>
@@ -71,15 +71,9 @@ const AskList = () => {
                     {ask.atitle || '제목 없음'}
                   </Link>
                 </td>
-                <td className={styles.td}>{ask.user ? ask.user.id : 'Unknown'}</td>
-                <td className={styles.td}>{new Date(ask.aDate).toLocaleString()}</td>
-                <td className={styles.td}>
-                  {ask.reply ? (
-                    <span style={{ color: 'green' }}>답변 완료</span> // 답변이 있을 경우
-                  ) : (
-                    <span style={{ color: 'red' }}>답변 미완료</span> // 답변이 없을 경우
-                  )}
-                </td>
+                <td>{ask.userId || 'Unknown'}</td>
+                <td>{new Date(ask.adate).toLocaleString()}</td>
+                <td>{renderReplyStatus(ask.reply)}</td>
               </tr>
             ))
           )}

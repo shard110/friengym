@@ -1,130 +1,174 @@
-/* 기본 스타일은 이전과 동일 */
-
-/* 슬라이드 컨테이너 스타일 */
-.slide-container {
-  position: relative;
-  overflow: hidden;
+.navbarH {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #ff5722;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   width: 100%;
-  max-height: 500px;
+  height: 80px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 }
 
-/* 슬라이드 스타일 */
+.menu-icon {
+  margin-right: auto;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.logo img {
+  height: 20px;
+}
+
+.logo {
+  flex-grow: 1;
+  text-align: center;
+  height: 50px;
+}
+
+.search-icon {
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+/* 메뉴바 메뉴 부분 */
+.homepage-menu {
+  background-color: #ff5722;
+  padding: 0;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 200px;
+  transition: max-height 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  z-index: 999;
+}
+
+.homepage-menu.open {
+  max-height: 200px;
+}
+
+.homepage-menu ul {
+  list-style-type: none;
+  padding: 10px 0;
+  margin: 0;
+}
+
+.homepage-menu li {
+  padding: 10px 15px;
+  color: white;
+  cursor: pointer;
+}
+
+.homepage-menu li:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 슬라이드 부분 */
+.slider {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  margin-top: 80px;
+}
+
 .slides {
   display: flex;
   transition: transform 0.5s ease-in-out;
 }
 
-/* 개별 슬라이드 스타일 */
 .slide {
   min-width: 100%;
-  box-sizing: border-box;
+  transition: opacity 0.5s ease-in-out;
   position: relative;
 }
 
-.slide img {
+.slide-image {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* 버튼 스타일 */
-.slide-button {
+.slide-content {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
+  bottom: 20px;
+  left: 20px;
   color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 5px;
-  z-index: 10;
-}
-
-.prev-button {
-  left: 10px;
-}
-
-.next-button {
-  right: 10px;
-}
-
-/* 전체 너비를 100%로 하고 콘텐츠를 1200px로 제한 */
-.homepage {
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.homepage-inner {
-  max-width: 1200px;
-  width: 100%;
-}
-
-/* 상품 섹션 스타일 */
-.product-section, .product-section2 {
-  width: 100%;
-  padding: 20px 0; /* 상하 여백 */
-}
-
-/* .product-section2 배경색 설정 */
-.product-section {
-  background-color: #f0f0f0; /* 배경색 예시, 필요에 따라 조정 */
-}
-
-.product-header {
-  display: flex;
-  justify-content: space-between; /* 제목과 링크를 양 끝에 배치 */
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.product-title {
   font-size: 24px;
-  margin: 0;
   font-weight: bold;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-.more-products-link, .more-products-link2 {
-  color: #333;
-  text-decoration: none;
-  font-size: 16px;
-}
-
-.more-products-link:hover, .more-products-link2:hover {
-  text-decoration: underline;
-}
-
-.product-list {
+.indicators {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px; /* 카드 사이의 간격 */
+  gap: 8px;
 }
 
-.product-card {
-  flex: 1 1 calc(25% - 20px); /* 4개의 카드가 한 줄에 표시되도록 설정, 카드 사이의 간격 고려 */
-  box-sizing: border-box;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #fff;
-  padding: 10px;
+.indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: white;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.indicator.active {
+  opacity: 1;
+}
+
+/* 트렌드 숏츠 스타일 */
+.trend-shorts {
+  padding: 20px;
+}
+
+.video-slider {
+  display: flex;
+  justify-content: center; /* 가운데 정렬로 수정 */
+  overflow-x: auto;
+}
+
+.video-group {
+  display: flex;
+  gap: 10px; /* 비디오 아이템들 간의 간격 설정 */
+}
+
+.video-item {
+  flex: 0 0 auto; /* 비디오 아이템을 가로로 고정된 너비로 설정 */
   text-align: center;
 }
 
-.product-card img {
+.video-item video {
+  width: 250px; /* 너비 늘리기 */
+  height: 150px; /* 높이 비율 맞추기 */
+}
+
+/* 베스트 게시물 스타일 */
+.Hbest-posts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 각 열을 고정 너비로 설정 */
+  gap: 0px; /* 이미지 사이에 약간의 간격 추가 */
+}
+
+.Hpost-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* 이미지가 영역 밖으로 나가지 않도록 설정 */
+}
+
+.Hpost-image {
   width: 100%;
-  height: auto;
+  height: auto; /* 이미지를 비율에 맞게 표시 */
+  object-fit: cover; /* 이미지가 잘리지 않고 커버되도록 설정 */
 }
 
-.product-card h3 {
-  font-size: 18px;
-  margin: 10px 0 5px;
-}
-
-.product-card p {
-  font-size: 16px;
-  margin: 0;
-}

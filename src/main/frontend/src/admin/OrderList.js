@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
 import { Link } from 'react-router-dom';
-import styles from './ListStyles.module.css'; // CSS 모듈 import
+import './ListStyles.css';
 
 const OrderHistoryPage = () => {
     const { user } = useAuth();
@@ -33,9 +33,9 @@ const OrderHistoryPage = () => {
     }, [user]);
 
     return (
-        <div className={styles.orderHistory}>
-            <h2 className={styles.h2}>결제 내역</h2>
-            <table className={styles.table}>
+        <div>
+            <h2>결제 내역</h2>
+            <table className="common-table">
                 <thead>
                     <tr>
                         <th className={styles.th}>주문 번호</th>

@@ -203,6 +203,24 @@ public class PostService {
         postRepository.deleteById(poNum);
     }
 
+    // 게시글 삭제 (사용자 ID 없이)
+    @Transactional
+    public void deletePost(Integer poNum) {
+        Post post = postRepository.findById(poNum)
+                .orElseThrow(() -> new PostNotFoundException(poNum));
+
+        // 해당 게시글과 관련된 모든 경고 삭제
+        warningRepository.deleteByPost(post); 
+
+        // 해당 게시글과 관련된 댓글 삭제
+        commentRepository.deleteByPost(post);
+        
+        // 해당 게시글과 관련된 모든 알림 삭제
+        notificationRepository.deleteByPost(post);
+        
+        postRepository.deleteById(poNum);
+    }
+
      // 해시태그 처리 메서드
      private Set<Hashtag> processHashtags(List<String> tagStrings) {
         return tagStrings.stream().map(tag -> {
