@@ -172,3 +172,50 @@
   object-fit: cover; /* 이미지가 잘리지 않고 커버되도록 설정 */
 }
 
+/* 인기 상품 슬라이드 버튼 스타일 */
+.slider-button {
+  font-size: 24px;
+  cursor: pointer;
+  align-self: center; /* 버튼을 가운데 정렬 */
+  color: #ff5722; /* 버튼 색상 */
+}
+
+/* 인기 상품 슬라이드 스타일 */
+.popular-products-slider {
+  display: flex;
+  align-items: center; /* 버튼과 상품 아이템을 가운데 정렬 */
+  justify-content: center; /* 슬라이드 전체를 중앙으로 정렬 */
+  overflow: hidden; /* 아이템이 넘치지 않도록 설정 */
+  padding: 20px;
+}
+
+/* 상품 아이템을 담는 컨테이너의 스타일 */
+.product-items {
+  display: flex; /* 상품 아이템을 가로로 배치 */
+  transition: transform 0.5s ease-in-out; /* 슬라이드 전환 효과 */
+}
+
+/* 상품 아이템 스타일 */
+.product-item {
+  flex: 0 0 calc(25% - 10px); /* 4개가 보이도록 너비 설정 */
+  margin-right: 10px; /* 아이템 간격 설정 */
+  text-align: center;
+}
+
+.product-item:last-child {
+  margin-right: 0; /* 마지막 아이템의 오른쪽 마진 없애기 */
+}
+
+/* 슬라이드 버튼 스타일 */
+.slider-button {
+  font-size: 24px;
+  cursor: pointer;
+  color: #ff5722; /* 버튼 색상 */
+  margin: 0 10px; /* 버튼 사이의 여백 추가 */
+}
+
+
+
+
+
+
