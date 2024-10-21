@@ -20,7 +20,7 @@ public class JwtTokenProvider {
 
     private Set<String> blacklistedTokens = new HashSet<>();
 
-    private static final long VALIDITY_IN_MS = 3600000; // 1 hour
+    private static final long VALIDITY_IN_MS = 360000000; // 1 hour
 
     // JWT 토큰 생성
     public String createToken(String username) {
@@ -43,6 +43,11 @@ public class JwtTokenProvider {
     // JWT 토큰에서 Claims 추출
     public Claims getClaims(String token) {
         try {
+            token = token.trim();
+            
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7); // "Bearer " 접두어 제거
+            }    
             System.out.println("Parsing token: " + token);
             if (isTokenBlacklisted(token)) {
                 throw new JwtException("Token is blacklisted");
@@ -60,6 +65,7 @@ public class JwtTokenProvider {
 
     // 토큰 유효성 검증
     public boolean validateToken(String token) {
+        System.out.println("스프링에서 현재시간:"+new Date());
         try {
             Claims claims = getClaims(token);
             boolean isExpired = claims.getExpiration().before(new Date());

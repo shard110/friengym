@@ -1,84 +1,238 @@
 /* Navbar.css */
 
 .navbarH {
-    width: 100%;
-    background-color: #333; /* 원하는 배경색으로 변경 */
-    color: #fff; /* 글자색 */
-    padding: 10px 0; /* 상하 여백 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    max-width: 100%;
+    background-color: #fff;
+    box-shadow: 0 0 4px #575f6434;
+    margin: 0 auto;
+    z-index: 2000;
   }
   
-  .navbar-container {
+.navbarH .navbar-container {
     max-width: 1200px;
-    margin: 0 auto; /* 중앙 정렬 */
+    height: 64px;
+    margin: 0 auto;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 0 20px; /* 좌우 여백 */
   }
   
-  .navbar-logo-container {
-    flex: 1;
-  }
   
-  .navbar-logo {
-    height: 55px; /* 로고 높이 조정 */
-  }
+  .navbarH .navbar-logo-container{
+    margin-right: 56px;
+    }
+
+  .navbarH .navbar-logo-container a{
+    display: block;
+    height: 18px;
+    }
+
+.navbarH .navbar-logo-container .navbar-logo {
+    height: 18px;
+    width: 100%;
+    object-fit: cover;
+    object-position: left;
+    transition: width 0.5s ease;
+}
   
-  .navbar-main-menu {
-    flex: 2;
-    display: flex; /* Flexbox 사용 */
+.navbarH .navbar-main-menu {
+    display: flex;
     align-items: center;
-    margin-right: 50px; /* 오른쪽 여백 조정, 필요에 따라 조정 */
   }
   
-  .navbar-nav {
+.navbarH .navbar-nav {
     list-style: none;
     display: flex;
-    padding: 0;
-    margin: 0;
+    gap: 32px;
   }
   
-  .nav-item {
-    margin: 0 15px; /* 메뉴 항목 간 여백 */
-  }
-  
-  .nav-link {
-    color: #fff;
+.navbarH .nav-link {
+    color: #333;
     text-decoration: none;
-    font-size: 16px; /* 글자 크기 조정 */
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.2s ease;
   }
   
-  .nav-link:hover {
-    text-decoration: underline;
+.navbarH .nav-link:hover {
+    color: #03C7A6;
   }
   
-  .navbar-user-menu {
+.navbarH .navbar-user-menu {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 10px; /* 항목 사이의 간격 조정 */
+    gap: 10px;
     flex: 1;
   }
+
+  .navbarH .user-menu-logged-out{
+    gap: 24px;
+  }
   
-  .user-menu-logged-in, .user-menu-logged-out {
+.navbarH .user-menu-logged-in, .user-menu-logged-out {
     display: flex;
     align-items: center;
-    gap: 10px; /* 항목 간 간격 조정 */
+    justify-content: space-between;
+    gap: 16px;
   }
   
-  .user-menu-logged-in .nav-link, .user-menu-logged-out .nav-link {
-    margin: 0; /* 기본 여백 제거 */
-  }
-  
-  button.nav-link {
+.navbarH button.nav-link {
     background: none;
     border: none;
-    color: #fff;
-    font-size: 15px;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif !important;
+  }
+
+.navbarH .sliding-navbar, .navbarH .menu-mobile {
+  display: none;
+}
+
+@media (max-width: 1280px) {
+  .navbarH .navbar-container{
+    padding-left: 20px;
+  }
+
+  .navbarH .sliding-navbar, .navbarH .show, .navbarH .sliding-navbar .navbar-user-menu{
+    display: block;
+  }
+  .navbarH a{
+    color: #333;
+  }
+
+  .navbarH .navbar-main-menu, .navbarH .navbar-user-menu{
+    display: none;
+  }
+
+  .navbarH .navbar-container {
+    justify-content: space-between;
+  }
+
+  .navbarH .navbar-logo-container a{
+    display: flex;
+    height: 50px;
+    align-items: center;
+    }
+
+  .navbarH .navbar-logo-container .navbar-logo {
+    height: 18px;
+    width: 42px;
+    object-fit: cover;
+    object-position: left;
+  }
+
+  .navbarH .sliding-navbar{
+    position: absolute;
+    top: 0;
+    right: -110%;
+    height: 100vh;
+    width: 55%;
+    background-color: #fff;
+    transition: 0.2s ease-out;
+    z-index: 3000;
+    padding: 80px 40px 40px 40px;
+  }
+
+  .navbarH .sliding-navbar--open {
+    right: 0px;
+  }
+
+  .navbarH .mask {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    height: 100vh;
+    width: 100%;
+    background: #444c50;
+    opacity: 0.8;
+  }
+
+  .navbarH .show {
+    left: 0;
+  }
+  
+  .navbarH .navbar--item {
+    margin: 16px;
+    margin-left: 0;
+  }
+
+  .navbarH .navbar--item:first-child{
+    margin-top: 92px;
+  }
+  
+  .navbarH .hamburger-menu {
+    z-index: 3999;
+    position: absolute;
+    top: 8px;
+    right: 6px;
+    margin: auto;
+    width: 48px;
+    height: 48px;
     cursor: pointer;
   }
   
-  button.nav-link:hover {
-    text-decoration: underline;
+  .navbarH .hamburger {
+    position: relative;
+    transform: translate3d(14px, 23px, 0);
+    background: #333;
+    transition: 0.2s ease-in-out;
   }
+  
+  .navbarH .hamburger,
+  .navbarH .hamburger:after,
+  .navbarH .hamburger:before {
+    width: 20px;
+    height: 2px;
+  }
+
+  .navbarH .hamburger:hover,
+  .navbarH .hamburger:after:hover,
+  .navbarH .hamburger:before:hover {
+    width: 20px;
+    height: 2px;
+  }
+  
+  .navbarH .hamburger:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 6px;
+    background: #333;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .navbarH .hamburger:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 6px;
+    background: #333;
+    transition: 0.3s ease-in-out;
+  }
+
+  .navbarH .menu-opened{
+    background-color: #fff;
+    transition: 0.3s ease-in-out;
+  }
+
+  .navbarH .menu-opened:before {
+    bottom: 0;
+    transition: 0.3s ease-in-out;
+    transform: rotate(-45deg);
+  }
+  
+  .navbarH .menu-opened:after {
+    top: 0;
+    transition: 0.3s ease-in-out;
+    transform: rotate(45deg);
+  }
+  
+  .navbarH .hamburger-menu:hover .hamburger:before,
+  .navbarH .hamburger-menu:hover .hamburger:after {
+    background: #03C7A6;
+}
+}  
   

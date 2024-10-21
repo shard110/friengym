@@ -52,7 +52,6 @@
 /* 전체 너비를 100%로 하고 콘텐츠를 1200px로 제한 */
 .homepage {
   width: 100%;
-  padding: 0 20px; /* 좌우 여백 */
   box-sizing: border-box;
   display: flex;
   flex-direction: column;

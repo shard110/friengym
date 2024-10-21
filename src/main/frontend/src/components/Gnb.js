@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // React Router의 Link를 사용합니다.
-import logo from '../img/logo.svg';
+import logo from '../img/logo_friengym.svg';
 import './Gnb.css';
 
 const Gnb = () => {
