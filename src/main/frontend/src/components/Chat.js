@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import { useAuth } from "./AuthContext";
+import { useNavigate } from "react-router-dom"; // useNavigate 추가
 import "./Chat.css";
 import defaultProfileImg from "../img/default.jpg";
 
 function Chat() {
   const { user } = useAuth();
   const token = localStorage.getItem("token");
+  const navigate = useNavigate(); // useNavigate 훅 호출
 
   const [connectedUsers, setConnectedUsers] = useState([]);
   const [messages, setMessages] = useState([]);
@@ -222,6 +224,13 @@ function Chat() {
             <button onClick={sendMessage}>Send</button>
           </div>
         )}
+        {/* 닫기 버튼 추가 */}
+        <button
+          className="close-button"
+          onClick={() => navigate("/totalmypage")}
+        >
+          닫기
+        </button>
       </div>
     </div>
   );
