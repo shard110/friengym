@@ -9,6 +9,7 @@ import com.example.demo.repository.AskRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.entity.Warning; // Warning 엔티티 임포트
 import com.example.demo.repository.WarningRepository; // WarningRepository 임포트
+import com.example.demo.service.PostService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +35,15 @@ public class AdminController {
     private final UserRepository userRepository;
     private final AskRepository askRepository;
     private final WarningRepository warningRepository;
+    private final PostService postService; // PostService 필드 추가
 
     @Autowired
-    public AdminController(UserRepository userRepository, AskRepository askRepository, WarningRepository warningRepository) {
+    public AdminController(UserRepository userRepository, AskRepository askRepository, 
+                           WarningRepository warningRepository, PostService postService) {
         this.userRepository = userRepository;
         this.askRepository = askRepository;
         this.warningRepository = warningRepository;
+        this.postService = postService; // PostService 주입
     }
 
     // 관리자 로그인
@@ -240,6 +244,23 @@ public class AdminController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    // 게시글 삭제
+    // 게시글 삭제
+    @DeleteMapping("/posts/{poNum}")
+    public ResponseEntity<String> deletePost(
+            @PathVariable("poNum") Integer poNum) {
+        try {
+            // 게시글 삭제
+            postService.deletePost(poNum);
+            
+            return ResponseEntity.ok("Post with ID " + poNum + " has been deleted successfully.");
+        } catch (Exception e) {
+            // 서버 오류 발생 시 응답
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while deleting the post.");
         }
     }
 }

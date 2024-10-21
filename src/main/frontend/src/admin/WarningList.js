@@ -58,7 +58,7 @@ const WarningList = () => {
       }
   
       // 게시물 삭제 요청
-      await axios.delete(`http://localhost:8080/api/posts/${postId}`);
+      await axios.delete(`http://localhost:8080/api/admin/posts/${postId}`);
       setWarnings(prevWarnings => prevWarnings.filter(warning => warning.postId !== postId));
       alert('Post deleted successfully.');
     } catch (error) {
