@@ -1,10 +1,10 @@
-/* src/components/Comment.css */
-
+/* 댓글 스타일 */
 .comment {
   border-bottom: 1px solid #ddd;
   padding: 10px 0;
 }
 
+/* 사용자 정보 */
 .comment-user-info {
   display: flex;
   align-items: flex-start;
@@ -22,8 +22,11 @@
   white-space: pre-wrap;
 }
 
+/* 댓글 액션 버튼 */
 .comment-actions {
   margin-left: 10px;
+  margin-top: 5px; /* 간격 추가 */
+  margin-bottom: 5px;
 }
 
 .comment-actions button {
@@ -32,11 +35,47 @@
   cursor: pointer;
 }
 
+/* 댓글 수정 입력창 */
 .edit-comment-textarea {
   flex: 1;
   height: 60px;
   padding: 5px;
   margin-right: 10px;
+  margin-bottom: 10px; /* 간격 추가 */
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+/* ----- 답글 스타일링 추가 ----- */
+
+/* 답글 리스트 스타일 (들여쓰기) */
+.replies {
+  margin-left: 20px;
+  padding-left: 10px;
+  border-left: 2px solid #ddd; /* 답글 구분을 위한 세로선 */
+}
+
+/* 답글의 댓글 스타일 */
+.replies .comment {
+  background-color: #f9f9f9; /* 답글의 배경색 */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* 답글 작성 폼 */
+.add-reply {
+  margin-top: 10px;
+}
+
+.reply-button button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.reply-button button:hover {
+  background-color: #0056b3;
 }
