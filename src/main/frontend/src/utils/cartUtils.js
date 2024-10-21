@@ -10,7 +10,7 @@ export const addToCart = async (product) => {
         return;
     }
 
-    console.log('토큰:', token); // 토큰 확인용 콘솔 로그 추가
+    console.log('토큰:', token); // 토큰 확인용 콘솔 로그
 
     try {
         // 토큰 형식 검사

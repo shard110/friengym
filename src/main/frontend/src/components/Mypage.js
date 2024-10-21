@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import Footer from './Footer'; // Footer 컴포넌트 import
 import './Mypage.css';
+import FloatingMenu from './FloatingMenu';
 
 const Mypage = () => {
     const { user, loading: authLoading } = useAuth();  // useAuth에서 user와 loading을 가져옴
@@ -99,6 +100,7 @@ const Mypage = () => {
 
     return (
         <div className="page-wrapper">
+            <FloatingMenu />
             <div className="Mypage">
                 {userInfo ? (
                     <div>

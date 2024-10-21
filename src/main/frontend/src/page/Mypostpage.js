@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
-import Chat from "../components/Chat";  //추가
+import Chat from "../components/Chat"; //추가
 import "./Mypostpage.css";
 
 // MyPageSideBar 컴포넌트 추가
@@ -246,7 +246,7 @@ const Mypostpage = () => {
             className="post-item"
             onClick={() => navigate(`/posts/${post.poNum}`)}
           >
-            {/\.(jpeg|jpg|png|gif)$/i.test(post.fileUrl) ? (
+            {/\.(jpeg|jpg|png|gif|jfif)$/i.test(post.fileUrl) ? (
               <img src={post.fileUrl} alt="Post" />
             ) : /\.(mp4|webm|ogg)$/i.test(post.fileUrl) ? (
               <video

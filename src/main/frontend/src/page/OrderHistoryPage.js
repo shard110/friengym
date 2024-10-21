@@ -3,6 +3,10 @@ import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
 import { Link } from 'react-router-dom';
 import './OrderHistoryPage.css'; // CSS 파일을 import 합니다.
+import ShopLnb from '../components/ShopLnb';
+import FloatingMenu from '../components/FloatingMenu';
+import replace from "../img/product_replace.png";
+import Navbar from '../components/NavBar';
 
 const OrderHistoryPage = () => {
     const { user } = useAuth();
@@ -33,9 +37,17 @@ const OrderHistoryPage = () => {
             fetchOrders();
         }
     }, [user]);
+    
+    const onErrorImg = (e) => {
+        e.target.src = replace;
+      };
 
     return (
         <div className="order-history">
+            <Navbar />
+            <ShopLnb />
+            <FloatingMenu />
+            <div className='order-wrap'>
             <h2>결제 내역</h2>
             <table>
                 <thead>
@@ -46,7 +58,6 @@ const OrderHistoryPage = () => {
                         <th>수량</th>
                         <th>상태</th>
                         <th>결제 날짜</th>
-                        <th>결제 아이디</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,10 +70,9 @@ const OrderHistoryPage = () => {
                                     )}
                                     <td>
                                         <Link to={`/productslist/${dorder.product.pNum}`}>
-                                            <img src={dorder.product.pImgUrl} alt={dorder.product.pName} className="cart-img" />
+                                            <img src={dorder.product.pImgUrl} alt={dorder.product.pName} className="cart-img" onError={onErrorImg}/>
                                         </Link>
                                     </td>
-                                    <td>{order.id}</td>
                                     <td>{dorder.product.pName}</td>
                                     <td>{dorder.doCount}개</td>
                                     {index === 0 && (
@@ -77,6 +87,7 @@ const OrderHistoryPage = () => {
                     ))}
                 </tbody>
             </table>
+            </div>
         </div>
     );
 };

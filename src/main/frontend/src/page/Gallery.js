@@ -165,7 +165,7 @@ if (loading) return <div>로딩 중...</div>;
 
               {post.fileUrl && (
                 <div className="post-media">
-                  {/\.(jpeg|jpg|png|gif)$/i.test(post.fileUrl) ? (
+                  {/\.(jpeg|jpg|png|gif|jfif)$/i.test(post.fileUrl) ? (
                     <img src={post.fileUrl} alt="Uploaded" className="post-image" />
                   ) : /\.(mp4|mov)$/i.test(post.fileUrl) ? (
                     <video
@@ -188,11 +188,13 @@ if (loading) return <div>로딩 중...</div>;
 
               {/* 유튜브 링크가 있는 경우 YouTubePreview 컴포넌트 사용 */}
               {post.poContents.match(/https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/[^\s]+/g) && (
-                post.poContents
+                 <div className="youtube-preview-container">
+                {post.poContents
                   .match(/https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/[^\s]+/g)
                   .map((url, index) => (
                     <YouTubePreview key={index} url={url} />
-                  ))
+                  ))}
+                  </div>
               )}
 
               <div className="hashtags">

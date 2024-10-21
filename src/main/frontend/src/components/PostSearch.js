@@ -111,6 +111,11 @@ const PostSearch = () => {
     fetchSearchResults();
   };
 
+  const handleCardClick = (poNum) => {
+    // 클릭 시 게시물 상세 페이지로 이동
+    navigate(`/posts/${poNum}`);
+  };
+
   return (
     <div className="post-search-container">
       <h2>게시물 검색</h2>
@@ -164,33 +169,34 @@ const PostSearch = () => {
           <div>
             <h3>검색 결과</h3>
             {searchResults.map((post) => (
-              <div key={post.poNum} className="post-card">
-                <p>작성자: {post.user ? post.user.id : "Unknown"}</p>
-                <h4>{post.poContents}</h4>
-                {post.fileUrl && (
-                  <div className="post-media">
-                    {post.fileUrl.endsWith(".mp4") ? (
-                      <video controls>
-                        <source src={post.fileUrl} type="video/mp4" />
-                      </video>
-                    ) : (
-                      <img src={post.fileUrl} alt="Uploaded" />
-                    )}
-                  </div>
+            <div key={post.poNum}
+            className="post-card"
+            onClick={() => handleCardClick(post.poNum)} // 클릭 시 상세 페이지로 이동
+            >
+
+            <p>작성자: {post.userId ? post.userId : "Unknown"} </p>
+            <h4>{post.poContents}</h4>
+            {post.fileUrl && (
+              <div className="post-media">
+                {post.fileUrl.endsWith(".mp4") ? (
+                  <video controls>
+                    <source src={post.fileUrl} type="video/mp4" />
+                  </video>
+                ) : (
+                  <img src={post.fileUrl} alt="Uploaded" />
                 )}
-                <p>👁 {post.viewCnt}  👍 {post.likes}</p>
-                <div className="post-hashtags">
-                  {post.hashtags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="hashtag"
-                      onClick={() => handleKeywordClick(tag)}
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
               </div>
+            )}
+            <p>👁 {post.viewCnt}  👍 {post.likes}</p>
+            <div className="post-hashtags">
+              {post.hashtags.map((tag) => (
+                <span key={tag} className="hashtag" onClick={() => handleKeywordClick(tag)}>
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          </div>
+          
             ))}
           </div>
         )}

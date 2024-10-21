@@ -20,7 +20,6 @@ import com.example.demo.dto.FollowResponse;
 import com.example.demo.entity.Follow;
 import com.example.demo.entity.User;
 import com.example.demo.service.FollowService;
-import com.example.demo.service.NotificationService;
 import com.example.demo.service.UserService;
 
 @RestController
@@ -33,9 +32,6 @@ public class FollowController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private NotificationService notificationService;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;

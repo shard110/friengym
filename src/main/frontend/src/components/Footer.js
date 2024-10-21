@@ -6,9 +6,7 @@ const Footer = () => {
     return (
         <footer className="footer">
             <div className='footer-wrap'>
-                <span className="footer-copy">
-                    © 2024 FRIENGYM. All Rights Reserved.
-                </span>
+                <span className="footer-copy">© 2024 FRIENGYM.</span>
                 <p></p>
                 <span className="footer-tel">
                     Tel. 000-000-0000

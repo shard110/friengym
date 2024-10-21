@@ -73,13 +73,41 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
+
+    public List<Post> getPosts() {
+        return this.posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
     
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follow> following;
+
+    public List<Follow> getFollowing() {
+        return this.following;
+    }
+
+    public void setFollowing(List<Follow> following) {
+        this.following = following;
+    }
     
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follow> followers;
 
+    public List<Follow> getFollowers() {
+        return this.followers;
+    }
 
+    public void setFollowers(List<Follow> followers) {
+        this.followers = followers;
+    }
+
+    public User() {}
+    
+    public User(String id) {
+        this.id = id;
+    }
 
 }

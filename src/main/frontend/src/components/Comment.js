@@ -18,6 +18,8 @@ const Comment = ({
   const [editedText, setEditedText] = useState(comment.comment);
   const [showReplyForm, setShowReplyForm] = useState(false); // 답글 작성 폼 표시 여부
 
+
+
   const handleSave = () => {
     onEdit(comment.commentNo, editedText);
     setIsEditing(false);
@@ -43,8 +45,8 @@ const Comment = ({
   };
 
   return (
-    <div className="comment">
-       {/* 기존 댓글 내용 표시 */}
+    <div className={`comment ${comment.parentId ? "reply-comment" : ""}`}>
+      <div className="comment-header">
       <div className="comment-user-info">
       <img
           src={comment.userPhoto || "default-photo-url"}
@@ -52,6 +54,7 @@ const Comment = ({
           className="comment-user-photo"
         />
         <span className="comment-username">{comment.userId}</span>
+        </div>
         </div>
 
         {isEditing ? (

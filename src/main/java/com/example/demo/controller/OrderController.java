@@ -31,54 +31,54 @@ public class OrderController {
         }
     }
 
-    @PostMapping
-    public CartItemDTO addOrUpdateCartItem(@RequestBody Cart cart, @RequestHeader("Authorization") String token) {
-        String userId = jwtTokenProvider.getClaims(token).getSubject();
-        if (jwtTokenProvider.validateToken(token)) {
-            User user = new User();
-            user.setId(userId);
-            cart.setUser(user);
-            Cart updatedCart = cartService.addOrUpdateCartItem(cart);
-            return new CartItemDTO(
-                    updatedCart.getCnum(),
-                    updatedCart.getcCount(),
-                    new ProductDTO(
-                            updatedCart.getProduct().getpNum(),
-                            updatedCart.getProduct().getpName(),
-                            updatedCart.getProduct().getpPrice(),
-                            updatedCart.getProduct().getpImgUrl()
-                    )
-            );
-        } else {
-            throw new RuntimeException("Invalid token");
-        }
-    }
+    // @PostMapping
+    // public CartItemDTO addOrUpdateCartItem(@RequestBody Cart cart, @RequestHeader("Authorization") String token) {
+    //     String userId = jwtTokenProvider.getClaims(token).getSubject();
+    //     if (jwtTokenProvider.validateToken(token)) {
+    //         User user = new User();
+    //         user.setId(userId);
+    //         cart.setUser(user);
+    //         Cart updatedCart = cartService.addOrUpdateCartItem(cart);
+    //         return new CartItemDTO(
+    //                 updatedCart.getCnum(),
+    //                 updatedCart.getcCount(),
+    //                 new ProductDTO(
+    //                         updatedCart.getProduct().getpNum(),
+    //                         updatedCart.getProduct().getpName(),
+    //                         updatedCart.getProduct().getpPrice(),
+    //                         updatedCart.getProduct().getpImgUrl()
+    //                 )
+    //         );
+    //     } else {
+    //         throw new RuntimeException("Invalid token");
+    //     }
+    // }
 
-    @PutMapping("/{cnum}")
-    public CartItemDTO updateCartItemCount(@PathVariable int cnum, @RequestBody Cart cart, @RequestHeader("Authorization") String token) {
-        String userId = jwtTokenProvider.getClaims(token).getSubject();
-        if (jwtTokenProvider.validateToken(token)) {
-            Cart existingCartItem = cartService.getCartItemById(cnum);
-            if (existingCartItem != null && existingCartItem.getUser().getId().equals(userId)) {
-                existingCartItem.setcCount(cart.getcCount());
-                Cart updatedCart = cartService.addOrUpdateCartItem(existingCartItem);
-                return new CartItemDTO(
-                        updatedCart.getCnum(),
-                        updatedCart.getcCount(),
-                        new ProductDTO(
-                                updatedCart.getProduct().getpNum(),
-                                updatedCart.getProduct().getpName(),
-                                updatedCart.getProduct().getpPrice(),
-                                updatedCart.getProduct().getpImgUrl()
-                        )
-                );
-            } else {
-                throw new RuntimeException("Invalid cart item or user");
-            }
-        } else {
-            throw new RuntimeException("Invalid token");
-        }
-    }
+    // @PutMapping("/{cnum}")
+    // public CartItemDTO updateCartItemCount(@PathVariable int cnum, @RequestBody Cart cart, @RequestHeader("Authorization") String token) {
+    //     String userId = jwtTokenProvider.getClaims(token).getSubject();
+    //     if (jwtTokenProvider.validateToken(token)) {
+    //         Cart existingCartItem = cartService.getCartItemById(cnum);
+    //         if (existingCartItem != null && existingCartItem.getUser().getId().equals(userId)) {
+    //             existingCartItem.setcCount(cart.getcCount());
+    //             Cart updatedCart = cartService.addOrUpdateCartItem(existingCartItem);
+    //             return new CartItemDTO(
+    //                     updatedCart.getCnum(),
+    //                     updatedCart.getcCount(),
+    //                     new ProductDTO(
+    //                             updatedCart.getProduct().getpNum(),
+    //                             updatedCart.getProduct().getpName(),
+    //                             updatedCart.getProduct().getpPrice(),
+    //                             updatedCart.getProduct().getpImgUrl()
+    //                     )
+    //             );
+    //         } else {
+    //             throw new RuntimeException("Invalid cart item or user");
+    //         }
+    //     } else {
+    //         throw new RuntimeException("Invalid token");
+    //     }
+    // }
 
     @DeleteMapping("/{cnum}")
     public void removeCartItem(@PathVariable int cnum, @RequestHeader("Authorization") String token) {

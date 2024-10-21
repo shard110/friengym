@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './ListStyles.css';
+import styles from './ListStyles.module.css';
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -74,36 +74,36 @@ const UserList = () => {
   };
 
   return (
-    <div>
-      <h2>사용자 목록</h2>
-      {error && <p>{error}</p>}
-      <table>
+    <div className={styles.container}>
+      <h2 className={styles.h2}>사용자 목록</h2>
+      {error && <p className={styles.p}>{error}</p>}
+      <table className={styles.table}>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>이름</th>
-            <th>전화번호</th>
-            <th>이메일</th> {/* 이메일 열 추가 */}
-            <th>성별</th>
-            <th>생일</th>
-            <th>등록일자</th>
-            <th>남은 일수</th>            
-            <th>개월 추가</th>
-            <th>작업</th>
+            <th className={styles.th}>ID</th>
+            <th className={styles.th}>이름</th>
+            <th className={styles.th}>전화번호</th>
+            <th className={styles.th}>이메일</th> {/* 이메일 열 추가 */}
+            <th className={styles.th}>성별</th>
+            <th className={styles.th}>생일</th>
+            <th className={styles.th}>등록일자</th>
+            <th className={styles.th}>남은 일수</th>            
+            <th className={styles.th}>개월 추가</th>
+            <th className={styles.th}>작업</th>
           </tr>
         </thead>
         <tbody>
           {users.map(user => (
             <tr key={user.id}>
-              <td>{user.id}</td>
-              <td>{user.name}</td>
-              <td>{user.phone}</td>
-              <td>{user.email}</td> {/* 이메일 값 표시 */}
-              <td>{user.sex}</td>
-              <td>{user.birth}</td>
-              <td>{user.firstday}</td>
-              <td>{user.restday}</td>
-              <td>
+              <td className={styles.td}>{user.id}</td>
+              <td className={styles.td}>{user.name}</td>
+              <td className={styles.td}>{user.phone}</td>
+              <td className={styles.td}>{user.email}</td> {/* 이메일 값 표시 */}
+              <td className={styles.td}>{user.sex}</td>
+              <td className={styles.td}>{user.birth}</td>
+              <td className={styles.td}>{user.firstday}</td>
+              <td className={styles.td}>{user.restday}</td>
+              <td className={styles.td}>
                 <select
                   onChange={(e) => setSelectedMonths({ ...selectedMonths, [user.id]: e.target.value })}
                   defaultValue=""
@@ -116,7 +116,7 @@ const UserList = () => {
                 </select>
                 <button onClick={() => handleAddMonths(user.id)}>등록</button>
               </td>
-              <td>
+              <td className={styles.td}>
                 <button onClick={() => handleDelete(user.id)}>삭제</button>
               </td>
             </tr>

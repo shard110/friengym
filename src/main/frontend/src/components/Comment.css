@@ -1,8 +1,10 @@
 /* src/components/Comment.css */
 
 .comment {
-  border-bottom: 1px solid #ddd;
-  padding: 10px 0;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
 
 .comment-user-info {
@@ -39,4 +41,21 @@
   margin-right: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+
+.replies {
+  margin-left: 20px; /* 답글 리스트 들여쓰기 */
+}
+
+.reply-button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.reply-button:hover {
+  text-decoration: underline;
 }
