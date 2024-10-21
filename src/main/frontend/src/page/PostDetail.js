@@ -68,7 +68,7 @@ const PostDetail = () => {
   };
   
   const handleEditPost = () => {
-    navigate(`/posts/edit/${post.poNum}`);
+    navigate(`/edit-post/${post.poNum}`);
   };
 
   // 신고 제출 핸들러

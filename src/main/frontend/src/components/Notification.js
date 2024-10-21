@@ -53,9 +53,15 @@ const Notifications = () => {
       console.error('Failed to mark notification as read');
     }
 
-    // 해당 게시물로 이동
+     // 알림 타입에 따라 다른 페이지로 이동
+  if (notification.type === 'FOLLOW') {
+    // 팔로우 알림은 사용자 페이지로 이동
+    navigate(`/users/${notification.senderId}`);
+  } else {
+    // 좋아요와 댓글 알림은 게시물 페이지로 이동
     navigate(`/posts/${notification.postId}`);
-  };
+  }
+};
 
   return (
     <div>

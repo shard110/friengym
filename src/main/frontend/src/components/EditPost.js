@@ -18,9 +18,15 @@ export default function EditPost() {
   const { user } = useAuth(); // 인증 정보 가져오기
 
   useEffect(() => {
+    
     const loadPost = async () => {
       try {
-        const result = await axios.get(`http://localhost:8080/api/posts/${poNum}`);
+        const result = await axios.get(`http://localhost:8080/api/posts/${poNum}`,
+          {headers: {
+            'Authorization': `Bearer ${user?.token || localStorage.getItem('jwtToken')}`,
+            'Content-Type': 'multipart/form-data',
+          }
+      });
         setPost({
           poContents: result.data.poContents,
           hashtags: result.data.hashtags || [],

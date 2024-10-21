@@ -69,6 +69,7 @@ const CreatePostForm = () => {
   const [filePreview, setFilePreview] = useState(null); // 미리보기 상태
 
   useEffect(() => {
+console.log(user);
 
     // 게시글 내용에서 링크를 감지
     const urls = poContents.match(urlRegex);
@@ -160,11 +161,11 @@ const CreatePostForm = () => {
       {/* 유저 정보 섹션 추가 */}
       <div className="user-info">
         <img
-          src={user.userPhoto || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
-          alt={user.userId}
+          src={user?.photo || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+          alt={user?.id}
           className="user-photo"
         />
-        <span>{user.userId}</span>
+        <span>{user.id}</span>
       </div>
 
       <form onSubmit={handleSubmit}>
