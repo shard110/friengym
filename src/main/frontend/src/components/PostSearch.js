@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
+import Navbar from "./NavBar";
 import "./PostSearch.css"; // 스타일 파일 (추후 생성)
 
 const PostSearch = () => {
@@ -118,6 +119,7 @@ const PostSearch = () => {
 
   return (
     <div className="post-search-container">
+      <Navbar />
       <h2>게시물 검색</h2>
 
       {/* 검색 폼 */}

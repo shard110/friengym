@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import LikeButton from "../components/LikeButton"; // LikeButton 컴포넌트 추가
+import Navbar from "../components/NavBar";
 import PostSideBar from "../components/PostSideBar";
 import ReportPopup from "../components/ReportPopup"; // 신고 팝업 추가
 import YouTubePreview from "../components/YouTubePreview";
@@ -111,6 +112,7 @@ if (loading) return <div>로딩 중...</div>;
 
   return (
     <div className="gallery-layout">
+      <Navbar />
       <PostSideBar />
       <div className="gallery">
         <div className="create-post">

@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import { useAuth } from "../components/AuthContext";
+import Navbar from "../components/NavBar";
 
 const ChatPage = () => {
   const { senderId, recipientId } = useParams();
@@ -109,6 +110,7 @@ const ChatPage = () => {
 
   return (
     <div>
+      <Navbar />
       <h2>DM</h2>
       {/* 대화 중인 사용자들의 ID 표시 */}
       <div>

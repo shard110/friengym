@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import DirectMessage from '../components/DirectMessage'; // DM import
+import Navbar from "../components/NavBar";
 import "./UserPostPage.css";
 
 const UserPostPage = () => {
@@ -17,7 +18,7 @@ const UserPostPage = () => {
   const [isDMModalOpen, setIsDMModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null); // 선택된 사용자 ID
   const [isFollowingMe, setIsFollowingMe] = useState(false); // 맞팔로우 상태 추가
-
+  const [followers, setFollowers] = useState([]);
 
 
   const navigate = useNavigate();
@@ -108,14 +109,25 @@ const UserPostPage = () => {
       });
 
       if (response.status === 200) {
+        // 성공적으로 팔로우/언팔로우가 되었을 때 상태 업데이트
         setFollowing(!following); // 팔로우 상태 업데이트
-        alert(following ? "언팔로우 성공" : "팔로우 성공");
+
+        // 팔로워 수 업데이트
+      if (following) {
+        setFollowers((prevFollowers) => prevFollowers - 1); // 언팔로우일 때 팔로워 수 감소
+      } else {
+        setFollowers((prevFollowers) => prevFollowers + 1); // 팔로우일 때 팔로워 수 증가
       }
-    } catch (error) {
-      console.error("팔로우/언팔로우 처리 중 오류:", error);
-      alert("처리 중 오류가 발생했습니다.");
+
+        alert(following ? "언팔로우 성공" : "팔로우 성공");
+    } else {
+        alert("오류가 발생했습니다. 다시 시도해 주세요.");
     }
-  };
+} catch (error) {
+    console.error("팔로우/언팔로우 처리 중 오류:", error);
+    alert("처리 중 오류가 발생했습니다.");
+}
+};
 
   // 차단하기 처리
   const handleBlockUser = async () => {
@@ -188,6 +200,7 @@ const UserPostPage = () => {
 
   return (
     <div className="user-postpage-container">
+      <Navbar />
       <div className="profile-section">
         <div className="profile-header">
           <div className="user-info">

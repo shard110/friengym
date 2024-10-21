@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from './NavBar';
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
@@ -65,6 +66,7 @@ const Notifications = () => {
 
   return (
     <div>
+      <Navbar />
       <h2>알림</h2>
       {notifications.length > 0 ? (
         <ul>

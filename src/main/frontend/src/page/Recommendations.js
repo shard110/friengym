@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from "../components/AuthContext";
+import Navbar from '../components/NavBar';
+import "./Recommendations.css";
 
 const Recommendations = () => {
     const [recommendedPosts, setRecommendedPosts] = useState([]);
     const { user } = useAuth(); // 인증된 사용자 정보 가져오기
     const navigate = useNavigate();
+    const containerRef = useRef(null); // 스크롤 감지를 위한 ref
 
     useEffect(() => {
         const fetchRecommendations = async () => {
@@ -39,12 +42,56 @@ const Recommendations = () => {
      fetchRecommendations();
   }, [user, navigate]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+        if (containerRef.current) {
+            const { scrollTop, clientHeight, scrollHeight } = containerRef.current;
+            // 스크롤이 맨 위에 도달했을 때
+            if (scrollTop === 0) {
+                fetchMoreRecommendations();
+            }
+        }
+    };
+
+    const fetchMoreRecommendations = async () => {
+        const token = user?.token || localStorage.getItem('jwtToken');
+        if (!token) return;
+
+        try {
+            const response = await fetch('/api/recommendations', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setRecommendedPosts((prevPosts) => [...data, ...prevPosts]); // 새로 가져온 데이터를 위에 추가
+            }
+        } catch (error) {
+            console.error('네트워크 오류:', error);
+        }
+    };
+
+    const currentContainer = containerRef.current;
+    if (currentContainer) {
+        currentContainer.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+        if (currentContainer) {
+            currentContainer.removeEventListener('scroll', handleScroll);
+        }
+    };
+}, [user]);
+
     return (
         <div className="recommendations">
+            <Navbar />
             <h2>Recommended for you</h2>
             <div className="gallery-container">
                 {recommendedPosts.map((post) => (
-                    <div className="post-card" key={post.poNum}>
+                    <div className="recommendations-post-card" key={post.poNum}>
                         <Link to={`/post/${post.poNum}`}>
                             {/* 이미지나 동영상이 있으면 출력, 없으면 텍스트만 출력 */}
                             {post.fileUrl ? (

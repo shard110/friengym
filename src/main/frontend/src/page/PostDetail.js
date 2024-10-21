@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import AddComment from "../components/AddComment"; // AddComment 컴포넌트 임포트
 import { useAuth } from "../components/AuthContext"; // 사용자 인증 정보 사용
 import CommentsList from "../components/CommentsList"; // CommentsList 컴포넌트 임포트
+import Navbar from "../components/NavBar";
 import ReportPopup from "../components/ReportPopup"; // 신고 팝업 추가
 import YouTubePreview from "../components/YouTubePreview"; // YouTubePreview 컴포넌트 임포트
 import "./PostDetail.css"; // 스타일 정의
@@ -205,6 +206,7 @@ const PostDetail = () => {
 
   return (
     <div className="post-detail">
+      <Navbar />
       {post ? (
         <div>
           <div className="user-info">
@@ -266,7 +268,20 @@ const PostDetail = () => {
             </div>
           )}
 
-
+          <div className="hashtags">
+                {post.hashtags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="hashtag"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/hashtag/${tag}`);
+                    }}
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
    
 
 

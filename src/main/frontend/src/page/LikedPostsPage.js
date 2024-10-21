@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Link 추가
 import { useAuth } from "../components/AuthContext";
+import Navbar from "../components/NavBar";
 import "./LikedPostsPage.css";
 
 const LikedPostsPage = () => {
@@ -42,6 +43,7 @@ const LikedPostsPage = () => {
 
   return (
     <div className="liked-posts-page">
+      <Navbar />
       <h2>{user.name}님의 좋아요한 게시물</h2>
       <div className="gallery-container">
         {likedPosts.length > 0 ? (
