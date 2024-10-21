@@ -32,17 +32,30 @@ const Cart = () => {
             }
 
             try {
-                const response = await axios.get(`/api/cart/${user.id}`, {
-                    headers: {
-                        'Authorization': `${token}`
-                    }
-                });
+                console.log("토큰 확인", `${token}`);
+                const response = await axios.get(`/api/cart/${user.user.id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+                console.log('카트 아이템:', response.data); // 로그 추가
                 setCartItems(response.data);
             } catch (error) {
                 console.error('장바구니 아이템을 불러오는 동안 오류 발생:', error);
+                if (error.response) {
+                    // 서버가 응답을 보낸 경우
+                    console.error('응답 데이터:', error.response.data);
+                    console.error('응답 상태:', error.response.status);
+                    console.error('응답 헤더:', error.response.headers);
+                } else if (error.request) {
+                    // 요청이 전송되었으나 응답을 받지 못한 경우
+                    console.error('요청 데이터:', error.request);
+                } else {
+                    // 오류가 발생한 요청 설정
+                    console.error('오류 메시지:', error.message);
+                }
             } finally {
                 setLoading(false);  // 로딩 상태를 false로 설정
-
             }
         };
 

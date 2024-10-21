@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "cart")
 public class Cart implements Serializable {
@@ -15,6 +17,7 @@ public class Cart implements Serializable {
 
     private int cCount;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id")
     private User user;

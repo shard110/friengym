@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.CartItemDTO;
 import com.example.demo.dto.ProductDTO;
+import com.example.demo.dto.UserDTO;
 import com.example.demo.entity.Cart;
 import com.example.demo.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,8 @@ public class CartService {
                                 cart.getProduct().getpName(),
                                 cart.getProduct().getpPrice(),
                                 cart.getProduct().getpImgUrl()
-                        )
+                        ),
+                        new UserDTO(cart.getUser().getId()) // UserDTO 생성자 사용
                 ))
                 .collect(Collectors.toList());
     }
@@ -47,11 +49,11 @@ public class CartService {
         return cartRepository.findById(cnum).orElseThrow(() -> new RuntimeException("Cart item not found"));
     }
 
-    public void removeCartItem(int cnum) {  // 개별 삭제
+    public void removeCartItem(int cnum) {
         cartRepository.deleteById(cnum);
     }
 
-    public void clearCart(String userId) {  // 전체 삭제
+    public void clearCart(String userId) {
         cartRepository.deleteByUserId(userId);
     }
 }
