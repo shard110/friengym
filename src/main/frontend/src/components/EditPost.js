@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from './AuthContext'; // 인증 컨텍스트 추가
-import "./EditPost.css"; // 새로 정의된 CSS
+import "./CreatePostForm.css";
 
 export default function EditPost() {
   const [post, setPost] = useState({
