@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.config.JwtTokenProvider;
 import com.example.demo.dto.CommentResponse;
 import com.example.demo.dto.PostRequest;
 import com.example.demo.dto.PostResponse;
@@ -54,8 +53,7 @@ public class PostController {
     @Autowired
     private CommentService commentService;
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+
 
     // 모든 게시글 조회
     @GetMapping

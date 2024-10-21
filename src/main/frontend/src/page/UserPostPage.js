@@ -2,8 +2,8 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
-import "./UserPostPage.css";
 import DirectMessage from '../components/DirectMessage'; // DM import
+import "./UserPostPage.css";
 
 const UserPostPage = () => {
   const { id } = useParams(); // URL의 유저 ID 파라미터
@@ -239,7 +239,7 @@ const UserPostPage = () => {
             className="post-item"
             onClick={() => navigate(`/posts/${post.poNum}`)}
           >
-            {/\.(jpeg|jpg|png|gif)$/i.test(post.fileUrl) ? (
+            {/\.(jpeg|jpg|png|gif|jfif)$/i.test(post.fileUrl) ? (
               <img src={post.fileUrl} alt="Post" />
             ) : /\.(mp4|webm|ogg)$/i.test(post.fileUrl) ? (
               <video

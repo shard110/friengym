@@ -282,6 +282,7 @@ const PostDetail = () => {
           {/* 댓글 목록 */}
           <div className="comments-section">
             <h3>댓글</h3>
+            <hr></hr><br></br>
             <CommentsList
               comments={comments}
               userId={user?.id}
