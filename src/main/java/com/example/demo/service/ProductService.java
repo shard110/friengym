@@ -68,11 +68,11 @@ public class ProductService {
 
     // 인기상품 가져오기
     public List<Product> findPopularProducts(Integer limit) {
-        String sql =  "SELECT p.pNum, p.pName, p.pPrice, p.pCount, p.pImg, p.pDate, p.pIntro, SUM(d.docount) AS total_quantity " +
+        String sql =  "SELECT p.pNum, p.pName, p.pPrice, p.pCount, p.pImgUrl, p.pDate, p.pIntro, SUM(d.docount) AS total_quantity " +
                  "FROM product p " +
                  "JOIN Dorder d ON p.pNum = d.pnum " +
                  "JOIN ordertbl o ON d.onum = o.onum " +
-                 "GROUP BY p.pNum, p.pName, p.pPrice, p.pCount, p.pImg, p.pDate, p.pIntro " +
+                 "GROUP BY p.pNum, p.pName, p.pPrice, p.pCount, p.pImgUrl, p.pDate, p.pIntro " +
                  "ORDER BY total_quantity DESC ";
         if (limit != null) {
                 sql += "LIMIT " + limit;
@@ -84,7 +84,7 @@ public class ProductService {
             product.setpName(rs.getString("pName"));
             product.setpPrice(rs.getInt("pPrice"));
             product.setpCount(rs.getInt("pCount"));
-            product.setpImg(rs.getString("pImg"));
+            product.setpImgUrl(rs.getString("pImgUrl"));
             product.setpDate(rs.getDate("pDate"));
             product.setpIntro(rs.getString("pIntro"));
             return product;
@@ -100,7 +100,7 @@ public class ProductService {
             product.setpName(rs.getString("pName"));
             product.setpPrice(rs.getInt("pPrice"));
             product.setpCount(rs.getInt("pCount"));
-            product.setpImg(rs.getString("pImg"));
+            product.setpImgUrl(rs.getString("pImgUrl"));
             product.setpDate(rs.getDate("pDate"));
             product.setpIntro(rs.getString("pIntro"));
             return product;
@@ -117,7 +117,7 @@ public class ProductService {
             product.setpName(rs.getString("pName"));
             product.setpPrice(rs.getInt("pPrice"));
             product.setpCount(rs.getInt("pCount"));
-            product.setpImg(rs.getString("pImg"));
+            product.setpImgUrl(rs.getString("pImgUrl"));
             product.setpDate(rs.getDate("pDate"));
             product.setpIntro(rs.getString("pIntro"));
             return product;

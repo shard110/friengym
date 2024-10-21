@@ -6,7 +6,7 @@ import com.example.demo.service.CartService;
 import com.example.demo.config.JwtTokenProvider;
 import com.example.demo.dto.CartItemDTO;
 import com.example.demo.dto.ProductDTO;
-
+import com.example.demo.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,29 +15,24 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/cart")
 public class CartController {
-
     @Autowired
     private CartService cartService;
-
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/{userId}")
     public List<CartItemDTO> getCartItems(@PathVariable String userId, @RequestHeader("Authorization") String token) {
-        if (jwtTokenProvider.validateToken(token)) {
-            return cartService.getCartItems(userId);
-        } else {
-            throw new RuntimeException("Invalid token");
-        }
+            String userUseId = jwtTokenProvider.getClaims(token).getSubject();
+            return cartService.getCartItems(userUseId);
+        
     }
 
     @PostMapping
     public CartItemDTO addOrUpdateCartItem(@RequestBody Cart cart, @RequestHeader("Authorization") String token) {
+       
         String userId = jwtTokenProvider.getClaims(token).getSubject();
         if (jwtTokenProvider.validateToken(token)) {
-            User user = new User();
-            user.setId(userId);
-            cart.setUser(user);
+            cart.setUser(new User(userId)); // User 엔티티 생성자 사용
             Cart updatedCart = cartService.addOrUpdateCartItem(cart);
             return new CartItemDTO(
                     updatedCart.getCnum(),
@@ -47,7 +42,8 @@ public class CartController {
                             updatedCart.getProduct().getpName(),
                             updatedCart.getProduct().getpPrice(),
                             updatedCart.getProduct().getpImgUrl()
-                    )
+                    ),
+                    new UserDTO(userId) // id만 설정
             );
         } else {
             throw new RuntimeException("Invalid token");
@@ -70,7 +66,8 @@ public class CartController {
                                 updatedCart.getProduct().getpName(),
                                 updatedCart.getProduct().getpPrice(),
                                 updatedCart.getProduct().getpImgUrl()
-                        )
+                        ),
+                        new UserDTO(userId) // id만 설정
                 );
             } else {
                 throw new RuntimeException("Invalid cart item or user");

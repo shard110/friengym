@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
 import PortOne from "@portone/browser-sdk/v2";
+import replace from '../img/product_replace.png';
+import logoToss from '../img/logo-toss-symbol-white-fill.png';
+import { CreditCard } from 'react-feather';
 
 const OrderPage = () => {
     const { user } = useAuth();
@@ -96,6 +99,12 @@ const OrderPage = () => {
         }
     }
 
+    const onErrorImg = (e) => {
+        console.log('Image error:', e);
+        e.target.src = replace;
+    };
+
+
     const handlePaymentKG = async () => {
         const customer = {
             email: "test@gmail.com",    // to-do user테이블에 메일 추가해야 함
@@ -129,12 +138,13 @@ const OrderPage = () => {
     };
 
     return (
-        <div className="cart">
+        <div className="cart order">
+            <div className='cart-wrap'>
             <h2>주문서</h2>
-            <h2>배송지</h2>
-            <div>
-                <p>{user.name}</p>
-                <p>{user.phone}</p>
+            <div className='order-user'>
+                <span>주문자 정보</span>
+                <span>주문자 성명: {user.name}</span>
+                <span>전화번호: {user.phone}</span>
             </div>
             <table>
                 <thead>
@@ -150,7 +160,7 @@ const OrderPage = () => {
                     {Array.isArray(cartItems) && cartItems.map(item => (
                         <tr key={item.cnum}>
                             <td>
-                                <img src={item.product.pImgUrl} alt={item.product.pName} className="cart-img" />
+                                <img src={item.product.pImgUrl} alt={item.product.pName} className="cart-img" onError={onErrorImg}/>
                             </td>
                             <td>{item.product.pName}</td>
                             <td>{item.product.pPrice.toLocaleString()}원</td>
@@ -164,16 +174,17 @@ const OrderPage = () => {
                         <td colSpan={5}>총계</td>
                     </tr>
                     <tr>
-                        <td colSpan={5}>{totalPrice.toLocaleString()} 원</td>
+                        <td className="order-total" colSpan={5}>{totalPrice.toLocaleString()} 원</td>
                     </tr>
                 </tfoot>
             </table>
             <h2>결제수단</h2>
-            <p>신용카드</p>
-            <p>무통장입금</p>
-            <p>만나서 결제</p>
-            <button onClick={handlePaymentToss}>토스페이</button>
-            <button onClick={handlePaymentKG}>신용카드 결제</button>
+            <div className='order-buy'>
+                <button  onClick={handlePaymentToss}><img img src={logoToss} alt="토스 결제" /><span>토스페이</span></button>
+                <button onClick={handlePaymentKG}><CreditCard /><span>신용카드</span></button>
+                
+            </div>
+        </div>
         </div>
     );
 };

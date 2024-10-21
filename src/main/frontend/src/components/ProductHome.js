@@ -4,6 +4,11 @@ import { Link } from 'react-router-dom';
 import PopularProducts from './PopularProducts';
 import './ProductHome.css';
 import ShopLnb from './ShopLnb';
+import FloatingMenu from './FloatingMenu';
+import Footer from './Footer';
+import { ChevronLeft, ChevronRight } from 'react-feather';
+import replace from "../img/product_replace.png";
+import Navbar from './NavBar';
 
 function ProductHome() {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -54,10 +59,15 @@ function ProductHome() {
         };
     }, [images.length, reviews.length]);
 
-
+    const onErrorImg = (e) => {
+        e.target.src = replace;
+      };
+    
     return (
         <div className="product-home">
+            <Navbar />
             <ShopLnb />
+            <FloatingMenu />
             <div className="banner">
                 <img
                     src={images[currentImageIndex]}
@@ -65,12 +75,13 @@ function ProductHome() {
                     className="banner-image"
                 />
                 <button className="prev-button" onClick={() => setCurrentImageIndex(currentImageIndex === 0 ? images.length - 1 : currentImageIndex - 1)}>
-                    <p className='btn-icon-prev'></p>
+                    <ChevronLeft size={48}/>
                 </button>
                 <button className="next-button" onClick={() => setCurrentImageIndex(currentImageIndex === images.length - 1 ? 0 : currentImageIndex + 1)}>
-                    <p className='btn-icon-next'></p>
+                    <ChevronRight size={48}/>
                 </button>
             </div>
+            <div className='prod-wrap' >
             <section id='shop_cont'>
                 <div className="section popular-products">
                     <h2>Best</h2>
@@ -99,7 +110,9 @@ function ProductHome() {
                         {recentProducts.length > 0 ? (
                             recentProducts.slice(0, 3).map(product => (  // 3개만 표시
                                 <div key={product.pNum} className="product-item">
-                                    <img src={product.pImg} alt={`상품명: ${product.pName}`} />
+                                    <Link to={`/productslist/${product.pNum}`}>
+                                        <img src={product.pImgUrl} alt={`상품명: ${product.pName}`} onError={onErrorImg}/>
+                                    </Link>
                                     <p className='prod_name'>{product.pName}</p>
                                     <p className='prod_price'> ₩ {product.pPrice.toLocaleString()}</p>
                                     <p className='prod_count'>재고 : {product.pCount}개</p>
@@ -126,6 +139,8 @@ function ProductHome() {
                 </div>
                 </div>
             </section>
+            </div>
+            <Footer />
         </div>
     );
 }

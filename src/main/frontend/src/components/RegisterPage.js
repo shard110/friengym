@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './RegisterPage.module.css';
-import logo from '../img/logo.png';
+import logo from '../img/logo_friengym.svg';
 import googleIcon from '../img/google.png';
 import kakaoIcon from '../img/kakao.png';
 

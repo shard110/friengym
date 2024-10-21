@@ -18,6 +18,13 @@ public class UserDTO {
 
     private Integer restday;
 
+    public UserDTO() {}
+
+    // 장바구니에서 씀
+    public UserDTO(String id) {
+        this.id = id;
+    }
+
     // Constructor
     public UserDTO(String id, String name, String phone, String email, String sex, Date birth, Date firstday, Integer restday) {
         this.id = id;

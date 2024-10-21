@@ -1,0 +1,76 @@
+.float-menu{
+  background-color: #ffffffd3;
+  backdrop-filter: blur(8px);
+  width: 85%;
+  border-radius: 50px;
+  position: fixed;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 2px 8px #575f643b;
+  padding: 16px;
+  z-index: 1999;
+  transition: 0.5s ease;
+}
+
+.float-menu ul{
+  display: flex;
+  flex: 1 1;
+  justify-content: space-around;
+}
+
+.float-menu li a{
+  min-width: 56px;
+  min-height: 48px;
+  font-size: 14px;
+  color: #333 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.float-menu li a:hover{
+  color: #03C7A6 !important;
+  text-decoration: none;
+}
+
+.float-menu li .active{
+  color: #03C7A6 !important;
+}
+
+@media (min-width: 1280px){
+  .float-menu{
+    width: 284px;
+    left: unset;
+    position: fixed;
+    transform: none;
+    right: 4%;
+    bottom: 5%;
+  }
+
+  .float-menu li:first-child, .float-menu li:last-child{
+    display: none;
+  }
+}
+
+@media (min-width: 1920px){
+  .float-menu{
+    width: 96px;
+    left: unset;
+    right: 10%;
+    bottom: 50%;
+    padding: 40px 0;
+    transform: translateY(+50%);
+    box-shadow: 0 2px 8px #575f643b;
+  }
+
+  .float-menu li:first-child, .float-menu li:last-child{
+    display: none;
+  }
+
+  .float-menu ul{
+    flex-direction: column;
+    gap: 32px;
+  }
+}
