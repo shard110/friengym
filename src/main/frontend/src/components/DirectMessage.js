@@ -93,7 +93,7 @@ const DirectMessage = ({ isOpen, onClose, userId }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Direct Messages with User ID: {userId}</h2>
+        <h2>Direct Messages with : {userId}</h2>
         {messages.length > 0 ? (
           <div className="messages-container">
             {messages.map((msg, index) => (
@@ -101,7 +101,7 @@ const DirectMessage = ({ isOpen, onClose, userId }) => {
                 key={index}
                 className={`message ${msg.senderId === user.id ? 'sent' : 'received'}`}
               >
-                <strong>{msg.senderId === user.id ? '나' : 'Other User'}:</strong>
+                {/* <strong>{msg.senderId === user.id ? '나' : 'Other User'}:</strong> */}
                 <p>{msg.content}</p>
               </div>
             ))}
