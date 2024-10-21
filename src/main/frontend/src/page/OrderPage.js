@@ -6,6 +6,8 @@ import PortOne from "@portone/browser-sdk/v2";
 import replace from '../img/product_replace.png';
 import logoToss from '../img/logo-toss-symbol-white-fill.png';
 import { CreditCard } from 'react-feather';
+import Navbar from '../components/NavBar';
+import Footer from '../components/Footer';
 
 const OrderPage = () => {
     const { user } = useAuth();
@@ -140,6 +142,7 @@ const OrderPage = () => {
 
     return (
         <div className="cart order">
+            <Navbar />
             <div className='cart-wrap'>
             <h2>주문서</h2>
             <div className='order-user'>
@@ -186,6 +189,7 @@ const OrderPage = () => {
                 
             </div>
         </div>
+        <Footer />
         </div>
     );
 };

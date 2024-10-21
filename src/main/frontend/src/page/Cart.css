@@ -1,6 +1,6 @@
 .cart {
     width: 100%;
-    padding-bottom: 20%;
+    padding-bottom: 88px;
 }
 
 .cart .cart-wrap{
@@ -113,6 +113,14 @@
     width: 60px;
 }
 
+.cart .float-menu{
+    bottom: 0 !important;
+}
+
+.order{
+    padding: 0;
+}
+
 .order-user span{
     display: block;
     line-height: 2em;
@@ -137,8 +145,11 @@
     font-weight: bold;
 }
 
-.order tfoot tr td:first-child{
+.order tbody tr td:nth-child(4){
+    padding-left: 1rem;
+}
 
+.order tfoot tr td:first-child{
     border-top: #333 solid 1px;
 }
 .order tfoot td:last-child{

@@ -2,6 +2,12 @@ import React, { useEffect } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
+import { ShoppingBag } from 'react-feather';
+import Navbar from '../components/NavBar';
+import ShopLnb from '../components/ShopLnb';
+import FloatingMenu from '../components/FloatingMenu';
+import Footer from '../components/Footer';
+import  './PaymentSuccess.css';
 
 const PaymentSuccess = () => {
     const location = useLocation();
@@ -36,15 +42,20 @@ const PaymentSuccess = () => {
 
     return (
         <div className="payment-success">
-            <h1>결제가 완료되었습니다</h1>
-            <div style={{textAlign:'center'}}>
-                <p>주문명: {orderName}</p>
-                <p>총 결제 금액: {totalAmount.toLocaleString()}원</p>
-                <p>주문해주셔서 감사합니다.</p>
-                <br/>
-                <Link to="/">홈으로 돌아가기</Link>
-                <Link to="/products">쇼핑을 계속하기</Link>
+            <Navbar />
+            <ShopLnb />
+            <div className='flex-wrap'>
+                <h2>결제가 완료되었습니다.</h2>
+                <ShoppingBag color="#ddd" strokeWidth={"1.5"}  size={"160"}/>
+                    <p>주문 상품: <span>{orderName}</span></p>
+                    <p>총 결제 금액: <span>{totalAmount.toLocaleString()}원<span/></span></p>
+                    <p>주문해주셔서 감사합니다.</p>
+                    <div className="btn-wrap">
+                        <Link to="/products"><span>쇼핑홈</span></Link>
+                        <Link to="/order-history"><span>주문 내역</span></Link>
+                    </div>
             </div>
+            <Footer />
         </div>
     );
 };

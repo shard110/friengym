@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
 import { Link } from 'react-router-dom';
-import './OrderHistoryPage.css'; // CSS 파일을 import 합니다.
+import './OrderHistoryPage.css';
 import ShopLnb from '../components/ShopLnb';
 import FloatingMenu from '../components/FloatingMenu';
 import replace from "../img/product_replace.png";
