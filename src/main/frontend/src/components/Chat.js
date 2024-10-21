@@ -3,7 +3,7 @@ import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import { useAuth } from "./AuthContext";
 import "./Chat.css";
-import defaultProfileImg from "../img/01.jpg";
+import defaultProfileImg from "../img/default.jpg";
 
 function Chat() {
   const { user } = useAuth();
@@ -147,7 +147,7 @@ function Chat() {
   return (
     <div className="chat-container">
       <div className="users-list">
-        <h2>대화 중인 사용자 목록</h2>
+        <h2>대화 중인 사용자</h2>
         {loading ? (
           <p>Loading...</p>
         ) : connectedUsers.length > 0 ? (
