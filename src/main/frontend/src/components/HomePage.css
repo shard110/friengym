@@ -18,6 +18,212 @@
   cursor: pointer;
 }
 
+.section-title {
+  text-align: left; /* 왼쪽 정렬 */
+  font-weight: bold; /* 볼드 처리 */
+  margin: 20px 0; /* 위아래 여백 추가 (선택사항) */
+}
+
+.section-title1 {
+  text-align: left; /* 왼쪽 정렬 */
+  font-weight: bold; /* 볼드 처리 */
+  margin-left: 10%;
+  margin-top: 3%;
+}
+
+.section-title2 {
+  text-align: left; /* 왼쪽 정렬 */
+  font-weight: bold; /* 볼드 처리 */
+  margin-left: 20%;
+  margin-top: 3%;
+}
+
+.logo img {
+  height: 20px;
+}
+
+.logo {
+  flex-grow: 1;
+  text-align: center;
+  height: 50px;
+}
+
+.search-icon {
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+/* 메뉴바 메뉴 부분 */
+.homepage-menu {
+  background-color: #ff5722;
+  padding: 0;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 200px;
+  transition: max-height 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  z-index: 999;
+}
+
+.homepage-menu.open {
+  max-height: 200px;
+}
+
+.homepage-menu ul {
+  list-style-type: none;
+  padding: 10px 0;
+  margin: 0;
+}
+
+.homepage-menu li {
+  padding: 10px 15px;
+  color: white;
+  cursor: pointer;
+}
+
+.homepage-menu li:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 슬라이드 부분 */
+.slider {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  margin-top: 80px;
+}
+
+.slides {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+  min-width: 100%;
+  transition: opacity 0.5s ease-in-out;
+  position: relative;
+}
+
+.slide-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slide-content {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.indicators {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+
+.indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: white;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.indicator.active {
+  opacity: 1;
+}
+
+/* 트렌드 숏츠 스타일 */
+/* 트렌드 숏츠 스타일 */
+.trend-shorts {
+  padding: 20px;
+}
+
+.video-slider {
+  display: flex;
+  align-items: center; /* 버튼과 비디오 아이템을 가운데 정렬 */
+  padding: 20px;
+  overflow: hidden; /* 아이템이 넘치지 않도록 설정 */
+}
+
+.video-group {
+  display: flex; /* 비디오 아이템을 가로로 배치 */
+  transition: transform 0.5s ease-in-out; /* 슬라이드 전환 효과 */
+}
+
+.video-item {
+  flex: 0 0 calc(20% - 10px); /* 5개가 보이도록 너비 설정 */
+  margin-right: 10px; /* 아이템 간격 설정 */
+  text-align: center;
+}
+
+.video-item:last-child {
+  margin-right: 0; /* 마지막 아이템의 오른쪽 마진 없애기 */
+}
+
+/* 슬라이드 버튼 스타일 */
+.slider-button {
+  font-size: 24px;
+  cursor: pointer;
+  color: #ff5722; /* 버튼 색상 */
+  margin: 0 10px; /* 버튼 사이의 여백 추가 */
+}
+
+
+
+/* 베스트 게시물 스타일 */
+.Hbest-posts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 각 열을 고정 너비로 설정 */
+  gap: 0px; /* 이미지 사이에 약간의 간격 추가 */
+}
+
+.Hpost-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* 이미지가 영역 밖으로 나가지 않도록 설정 */
+}
+
+.Hpost-image {
+  width: 100%;
+  height: auto; /* 이미지를 비율에 맞게 표시 */
+  object-fit: cover; /* 이미지가 잘리지 않고 커버되도록 설정 */
+}
+
+.navbarH {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #ff5722;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  height: 80px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.menu-icon {
+  margin-right: auto;
+  font-size: 24px;
+  cursor: pointer;
+}
+
 .logo img {
   height: 20px;
 }
@@ -213,7 +419,6 @@
   color: #ff5722; /* 버튼 색상 */
   margin: 0 10px; /* 버튼 사이의 여백 추가 */
 }
-
 
 
 

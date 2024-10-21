@@ -13,16 +13,16 @@ const slides = [
 
 // 트렌드 숏츠 비디오 데이터
 const videos = [
-  { id: 1, src: '/video/video1.mp4', description: '트렌트 숏츠 설명 문구 1' },
-  { id: 2, src: '/video/video2.mp4', description: '트렌트 숏츠 설명 문구 2' },
-  { id: 3, src: '/video/video3.mp4', description: '트렌트 숏츠 설명 문구 3' },
-  { id: 4, src: '/video/video4.mp4', description: '트렌트 숏츠 설명 문구 4' },
-  { id: 5, src: '/video/video5.mp4', description: '트렌트 숏츠 설명 문구 5' },
-  { id: 6, src: '/video/video6.mp4', description: '트렌트 숏츠 설명 문구 6' },
-  { id: 7, src: '/video/video7.mp4', description: '트렌트 숏츠 설명 문구 7' },
-  { id: 8, src: '/video/video8.mp4', description: '트렌트 숏츠 설명 문구 8' },
-  { id: 9, src: '/video/video9.mp4', description: '트렌트 숏츠 설명 문구 9' },
-  { id: 10, src: '/video/video10.mp4', description: '트렌트 숏츠 설명 문구 10' },
+  { id: 1, src: '/video/v1.mp4', description: '트렌트 숏츠 설명 문구 1' },
+  { id: 2, src: '/video/v1.mp4', description: '트렌트 숏츠 설명 문구 2' },
+  { id: 3, src: '/video/v1.mp4', description: '트렌트 숏츠 설명 문구 3' },
+  { id: 4, src: '/video/v1.mp4', description: '트렌트 숏츠 설명 문구 4' },
+  { id: 5, src: '/video/v1.mp4', description: '트렌트 숏츠 설명 문구 5' },
+  { id: 6, src: '/video/v1.mp4', description: '트렌트 숏츠 설명 문구 6' },
+  { id: 7, src: '/video/v1.mp4', description: '트렌트 숏츠 설명 문구 7' },
+  { id: 8, src: '/video/v1.mp4', description: '트렌트 숏츠 설명 문구 8' },
+  { id: 9, src: '/video/v1.mp4', description: '트렌트 숏츠 설명 문구 9' },
+  { id: 10, src: '/video/v1.mp4', description: '트렌트 숏츠 설명 문구 10' },
 ];
 
 // 베스트 게시물 데이터
@@ -114,11 +114,47 @@ const popularProducts = [
   }
 ];
 
+const newProducts = [
+  {
+    id: 1,
+    img: '/images/p1.jpg',
+    description: '[신상품] 비타민 C 1000mg',
+    price: '25,000원',
+    rating: '4.8',
+    reviews: '150',
+  },
+  {
+    id: 2,
+    img: '/images/p2.jpg',
+    description: '[신상품] 유산균 10종',
+    price: '28,000원',
+    rating: '4.7',
+    reviews: '120',
+  },
+  {
+    id: 3,
+    img: '/images/p3.jpg',
+    description: '[신상품] 오메가3 1000mg',
+    price: '30,000원',
+    rating: '4.9',
+    reviews: '200',
+  },
+  {
+    id: 4,
+    img: '/images/p4.jpg',
+    description: '[신상품] 마그네슘 500mg',
+    price: '22,000원',
+    rating: '4.5',
+    reviews: '100',
+  },
+];
+
 const HomePage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentVideoGroup, setCurrentVideoGroup] = useState(0);
   const [currentProductSlide, setCurrentProductSlide] = useState(0); 
+  const [currentNewProductSlide, setCurrentNewProductSlide] = useState(0);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -166,6 +202,18 @@ const HomePage = () => {
   // 현재 상품 그룹에 따라 상품을 선택
   const displayedProducts = popularProducts.slice(currentProductSlide * 4, currentProductSlide * 4 + 4); 
 
+  // 신상품 슬라이드 변경
+  const nextNewProductSlide = () => {
+    setCurrentNewProductSlide((prev) => prev + 1 < Math.ceil(newProducts.length / 4) ? prev + 1 : 0);
+  };
+
+  const prevNewProductSlide = () => {
+    setCurrentNewProductSlide((prev) => prev > 0 ? prev - 1 : Math.ceil(newProducts.length / 4) - 1);
+  };
+
+  // 현재 신상품 그룹에 따라 상품을 선택
+  const displayedNewProducts = newProducts.slice(currentNewProductSlide * 4, currentNewProductSlide * 4 + 4); 
+
   return (
     <>
       <nav className="navbarH">
@@ -212,7 +260,7 @@ const HomePage = () => {
       </div>
 
       {/* 트렌드 숏츠 부분 */}
-      <h2>트렌드 숏츠</h2>
+      <h2 className="section-title1">트렌드 숏츠</h2>
       <div className="trend-shorts">
         <div className="video-slider">
           <div className="video-group">
@@ -230,7 +278,7 @@ const HomePage = () => {
       </div>
 
       {/* 베스트 게시물 부분 */}
-      <h2>베스트 게시물</h2>
+      <h2 className="section-title">베스트 게시물</h2>
       <div className="Hbest-posts">
         {bestPosts.map((post) => (
           <Link to={`/post/${post.id}`} key={post.id} className="Hpost-item">
@@ -240,7 +288,7 @@ const HomePage = () => {
       </div>
 
       {/* 인기 상품 슬라이드 부분 */}
-      <h2>인기 상품</h2>
+      <h2 className="section-title2">인기 상품</h2>
       <div className="popular-products-slider">
         <FaChevronLeft className="slider-button" onClick={prevProductSlide} />
         <div className="product-items" style={{ display: 'flex', transform: `translateX(-${currentProductSlide * (100 / 4)}%)` }}>
@@ -256,6 +304,25 @@ const HomePage = () => {
           ))}
         </div>
         <FaChevronRight className="slider-button" onClick={nextProductSlide} />
+      </div>
+
+      {/* 신상품 슬라이드 부분 */}
+      <h2 className="section-title2">신상품</h2>
+      <div className="popular-products-slider">
+        <FaChevronLeft className="slider-button" onClick={prevNewProductSlide} />
+        <div className="product-items" style={{ display: 'flex', transform: `translateX(-${currentNewProductSlide * (100 / 4)}%)` }}>
+          {displayedNewProducts.map((product) => (
+            <div key={product.id} className="product-item">
+              <img src={product.img} alt={product.description} className="product-image" />
+              <div className="product-info">
+                <p>{product.description}</p>
+                <p>{product.discount} {product.price}</p>
+                <p>★ {product.rating} 리뷰 {product.reviews}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <FaChevronRight className="slider-button" onClick={nextNewProductSlide} />
       </div>
     </>
   );
