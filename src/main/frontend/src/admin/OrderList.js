@@ -38,13 +38,13 @@ const OrderHistoryPage = () => {
             <table className="common-table">
                 <thead>
                     <tr>
-                        <th className={styles.th}>주문 번호</th>
-                        <th className={styles.th}>상품 이미지</th>
-                        <th className={styles.th}>상품명</th>
-                        <th className={styles.th}>수량</th>
-                        <th className={styles.th}>상태</th>
-                        <th className={styles.th}>결제 날짜</th>
-                        <th className={styles.th}>결제 아이디</th>
+                        <th>주문 번호</th>
+                        <th>상품 이미지</th>
+                        <th>상품명</th>
+                        <th>수량</th>
+                        <th>상태</th>
+                        <th>결제 날짜</th>
+                        <th>결제 아이디</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,22 +53,22 @@ const OrderHistoryPage = () => {
                             {order.dorders.map((dorder, index) => (
                                 <tr key={dorder.doNum}>
                                     {index === 0 && (
-                                        <td rowSpan={order.dorders.length} className={styles.td}>{order.onum}</td>
+                                        <td rowSpan={order.dorders.length}>{order.onum}</td>
                                     )}
-                                    <td className={styles.td}>
+                                    <td>
                                         <Link to={`/productslist/${dorder.product.pNum}`}>
-                                            <img src={dorder.product.pImgUrl} alt={dorder.product.pName} className={styles.cartImg} />
+                                            <img src={dorder.product.pImgUrl} alt={dorder.product.pName} className="cart-img" />
                                         </Link>
                                     </td>
-                                    <td className={styles.td}>{dorder.product.pName}</td>
-                                    <td className={styles.td}>{dorder.doCount}개</td>
+                                    <td>{dorder.product.pName}</td>
+                                    <td>{dorder.doCount}개</td>
                                     {index === 0 && (
                                         <>
-                                            <td rowSpan={order.dorders.length} className={styles.td}>{order.status}</td>
-                                            <td rowSpan={order.dorders.length} className={styles.td}>{new Date(order.odate).toLocaleString()}</td>
+                                            <td rowSpan={order.dorders.length}>{order.status}</td>
+                                            <td rowSpan={order.dorders.length}>{new Date(order.odate).toLocaleString()}</td>
                                         </>
                                     )}
-                                    <td className={styles.td}>{order.id}</td>
+                                    <td>{order.id}</td>
                                 </tr>
                             ))}
                         </React.Fragment>

@@ -52,21 +52,21 @@ const AskList = () => {
       <table className="common-table">
         <thead>
           <tr>
-            <th className={styles.th}>제목</th>
-            <th className={styles.th}>작성자</th>
-            <th className={styles.th}>작성일</th>
-            <th className={styles.th}>상태</th> {/* 상태 열 추가 */}
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>상태</th>
           </tr>
         </thead>
         <tbody>
           {asks.length === 0 ? (
             <tr>
-              <td colSpan="4" className={styles.td}>등록된 문의글이 없습니다.</td>
+              <td colSpan="4">등록된 문의글이 없습니다.</td>
             </tr>
           ) : (
             asks.map((ask) => (
               <tr key={ask.anum}>
-                <td className={styles.td}>
+                <td>
                   <Link to={`/adminHome/ask/${ask.anum}`}>
                     {ask.atitle || '제목 없음'}
                   </Link>
