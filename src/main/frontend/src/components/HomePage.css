@@ -71,29 +71,27 @@
 /* 슬라이드 부분 */
 .slider {
   position: relative;
-  overflow: hidden;
   width: 100%;
-  margin-top: 80px; /* 메뉴바 높이만큼 간격 조정 */
+  height: 300px;
+  overflow: hidden;
+  margin-top: 80px;
 }
 
 .slides {
   display: flex;
-  transition: transform 0.5s ease; /* 슬라이드 애니메이션 */
+  transition: transform 0.5s ease-in-out;
 }
 
 .slide {
-  min-width: 100%; /* 각 슬라이드가 전체 너비를 차지 */
-  height: 500px; /* 슬라이드 높이 조정 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  min-width: 100%;
+  transition: opacity 0.5s ease-in-out;
   position: relative;
 }
 
 .slide-image {
-  width: 100%; /* 이미지 너비 조정 */
-  height: 100%; /* 이미지 높이 조정 */
-  object-fit: cover; /* 이미지 비율 유지 */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .slide-content {
@@ -102,117 +100,75 @@
   left: 20px;
   color: white;
   font-size: 24px;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* 슬라이드 인디케이터 스타일 */
 .indicators {
-  display: flex;
-  justify-content: center;
-  position: absolute; /* 슬라이드 내부에서 위치 조정 */
-  bottom: 10px; /* 슬라이드 바닥에서의 위치 */
+  position: absolute;
+  bottom: 10px;
   left: 50%;
-  transform: translateX(-50%); /* 가운데 정렬 */
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
 }
 
 .indicator {
-  width: 12px; /* 원의 크기 */
-  height: 12px; /* 원의 크기 */
-  border-radius: 50%; /* 둥글게 만들기 */
-  background-color: #ededed; /* 비활성 상태 색상 */
-  margin: 0 5px; /* 간격 조정 */
-  cursor: pointer; /* 커서 포인터로 변경 */
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: white;
+  opacity: 0.5;
+  cursor: pointer;
 }
 
 .indicator.active {
-  background-color: #03c7a6; /* 활성 상태 색상 */
+  opacity: 1;
 }
 
-/* 트렌트 숏츠 스타일 */
+/* 트렌드 숏츠 스타일 */
 .trend-shorts {
-  margin-top: 40px;
   padding: 20px;
 }
 
-.trend-shorts h2 {
-  font-size: 24px;
-  color: #828282;
-  text-align: left; /* 제목 왼쪽 정렬 */
-  margin-bottom: 20px;
-}
-
-.video-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 반응형 그리드 레이아웃 */
-  gap: 20px; /* 아이템 사이 간격 */
-}
-
-.video-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.3s ease;
-}
-
-.video-item:hover {
-  transform: scale(1.05); /* 마우스 오버 시 확대 */
-}
-
-.video-item video {
-  width: 100%;
-  height: auto;
-  border-radius: 10px; /* 부드러운 모서리 */
-}
-
-.video-item p {
-  margin-top: 10px;
-  font-size: 16px;
-  color: #666;
-  text-align: center;
-  font-weight: 600;
-}
-
-/* 비디오 슬라이더 스타일 */
 .video-slider {
   display: flex;
-  overflow: hidden;
-  width: 100%;
+  justify-content: center; /* 가운데 정렬로 수정 */
+  overflow-x: auto;
 }
 
 .video-group {
   display: flex;
-  width: 100%;
-  transition: transform 0.5s ease-in-out; /* 비디오 그룹 슬라이드 전환 */
+  gap: 10px; /* 비디오 아이템들 간의 간격 설정 */
 }
 
 .video-item {
-  flex: 1;
-  padding: 10px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex: 0 0 auto; /* 비디오 아이템을 가로로 고정된 너비로 설정 */
+  text-align: center;
 }
 
 .video-item video {
+  width: 250px; /* 너비 늘리기 */
+  height: 150px; /* 높이 비율 맞추기 */
+}
+
+/* 베스트 게시물 스타일 */
+.Hbest-posts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 각 열을 고정 너비로 설정 */
+  gap: 0px; /* 이미지 사이에 약간의 간격 추가 */
+}
+
+.Hpost-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* 이미지가 영역 밖으로 나가지 않도록 설정 */
+}
+
+.Hpost-image {
   width: 100%;
-  height: auto;
-  border-radius: 10px;
+  height: auto; /* 이미지를 비율에 맞게 표시 */
+  object-fit: cover; /* 이미지가 잘리지 않고 커버되도록 설정 */
 }
 
-.video-item p {
-  margin-top: 10px;
-  font-size: 16px;
-  color: #666;
-  text-align: center;
-  font-weight: 600;
-}
-
-/* 각 그룹에 대한 스타일 */
-.video-group:first-of-type {
-  margin-right: 10px; /* 첫 번째 비디오 그룹 간격 */
-}
-
-.video-group:last-of-type {
-  margin-left: 10px; /* 마지막 비디오 그룹 간격 */
-}

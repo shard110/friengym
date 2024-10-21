@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaBars, FaSearch } from 'react-icons/fa';
+import { Link } from 'react-router-dom'; // Link 컴포넌트 추가
 import './HomePage.css';
 import logo from '../img/logo.png';
 
@@ -16,12 +17,25 @@ const videos = [
   { id: 2, src: '/video/video2.mp4', description: '트렌트 숏츠 설명 문구 2' },
   { id: 3, src: '/video/video3.mp4', description: '트렌트 숏츠 설명 문구 3' },
   { id: 4, src: '/video/video4.mp4', description: '트렌트 숏츠 설명 문구 4' },
-  { id: 5, src: '/video/video5.mp4', description: '트렌트 숏츠 설명 문구 5' }, 
-  { id: 6, src: '/video/video6.mp4', description: '트렌트 숏츠 설명 문구 6' }, 
+  { id: 5, src: '/video/video5.mp4', description: '트렌트 숏츠 설명 문구 5' },
+  { id: 6, src: '/video/video6.mp4', description: '트렌트 숏츠 설명 문구 6' },
   { id: 7, src: '/video/video7.mp4', description: '트렌트 숏츠 설명 문구 7' },
   { id: 8, src: '/video/video8.mp4', description: '트렌트 숏츠 설명 문구 8' },
   { id: 9, src: '/video/video9.mp4', description: '트렌트 숏츠 설명 문구 9' },
   { id: 10, src: '/video/video10.mp4', description: '트렌트 숏츠 설명 문구 10' },
+];
+
+// 베스트 게시물 데이터
+const bestPosts = [
+  { id: 1, img: '/images/p1.jpg', alt: '베스트 이미지 1' },
+  { id: 2, img: '/images/p2.jpg', alt: '베스트 이미지 2' },
+  { id: 3, img: '/images/p3.jpg', alt: '베스트 이미지 3' },
+  { id: 4, img: '/images/p1.jpg', alt: '베스트 이미지 4' },
+  { id: 5, img: '/images/p2.jpg', alt: '베스트 이미지 5' },
+  { id: 6, img: '/images/p3.jpg', alt: '베스트 이미지 6' },
+  { id: 7, img: '/images/p1.jpg', alt: '베스트 이미지 7' },
+  { id: 8, img: '/images/p2.jpg', alt: '베스트 이미지 8' },
+  { id: 9, img: '/images/p3.jpg', alt: '베스트 이미지 9' },
 ];
 
 const HomePage = () => {
@@ -122,6 +136,16 @@ const HomePage = () => {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* 베스트 게시물 부분 */}
+      <h2>베스트 게시물</h2>
+      <div className="Hbest-posts">
+        {bestPosts.map((post) => (
+          <Link to={`/post/${post.id}`} key={post.id} className="Hpost-item"> {/* 링크 추가 */}
+            <img src={post.img} alt={post.alt} className="Hpost-image" />
+          </Link>
+        ))}
       </div>
     </>
   );
