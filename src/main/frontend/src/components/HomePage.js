@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaBars, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import './HomePage.css';
-import logo from '../img/logo.png';
+import Navbar from './NavBar';
 import Footer from './Footer'; // Footer 컴포넌트 import
 
 
@@ -208,28 +208,7 @@ const HomePage = () => {
 
   return (
     <>
-      {/* 네비게이션 바 */}
-      <nav className="navbarH">
-        <div className="menu-icon" onClick={toggleMenu}>
-          <FaBars />
-        </div>
-        <div className="logo">
-          <img src={logo} alt="My Logo" />
-        </div>
-        <div className="search-icon">
-          <FaSearch />
-        </div>
-      </nav>
-
-      {/* 메뉴 */}
-      <div className={`homepage-menu ${isMenuOpen ? 'open' : ''}`}>
-        <ul>
-          <li>Home</li>
-          <li>About</li>
-          <li>Services</li>
-          <li>Contact</li>
-        </ul>
-      </div>
+      <Navbar />
 
       {/* 슬라이드 부분 */}
       <div className="slider">
