@@ -18,10 +18,8 @@
 .product-item {
   background-color: #fff; /* 배경색 */
   border-radius: 10px; /* 모서리 둥글게 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
   overflow: hidden;
   transition: transform 0.3s ease; /* 마우스 호버 시 확대 */
-  padding: 20px;
   text-align: center; /* 텍스트 중앙 정렬 */
 }
 
@@ -48,7 +46,7 @@
 /* 상품 가격 스타일 */
 .product-item p:nth-of-type(2) {
   font-size: 16px;
-  color: #ff6347; /* 가격에 강조 색상 */
+  color: #03C7A6; /* 가격에 강조 색상 */
   margin-bottom: 10px;
 }
 

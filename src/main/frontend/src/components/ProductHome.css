@@ -1,8 +1,8 @@
-.product-home .popular-products .navbar{
+.product-home .prod-wrap .scroll-section h2{
   display: none;
 }
 
-.product-home section footer{
+.product-home .popular-products .navbar{
   display: none;
 }
 
@@ -72,6 +72,8 @@
     font-size: 32px;
     text-align: left;
     margin: 88px 0 4px 0;
+    max-width: 1200px;
+    margin: 4rem auto 0.3rem auto;
   }
 
   .product-home .etc{
@@ -99,9 +101,13 @@
 
   .product-home .product-item {
     text-align: left;
-    width: 23%;
+    width: 23.5%;
     border-radius: 5px;
     background-color: #fff;
+  }
+
+  .product-home .product-item{
+    margin-bottom: 3rem;
   }
 
   .product-home .product-item img {
@@ -206,6 +212,19 @@
     margin-left: 20px;
     padding: 0;
   }
+
+  @media (max-width: 1200px){
+    .product-home .flex_box {
+      display: none !important;
+    }
+
+    .product-home h2{
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+  }
+
+
 
 }
 

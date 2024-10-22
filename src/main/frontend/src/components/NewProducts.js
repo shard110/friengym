@@ -41,7 +41,7 @@ function NewProducts() {
       <Navbar />
       <ShopLnb />
       <FloatingMenu />
-      <h2>New Products</h2>
+      <h2 style={{ margin: '64px', color: '#333' }}>New Products</h2>
       <div className="product-list">
         {newProducts.length > 0 ? (
           newProducts.map(product => (

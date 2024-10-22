@@ -59,7 +59,7 @@
     width: 96px;
     left: unset;
     right: 10%;
-    bottom: 50%;
+    bottom: 50% !important;
     padding: 40px 0;
     transform: translateY(+50%);
     box-shadow: 0 2px 8px #575f643b;

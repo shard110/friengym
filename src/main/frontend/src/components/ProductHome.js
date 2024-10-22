@@ -82,15 +82,18 @@ function ProductHome() {
                 </button>
             </div>
             <div className='prod-wrap' >
+                    <h2>Best</h2>
             <section id='shop_cont'>
                 <div className="section popular-products">
-                    <h2>Best</h2>
                     <div className='flex_box'>
                         <p className='etc'>frengym에서 최고 인기! Best 상품들을 만나보세요.</p>
                         <Link to="/products/popular">more</Link>
                     </div>
                 </div>
-                <PopularProducts limit={4} />
+                <div className='scroll-section'>
+
+                <PopularProducts limit={10} showFooter={false} />
+                </div>
             </section>
 
                 <div className="ad">
@@ -126,7 +129,7 @@ function ProductHome() {
             
             {/* 리뷰 슬라이드 섹션 */}
             <div className="section review-slider">
-                <h3>리뷰</h3>
+                {/* <h3>리뷰</h3> */}
                 <div className="review-container">
                     {reviews.length > 0 && (
                         <div className="review-item">

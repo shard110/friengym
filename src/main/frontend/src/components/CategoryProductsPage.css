@@ -94,7 +94,7 @@
 }
 
 .category-products li:hover h3 {
-  color: #ff6347;  /* 마우스 호버 시 색상 변경 */
+  color: #03C7A6;  /* 마우스 호버 시 색상 변경 */
 }
 
 /* 상품 가격 스타일 */
@@ -110,9 +110,24 @@
   color: #000;
 }
 
+.category-products .cate-wrap>ul li{
+  margin: 4rem !important;
+}
+
+.category-products .cate-wrap>ul li img{
+  border-radius: 8px;
+  height: 480px;
+}
+
+
 @media (max-width: 1280px){
   .cate-wrap{
     max-width: 100%;
     padding: 0 20px;
+  }
+
+  .category-products .cate-wrap>ul li img{
+    border-radius: 8px;
+    height: 240px;
   }
 }

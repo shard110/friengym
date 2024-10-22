@@ -5,8 +5,9 @@ import ShopLnb from './ShopLnb';
 import Footer from './Footer';
 import FloatingMenu from './FloatingMenu';
 import Navbar from './NavBar';
+import replace from "../img/product_replace.png";
 
-function PopularProducts({ limit }) {
+function PopularProducts({ limit, showFooter = true }) {
     const [popularProducts, setPopularProducts] = useState([]);
 
     useEffect(() => {
@@ -28,16 +29,21 @@ function PopularProducts({ limit }) {
             .catch(error => console.error('Error fetching popular products:', error));
     }, [limit]);
 
+    const onErrorImg = (e) => {
+        e.target.src = replace;
+    };
+
     return (
         <div className='popular-products'>
             <Navbar />
             <ShopLnb />
             <FloatingMenu />
+            <h2 style={{ margin: '64px', color: '#333' }}>Best</h2>
             <div className="product-list">
                 {popularProducts.map(product => (
                     <div key={product.pNum} className="product-item">
                         <Link to={`/productslist/${product.pNum}`}>
-                            <img src={product.pImgUrl} alt={`상품명: ${product.pName}`} />
+                            <img src={product.pImgUrl} alt={`상품명: ${product.pName}`} onError={onErrorImg}/>
                         </Link>
                         <p className='prod_name'>{product.pName}</p>
                         <p className='prod_price'> ₩ {product.pPrice.toLocaleString()}</p>
@@ -45,7 +51,7 @@ function PopularProducts({ limit }) {
                     </div>
                 ))}
             </div>
-            <Footer />
+            {showFooter && <Footer />}
         </div>
     );
 }
