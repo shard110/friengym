@@ -1,82 +1,130 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useAuth } from '../components/AuthContext';
-import { Link } from 'react-router-dom';
 import './ListStyles.css';
 
-const OrderHistoryPage = () => {
-    const { user } = useAuth();
-    const [orders, setOrders] = useState([]);
+const UserList = () => {
+  const [users, setUsers] = useState([]);
+  const [error, setError] = useState('');
+  const [selectedMonths, setSelectedMonths] = useState({});
 
-    useEffect(() => {
-        const fetchOrders = async () => {
-            const token = user?.token || localStorage.getItem('adminToken');
-            if (!token) {
-                console.error('토큰을 찾을 수 없습니다.');
-                alert('로그인이 필요합니다.');
-                return;
-            }
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/admin/users', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+          },
+        });
+        setUsers(response.data);
+      } catch (err) {
+        setError('유저 정보를 가져오는 데 오류가 발생했습니다.');
+        console.error(err);
+      }
+    };
 
-            try {
-                const response = await axios.get(`/api/payment/orders`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                setOrders(response.data);
-            } catch (error) {
-                console.error('주문 내역을 불러오는 동안 오류 발생:', error);
-            }
-        };
+    fetchUsers();
+  }, []);
 
-          fetchOrders();
-    }, [user]);
+  const handleDelete = async (id) => {
+    const confirm = window.confirm("정말로 이 사용자를 삭제하시겠습니까?");
+    if (!confirm) {
+      return; // 사용자가 취소하면 함수 종료
+    }
 
-    return (
-        <div>
-            <h2>결제 내역</h2>
-            <table className="common-table">
-                <thead>
-                    <tr>
-                        <th>주문 번호</th>
-                        <th>상품 이미지</th>
-                        <th>상품명</th>
-                        <th>수량</th>
-                        <th>상태</th>
-                        <th>결제 날짜</th>
-                        <th>결제 아이디</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {Array.isArray(orders) && orders.map(order => (
-                        <React.Fragment key={order.onum}>
-                            {order.dorders.map((dorder, index) => (
-                                <tr key={dorder.doNum}>
-                                    {index === 0 && (
-                                        <td rowSpan={order.dorders.length}>{order.onum}</td>
-                                    )}
-                                    <td>
-                                        <Link to={`/productslist/${dorder.product.pNum}`}>
-                                            <img src={dorder.product.pImgUrl} alt={dorder.product.pName} className="cart-img" />
-                                        </Link>
-                                    </td>
-                                    <td>{dorder.product.pName}</td>
-                                    <td>{dorder.doCount}개</td>
-                                    {index === 0 && (
-                                        <>
-                                            <td rowSpan={order.dorders.length}>{order.status}</td>
-                                            <td rowSpan={order.dorders.length}>{new Date(order.odate).toLocaleString()}</td>
-                                        </>
-                                    )}
-                                    <td>{order.id}</td>
-                                </tr>
-                            ))}
-                        </React.Fragment>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    );
+    try {
+      await axios.delete(`http://localhost:8080/api/admin/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+        },
+      });
+      setUsers(users.filter(user => user.id !== id));
+    } catch (err) {
+      setError('유저 삭제 중 오류가 발생했습니다.');
+      console.error(err);
+    }
+  };
+
+  const handleAddMonths = async (id) => {
+    const months = selectedMonths[id];
+    if (months) {
+      const confirm = window.confirm(`${months}개월을 추가하시겠습니까?`);
+      if (!confirm) {
+        return; // 사용자가 취소하면 함수 종료
+      }
+
+      try {
+        await axios.patch(`http://localhost:8080/api/admin/users/${id}/addMonths`, { months }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+          },
+        });
+        const response = await axios.get('http://localhost:8080/api/admin/users', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+          },
+        });
+        setUsers(response.data);
+      } catch (err) {
+        setError('개월 수 추가 중 오류가 발생했습니다.');
+        console.error(err);
+      }
+    } else {
+      setError('개월 수를 선택하세요.');
+    }
+  };
+
+  return (
+    <div>
+      <h2>사용자 목록</h2>
+      {error && <p>{error}</p>}
+      <table className="common-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>이름</th>
+            <th>전화번호</th>
+            <th>이메일</th> {/* 이메일 열 추가 */}
+            <th>성별</th>
+            <th>생일</th>
+            <th>등록일자</th>
+            <th>남은 일수</th>            
+            <th>개월 추가</th>
+            <th>작업</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map(user => (
+            <tr key={user.id}>
+              <td>{user.id}</td>
+              <td>{user.name}</td>
+              <td>{user.phone}</td>
+              <td>{user.email}</td> {/* 이메일 값 표시 */}
+              <td>{user.sex}</td>
+              <td>{user.birth}</td>
+              <td>{user.firstday}</td>
+              <td>{user.restday}</td>
+              <td>
+                <select
+                  onChange={(e) => setSelectedMonths({ ...selectedMonths, [user.id]: e.target.value })}
+                  defaultValue=""
+                >
+                  <option value="" disabled>개월 추가</option>
+                  <option value="1">1개월</option>
+                  <option value="3">3개월</option>
+                  <option value="6">6개월</option>
+                  <option value="12">1년</option>
+                </select>
+                <button onClick={() => handleAddMonths(user.id)}>등록</button>
+              </td>
+              <td>
+                <button onClick={() => handleDelete(user.id)}>삭제</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 };
 
-export default OrderHistoryPage;
+export default UserList;
