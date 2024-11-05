@@ -1,10 +1,11 @@
 # friengym
-"**헬스장 회원 커뮤니티 및 쇼핑몰 웹사이트**"
+![image](https://github.com/user-attachments/assets/d9a77a26-9aff-4358-8130-2d744b4cf2e4)
 
+"**헬스장 회원 커뮤니티 및 쇼핑몰 웹사이트**"
 운동 지식이나 정보를 자유롭게 공유하여 초보 운동자들의 진입 장벽을 낮출 수 있습니다. 또한 해당 웹사이트의 쇼핑몰을 이용해 관리 물품의 구매를 통한 편의성을 확보 할 수 있습니다. 
 
 -----
-## 1. 개발황경
+## 1. 개발환경
 * Tools
   * Visual Studio Code
   * GitHub
@@ -27,11 +28,25 @@
 |**문의글**|- 문의글 작성 및 확인 시 비밀번호 요구|- Security 사용|
 |**관리자**|- 관리자 전용 아이디로 로그인<br> - 사용자 관리<br> - 쇼핑몰 상품 관리<br> - 신고 게시글 관리<br> - 문의글 관리||
 
-### 2.1. 로그인
+### 2.1. 사용자 인증
+
+### 2.2. 마이페이지
+
+### 2.3. 쇼핑몰
+
+### 2.4. SNS
+
+### 2.5. DM
+
+### 2.6. 알림
+
+### 2.7. 문의글
+
+### 2.8. 관리자
 
 
 
-
-### npm 패키지 정리
+-----
+#### npm 패키지 정리
 
 npm install axios react-router-dom jwt-decode @mui/material @emotion/react @emotion/styled dotenv path-browserify os-browserify crypto-browserify @portone/browser-sdk net sockjs-client stomp react-feather react-icons
