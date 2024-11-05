@@ -2,10 +2,13 @@
 ![image](https://github.com/user-attachments/assets/d9a77a26-9aff-4358-8130-2d744b4cf2e4)
 
 "**헬스장 회원 커뮤니티 및 쇼핑몰 웹사이트**"
+
 운동 지식이나 정보를 자유롭게 공유하여 초보 운동자들의 진입 장벽을 낮출 수 있습니다. 또한 해당 웹사이트의 쇼핑몰을 이용해 관리 물품의 구매를 통한 편의성을 확보 할 수 있습니다. 
 
 -----
 ## 1. 개발환경
+![image](https://github.com/user-attachments/assets/69caba66-44b3-4e62-8b5a-c4c64b808cff)
+
 * Tools
   * Visual Studio Code
   * GitHub
