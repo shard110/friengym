@@ -33,11 +33,10 @@
 
 ### 2.1. 사용자 인증
 https://github.com/user-attachments/assets/b850caa2-55ef-40ed-839e-e239d2857b5f
-
 ### 2.2. 마이페이지
-
+https://github.com/user-attachments/assets/44fc0b22-589b-4f03-9345-b57cbaf50102
 ### 2.3. 쇼핑몰
-
+https://github.com/user-attachments/assets/fbab0618-c982-4d72-aef9-94919effaf58
 ### 2.4. SNS
 
 ### 2.5. DM
