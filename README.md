@@ -40,14 +40,13 @@ https://github.com/user-attachments/assets/fbab0618-c982-4d72-aef9-94919effaf58
 ### 2.4. SNS
 
 ### 2.5. DM
-
+https://github.com/user-attachments/assets/32c1dc72-3b5c-4a55-a749-300010d633e1
 ### 2.6. 알림
 
 ### 2.7. 문의글
-
+https://github.com/user-attachments/assets/b411a5d7-c583-4eea-b128-894fbd3509f8
 ### 2.8. 관리자
-
-
+https://github.com/user-attachments/assets/137d826c-e234-449d-bdaa-cd7b4f4900e0
 
 -----
 #### npm 패키지 정리
